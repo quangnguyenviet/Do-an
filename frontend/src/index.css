@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+/* ===== Theme: Default (Xanh dương) ===== */
+[data-theme="default"] {
+  --accent-50: #eff6ff;
+  --accent-100: #dbeafe;
+  --accent-200: #bfdbfe;
+  --accent-300: #93c5fd;
+  --accent-400: #60a5fa;
+  --accent-500: #3b82f6;
+  --accent-600: #2563eb;
+  --accent-700: #1d4ed8;
+  --accent-800: #1e40af;
+  --accent-900: #1e3a8a;
+  --accent-950: #172554;
+}
+
+/* ===== Theme: Forest (Xanh lá) ===== */
+[data-theme="forest"] {
+  --accent-50: #ecfdf5;
+  --accent-100: #d1fae5;
+  --accent-200: #a7f3d0;
+  --accent-300: #6ee7b7;
+  --accent-400: #34d399;
+  --accent-500: #10b981;
+  --accent-600: #059669;
+  --accent-700: #047857;
+  --accent-800: #065f46;
+  --accent-900: #064e3b;
+  --accent-950: #022c22;
+}
+
+/* ===== Theme: Sunset (Cam đỏ) ===== */
+[data-theme="sunset"] {
+  --accent-50: #fff7ed;
+  --accent-100: #ffedd5;
+  --accent-200: #fed7aa;
+  --accent-300: #fdba74;
+  --accent-400: #fb923c;
+  --accent-500: #f97316;
+  --accent-600: #ea580c;
+  --accent-700: #c2410c;
+  --accent-800: #9a3412;
+  --accent-900: #7c2d12;
+  --accent-950: #431407;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: theme(colors.slate.300);
+  border-radius: 9999px;
+}
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb {
+    background: theme(colors.slate.700);
+  }
+}
+
+/* ===== Accent utility classes (theme-aware) ===== */
+.accent-bg {
+  background-color: var(--accent-600);
+}
+.accent-bg-hover:hover {
+  background-color: var(--accent-700);
+}
+.accent-bg-light {
+  background-color: var(--accent-50);
+}
+.accent-text {
+  color: var(--accent-600);
+}
+.accent-text-dark {
+  color: var(--accent-700);
+}
+.accent-border {
+  border-color: var(--accent-600);
+}
+.accent-border-light {
+  border-color: var(--accent-300);
+}
+.accent-ring:focus {
+  --tw-ring-color: var(--accent-100);
+  border-color: var(--accent-400);
+}
+.accent-dot {
+  background-color: var(--accent-600);
+}
+
+.dark .accent-bg-dark {
+  background-color: var(--accent-950);
+}
+.dark .accent-text-dark {
+  color: var(--accent-300);
+}
+.dark .accent-border-dark {
+  border-color: var(--accent-800);
+}
+
+/* Active filter pill (selected skill/difficulty/type button) */
+.accent-pill {
+  background-color: var(--accent-600);
+  border-color: var(--accent-600);
+  color: white;
+}
+.accent-pill:hover {
+  background-color: var(--accent-700);
+  border-color: var(--accent-700);
+}
+.accent-pill-outline {
+  border-color: var(--accent-300);
+  color: var(--accent-600);
+}
+.accent-pill-outline:hover {
+  border-color: var(--accent-400);
+}
+.dark .accent-pill-outline {
+  border-color: var(--accent-700);
+  color: var(--accent-300);
+}
+.dark .accent-pill-outline:hover {
+  border-color: var(--accent-400);
+}
+
+/* Unread dot */
+.accent-dot-unread {
+  background-color: var(--accent-600);
+}
+
+/* Link text */
+.accent-link {
+  color: var(--accent-600);
+}
+.accent-link:hover {
+  color: var(--accent-700);
+}
+.dark .accent-link {
+  color: var(--accent-400);
+}
+.dark .accent-link:hover {
+  color: var(--accent-300);
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
