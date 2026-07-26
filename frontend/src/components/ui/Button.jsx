@@ -2,13 +2,13 @@ import clsx from "clsx";
 
 const variants = {
   primary:
-    "accent-bg text-white accent-bg-hover active:scale-[0.98] disabled:bg-slate-300 disabled:text-slate-500",
+    "accent-bg text-white accent-bg-hover active:scale-[0.98] disabled:opacity-50",
   secondary:
-    "bg-slate-100 text-slate-900 hover:bg-slate-200 active:scale-[0.98] dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700",
+    "bg-slate-100 text-slate-900 hover:bg-slate-200 active:scale-[0.98] dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 disabled:opacity-50",
   ghost:
-    "text-slate-600 hover:bg-slate-100 active:scale-[0.98] dark:text-slate-300 dark:hover:bg-slate-800",
+    "text-slate-600 hover:bg-slate-100 active:scale-[0.98] dark:text-slate-300 dark:hover:bg-slate-800 disabled:opacity-40",
   danger:
-    "bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] disabled:bg-slate-300 disabled:text-slate-500",
+    "bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] disabled:bg-rose-300 dark:disabled:bg-rose-900 dark:disabled:text-rose-400",
 };
 
 const sizes = {

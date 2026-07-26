@@ -1,13 +1,12 @@
 import { NavLink, useParams, useLocation } from "react-router-dom";
 import clsx from "clsx";
-import { ArrowLeft, GraduationCap, BookOpen, BarChart3, FileText, LayoutDashboard } from "lucide-react";
+import { ArrowLeft, GraduationCap, BookOpen, FileText, LayoutDashboard } from "lucide-react";
 import Avatar from "../ui/Avatar";
 
 const NAV_ITEMS = [
   { to: "overview", label: "Tổng quan", icon: LayoutDashboard },
   { to: "path", label: "Lộ trình học", icon: GraduationCap },
   { to: "exercises", label: "Bài tập", icon: BookOpen },
-  { to: "progress", label: "Kết quả & tiến bộ", icon: BarChart3 },
   { to: "materials", label: "Tài liệu & video", icon: FileText },
 ];
 

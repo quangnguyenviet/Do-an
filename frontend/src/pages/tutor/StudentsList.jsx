@@ -44,7 +44,6 @@ export default function StudentsList() {
               </div>
               <div className="mb-3 flex flex-wrap gap-1.5">
                 <Badge tone="blue">{s.level}</Badge>
-                <Badge tone="rose">Yếu: {s.weakSkill}</Badge>
               </div>
               <p className="mb-3 text-sm text-slate-600 dark:text-slate-300">{s.goal}</p>
               <div className="mb-1 flex justify-between text-xs text-slate-400">

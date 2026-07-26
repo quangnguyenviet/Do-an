@@ -10,7 +10,7 @@ import StudentDetail from "./pages/tutor/StudentDetail";
 import StudentOverviewRoute from "./pages/tutor/student/StudentOverviewRoute";
 import StudentPathRoute from "./pages/tutor/student/StudentPathRoute";
 import StudentExercisesRoute from "./pages/tutor/student/StudentExercisesRoute";
-import StudentProgressRoute from "./pages/tutor/student/StudentProgressRoute";
+import AddExercisePage from "./pages/tutor/student/AddExercisePage";
 import StudentMaterialsRoute from "./pages/tutor/student/StudentMaterialsRoute";
 import TutorExerciseDetail from "./pages/tutor/TutorExerciseDetail";
 import ExerciseGenerator from "./pages/tutor/ExerciseGenerator";
@@ -74,9 +74,7 @@ export default function App() {
           </Route>
           <Route path="students/:studentId/exercises" element={<StudentDetail />}>
             <Route index element={<StudentExercisesRoute />} />
-          </Route>
-          <Route path="students/:studentId/progress" element={<StudentDetail />}>
-            <Route index element={<StudentProgressRoute />} />
+            <Route path="add" element={<AddExercisePage />} />
           </Route>
           <Route path="students/:studentId/materials" element={<StudentDetail />}>
             <Route index element={<StudentMaterialsRoute />} />
