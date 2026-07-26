@@ -55,6 +55,7 @@ const tutorLibraryNav = [
 ];
 
 const studentDetailNav = [
+  { to: "overview", label: "Tổng quan", icon: LayoutDashboard },
   { to: "path", label: "Lộ trình học", icon: GraduationCap },
   { to: "exercises", label: "Bài tập", icon: BookOpen },
   { to: "progress", label: "Kết quả & tiến bộ", icon: BarChart3 },

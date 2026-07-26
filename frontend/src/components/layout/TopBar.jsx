@@ -33,6 +33,7 @@ const routeMeta = {
 };
 
 const studentSubTabs = {
+  overview: "Tổng quan",
   path: "Lộ trình học",
   exercises: "Bài tập",
   progress: "Kết quả & tiến bộ",

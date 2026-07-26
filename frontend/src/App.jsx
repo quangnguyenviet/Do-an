@@ -7,6 +7,11 @@ import LoginPage from "./pages/LoginPage";
 import TutorDashboard from "./pages/tutor/TutorDashboard";
 import StudentsList from "./pages/tutor/StudentsList";
 import StudentDetail from "./pages/tutor/StudentDetail";
+import StudentOverviewRoute from "./pages/tutor/student/StudentOverviewRoute";
+import StudentPathRoute from "./pages/tutor/student/StudentPathRoute";
+import StudentExercisesRoute from "./pages/tutor/student/StudentExercisesRoute";
+import StudentProgressRoute from "./pages/tutor/student/StudentProgressRoute";
+import StudentMaterialsRoute from "./pages/tutor/student/StudentMaterialsRoute";
 import TutorExerciseDetail from "./pages/tutor/TutorExerciseDetail";
 import ExerciseGenerator from "./pages/tutor/ExerciseGenerator";
 import GradingQueue from "./pages/tutor/GradingQueue";
@@ -61,7 +66,21 @@ export default function App() {
           <Route index element={<TutorDashboard />} />
           <Route path="students" element={<StudentsList />} />
           <Route path="students/:studentId" element={<StudentDetailDefaultTab />} />
-          <Route path="students/:studentId/:tab" element={<StudentDetail />} />
+          <Route path="students/:studentId/overview" element={<StudentDetail />}>
+            <Route index element={<StudentOverviewRoute />} />
+          </Route>
+          <Route path="students/:studentId/path" element={<StudentDetail />}>
+            <Route index element={<StudentPathRoute />} />
+          </Route>
+          <Route path="students/:studentId/exercises" element={<StudentDetail />}>
+            <Route index element={<StudentExercisesRoute />} />
+          </Route>
+          <Route path="students/:studentId/progress" element={<StudentDetail />}>
+            <Route index element={<StudentProgressRoute />} />
+          </Route>
+          <Route path="students/:studentId/materials" element={<StudentDetail />}>
+            <Route index element={<StudentMaterialsRoute />} />
+          </Route>
           <Route path="students/:studentId/exercises/:exerciseId" element={<TutorExerciseDetail />} />
           <Route path="exercise-generator" element={<ExerciseGenerator />} />
           <Route path="grading" element={<GradingQueue />} />
