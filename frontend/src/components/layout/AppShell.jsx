@@ -16,11 +16,6 @@ import {
   LogOut,
   BookOpenCheck,
   Settings,
-  ArrowLeft,
-  GraduationCap,
-  BookOpen,
-  BarChart3,
-  FileText,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
@@ -28,6 +23,7 @@ import { gradingQueue, parentThreads, notifications, getStudentById } from "../.
 import Avatar from "../ui/Avatar";
 import AiAssistantPanel from "../tutor/AiAssistantPanel";
 import TopBar from "./TopBar";
+import StudentSidebar from "./StudentSidebar";
 
 const navByRole = {
   tutor: [
@@ -52,14 +48,6 @@ const tutorLibraryNav = [
   { to: "/tutor/library/paths", label: "Kho lộ trình", icon: Map },
   { to: "/tutor/library/exercises", label: "Kho bài tập", icon: ListChecks },
   { to: "/tutor/library/materials", label: "Kho video & tài liệu", icon: Video },
-];
-
-const studentDetailNav = [
-  { to: "overview", label: "Tổng quan", icon: LayoutDashboard },
-  { to: "path", label: "Lộ trình học", icon: GraduationCap },
-  { to: "exercises", label: "Bài tập", icon: BookOpen },
-  { to: "progress", label: "Kết quả & tiến bộ", icon: BarChart3 },
-  { to: "materials", label: "Tài liệu & video", icon: FileText },
 ];
 
 const roleLabel = { tutor: "Gia sư", student: "Học sinh" };
@@ -104,63 +92,7 @@ function AppShellInner() {
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3">
           {isStudentDetail ? (
-            <>
-              {/* Back button */}
-              <NavLink
-                to="/tutor/students"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900 transition"
-              >
-                <ArrowLeft size={18} strokeWidth={1.75} />
-                <span>Danh sách học sinh</span>
-              </NavLink>
-
-              {/* Student info mini-card */}
-              {student && (
-                <div className="mx-3 my-4 rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
-                  <div className="flex items-center gap-3">
-                    <Avatar initials={student.initials} size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-50">
-                        {student.name}
-                      </p>
-                      <p className="truncate text-xs text-slate-500 dark:text-slate-400">
-                        {student.level} &middot; {student.goal}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-400">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    {student.overallProgress}% hoàn thành
-                  </div>
-                </div>
-              )}
-
-              {/* Divider */}
-              <p className="mb-1 mt-2 px-3 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                Hồ sơ học sinh
-              </p>
-
-              {/* Student sub-nav */}
-              {studentDetailNav.map((item) => {
-                const to = `/tutor/students/${studentId}/${item.to}`;
-                const isActive = location.pathname === to;
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={to}
-                    className={clsx(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
-                      isActive
-                        ? "accent-bg-light accent-text-dark dark:accent-bg-dark dark:accent-text-dark"
-                        : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900"
-                    )}
-                  >
-                    <item.icon size={18} strokeWidth={1.75} />
-                    <span>{item.label}</span>
-                  </NavLink>
-                );
-              })}
-            </>
+            <StudentSidebar student={student} />
           ) : (
             <>
               {/* Main nav */}
