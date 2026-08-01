@@ -18,6 +18,7 @@ import GradingQueue from "./pages/tutor/GradingQueue";
 import ParentInbox from "./pages/tutor/ParentInbox";
 import Notifications from "./pages/tutor/Notifications";
 import LibraryPaths from "./pages/tutor/LibraryPaths";
+import LibraryPathDetail from "./pages/tutor/LibraryPathDetail";
 import LibraryExercises from "./pages/tutor/LibraryExercises";
 import LibraryMaterials from "./pages/tutor/LibraryMaterials";
 
@@ -85,6 +86,7 @@ export default function App() {
           <Route path="inbox" element={<ParentInbox />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="library/paths" element={<LibraryPaths />} />
+          <Route path="library/paths/:templateId" element={<LibraryPathDetail />} />
           <Route path="library/exercises" element={<LibraryExercises />} />
           <Route path="library/materials" element={<LibraryMaterials />} />
           <Route path="settings" element={<SettingsPage />} />

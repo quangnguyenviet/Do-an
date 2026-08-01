@@ -12,8 +12,9 @@ import {
   X,
   FileText,
   PlayCircle as PlayCircleIcon,
+  Save,
 } from "lucide-react";
-import { getStudentById, pathTemplates, skillList } from "../../../data/mockData";
+import { getStudentById, pathTemplates, skillList, computeActualUsage } from "../../../data/mockData";
 import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
@@ -67,6 +68,10 @@ export default function StudentPath({
   );
   const [detailTab, setDetailTab] = useState("overview");
   const [showPathPicker, setShowPathPicker] = useState(false);
+
+  // Save-as-template modal
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveForm, setSaveForm] = useState({ name: "", level: student?.level || "B1", goal: student?.goal || "" });
 
   useEffect(() => {
     setDetailTab("overview");
@@ -242,7 +247,40 @@ export default function StudentPath({
       sourceTemplateName: tpl.name,
     }));
     setPathItems((prev) => [...prev, ...cloned]);
+
+    // Cập nhật studentsUsing và templateSource cho học sinh
+    const templateInStore = pathTemplates.find((t) => t.id === tpl.id);
+    if (templateInStore) {
+      if (!templateInStore.studentsUsing.includes(studentId)) {
+        templateInStore.studentsUsing.push(studentId);
+      }
+      templateInStore.usageCount = computeActualUsage(tpl.id) || templateInStore.usageCount;
+    }
+
     setShowPathPicker(false);
+  }
+
+  /* ---- Save as Template ---- */
+  function handleSaveAsTemplate() {
+    if (!saveForm.name.trim()) return;
+    const newTemplate = {
+      id: `tpl-saved-${Date.now()}`,
+      name: saveForm.name.trim(),
+      level: saveForm.level,
+      goal: saveForm.goal.trim() || student?.goal || "Tùy chỉnh",
+      usageCount: 0,
+      studentsUsing: [studentId],
+      sessions: pathItems.map((it) => ({
+        phase: it.phase,
+        topic: it.topic,
+        skills: [...it.skills],
+      })),
+    };
+    pathTemplates.unshift(newTemplate);
+    setShowSaveModal(false);
+    setSaveForm({ name: "", level: student?.level || "B1", goal: student?.goal || "" });
+    // Scroll to top after save
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   const { registerTarget, clearTarget } = useAiAssistant();
@@ -286,12 +324,20 @@ export default function StudentPath({
     <div className="min-w-0 flex-1 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50">Lộ trình học</h2>
-          <button
-            onClick={() => setShowPathPicker((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 accent-border-light-hover hover:accent-text dark:border-slate-700 dark:text-slate-300 dark:hover:accent-text-dark"
-          >
-            <Library size={14} /> Áp dụng lộ trình từ Kho
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowSaveModal(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-emerald-600 accent-border-light-hover hover:bg-emerald-50 dark:border-slate-700 dark:text-emerald-400 dark:hover:bg-emerald-950"
+            >
+              <Save size={14} /> Lưu thành mẫu
+            </button>
+            <button
+              onClick={() => setShowPathPicker((v) => !v)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 accent-border-light-hover hover:accent-text dark:border-slate-700 dark:text-slate-300 dark:hover:accent-text-dark"
+            >
+              <Library size={14} /> Áp dụng lộ trình từ Kho
+            </button>
+          </div>
         </div>
 
         {showPathPicker && (
@@ -308,6 +354,11 @@ export default function StudentPath({
                     <p className="text-xs text-slate-500 dark:text-slate-400">
                       {tpl.sessions.length} buổi học &middot; {tpl.goal}
                     </p>
+                    {tpl.studentsUsing.length > 0 && (
+                      <p className="mt-0.5 text-xs text-slate-400">
+                        {tpl.studentsUsing.length} học sinh đang dùng
+                      </p>
+                    )}
                   </div>
                   <Button size="sm" onClick={() => applyPathTemplate(tpl)} type="button">
                     Áp dụng
@@ -705,6 +756,90 @@ export default function StudentPath({
               </>
             )}
           </aside>
+        </div>
+      )}
+
+      {/* ===== Save-as-Template Modal ===== */}
+      {showSaveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-slate-900/50 dark:bg-black/60" onClick={() => setShowSaveModal(false)} />
+          <Card className="relative z-10 mx-4 w-full max-w-lg">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-50">Lưu lộ trình thành mẫu</h3>
+              <button
+                onClick={() => setShowSaveModal(false)}
+                className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Lộ trình hiện tại của <strong>{student?.name}</strong> ({pathItems.length} buổi học) sẽ được lưu vào Kho lộ trình dưới dạng một mẫu mới. Các thay đổi sau này với lộ trình của học sinh sẽ không ảnh hưởng tới mẫu này.
+              </p>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">
+                  Tên mẫu lộ trình <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  value={saveForm.name}
+                  onChange={(e) => setSaveForm((f) => ({ ...f, name: e.target.value }))}
+                  placeholder={`VD: Lộ trình tùy chỉnh cho ${student?.name}`}
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:ring-blue-950"
+                  autoFocus
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Trình độ</label>
+                  <select
+                    value={saveForm.level}
+                    onChange={(e) => setSaveForm((f) => ({ ...f, level: e.target.value }))}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:ring-blue-950"
+                  >
+                    <option value="A2">A2</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Mục tiêu</label>
+                  <input
+                    value={saveForm.goal}
+                    onChange={(e) => setSaveForm((f) => ({ ...f, goal: e.target.value }))}
+                    placeholder="VD: Cải thiện kỹ năng giao tiếp"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:ring-blue-950"
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-slate-200 p-3 dark:border-slate-800">
+                <p className="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+                  Tóm tắt nội dung ({pathItems.length} buổi học)
+                </p>
+                <div className="max-h-28 space-y-1 overflow-y-auto">
+                  {pathItems.map((it, i) => (
+                    <div key={it.id} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                      <span className="shrink-0 font-medium text-slate-400">B{i + 1}:</span>
+                      <span className="min-w-0 truncate">{it.topic}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+              <Button variant="secondary" size="sm" onClick={() => setShowSaveModal(false)} type="button">
+                Hủy
+              </Button>
+              <Button size="sm" onClick={handleSaveAsTemplate} disabled={!saveForm.name.trim()} type="button">
+                <Save size={14} /> Lưu vào Kho lộ trình
+              </Button>
+            </div>
+          </Card>
         </div>
       )}
     </div>

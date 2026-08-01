@@ -29,6 +29,7 @@ export const students = [
     joinedDate: "2026-02-10",
     overallProgress: 68,
     weakSkill: "Viết",
+    templateSource: "tpl1",
     learningPath: [
       { id: "lp1", phase: "Giai đoạn 1: Củng cố nền tảng", week: 1, session: 1, date: "2026-02-11", skills: ["Ngữ pháp", "Từ vựng"], topic: "Thì hiện tại & quá khứ, từ vựng chủ đề gia đình", status: "done" },
       { id: "lp2", phase: "Giai đoạn 1: Củng cố nền tảng", week: 1, session: 2, date: "2026-02-13", skills: ["Nghe", "Nói"], topic: "Luyện nghe hội thoại đời sống, phát âm trọng âm", status: "done" },
@@ -71,6 +72,7 @@ export const students = [
     joinedDate: "2026-03-01",
     overallProgress: 42,
     weakSkill: "Ngữ pháp",
+    templateSource: "tpl2",
     learningPath: [
       { id: "lp1", phase: "Giai đoạn 1: Xây nền tảng", week: 1, session: 1, date: "2026-03-02", skills: ["Ngữ pháp"], topic: "Thì hiện tại đơn, cấu trúc câu cơ bản", status: "done" },
       { id: "lp2", phase: "Giai đoạn 1: Xây nền tảng", week: 1, session: 2, date: "2026-03-04", skills: ["Từ vựng", "Nói"], topic: "Từ vựng chào hỏi, giới thiệu bản thân", status: "done" },
@@ -103,6 +105,7 @@ export const students = [
     joinedDate: "2026-01-15",
     overallProgress: 81,
     weakSkill: "Nghe",
+    templateSource: "tpl3",
     learningPath: [
       { id: "lp1", phase: "Giai đoạn 2: Phản xạ giao tiếp", week: 6, session: 10, date: "2026-02-24", skills: ["Nói"], topic: "Thảo luận chủ đề công nghệ", status: "done" },
       { id: "lp2", phase: "Giai đoạn 2: Phản xạ giao tiếp", week: 6, session: 11, date: "2026-02-27", skills: ["Nghe"], topic: "Nghe podcast tốc độ tự nhiên", status: "done" },
@@ -194,8 +197,11 @@ export const parentThreads = [
   },
 ];
 
-// Kho lộ trình: các mẫu lộ trình dùng chung, có thể áp dụng (clone) cho học sinh
-// bất kỳ rồi tùy biến tiếp - chỉnh sửa bản sao không ảnh hưởng tới mẫu gốc.
+/* ===== Kho lộ trình =====
+ * Mỗi template có thể được clone cho nhiều học sinh.
+ * Trường "studentsUsing" là mảng id các học sinh đang dùng template này,
+ * giúp tracking usageCount chính xác và xem danh sách học sinh cụ thể.
+ */
 export const pathTemplates = [
   {
     id: "tpl1",
@@ -203,6 +209,7 @@ export const pathTemplates = [
     level: "B1",
     goal: "Thi chứng chỉ IELTS 6.0",
     usageCount: 14,
+    studentsUsing: ["s1"],
     sessions: [
       { phase: "Giai đoạn 1: Củng cố nền tảng", topic: "Ngữ pháp & từ vựng học thuật cơ bản", skills: ["Ngữ pháp", "Từ vựng"] },
       { phase: "Giai đoạn 1: Củng cố nền tảng", topic: "Kỹ thuật Skimming/Scanning cho bài đọc IELTS", skills: ["Đọc"] },
@@ -218,6 +225,7 @@ export const pathTemplates = [
     level: "A2",
     goal: "Lấy lại gốc, giao tiếp cơ bản",
     usageCount: 9,
+    studentsUsing: ["s2"],
     sessions: [
       { phase: "Giai đoạn 1: Xây nền tảng", topic: "Thì hiện tại đơn, cấu trúc câu cơ bản", skills: ["Ngữ pháp"] },
       { phase: "Giai đoạn 1: Xây nền tảng", topic: "Từ vựng chào hỏi, giới thiệu bản thân", skills: ["Từ vựng", "Nói"] },
@@ -231,11 +239,43 @@ export const pathTemplates = [
     level: "B2",
     goal: "Giao tiếp phản xạ nhanh",
     usageCount: 5,
+    studentsUsing: ["s3"],
     sessions: [
       { phase: "Giai đoạn 1: Phản xạ giao tiếp", topic: "Thảo luận chủ đề công nghệ", skills: ["Nói"] },
       { phase: "Giai đoạn 1: Phản xạ giao tiếp", topic: "Nghe podcast tốc độ tự nhiên", skills: ["Nghe"] },
       { phase: "Giai đoạn 2: Nâng cao", topic: "Debate: Ưu nhược điểm làm việc từ xa", skills: ["Nói", "Từ vựng"] },
       { phase: "Giai đoạn 2: Nâng cao", topic: "Phỏng vấn xin việc mô phỏng", skills: ["Nói", "Ngữ pháp"] },
+    ],
+  },
+  // === Mẫu mới ===
+  {
+    id: "tpl4",
+    name: "IELTS Writing chuyên sâu 5.0 → 6.5",
+    level: "B1",
+    goal: "Cải thiện kỹ năng Viết, đạt band 6.5 Writing",
+    usageCount: 3,
+    studentsUsing: [],
+    sessions: [
+      { phase: "Giai đoạn 1: Xây nền tảng Viết", topic: "Cấu trúc câu phức, mệnh đề quan hệ", skills: ["Viết", "Ngữ pháp"] },
+      { phase: "Giai đoạn 1: Xây nền tảng Viết", topic: "Từ nối học thuật và collocations", skills: ["Viết", "Từ vựng"] },
+      { phase: "Giai đoạn 2: Luyện Task 1", topic: "Biểu đồ đường, cột — cách chọn số liệu chính", skills: ["Viết"] },
+      { phase: "Giai đoạn 2: Luyện Task 1", topic: "Biểu đồ tròn, bảng — so sánh và tổng hợp", skills: ["Viết"] },
+      { phase: "Giai đoạn 3: Luyện Task 2", topic: "Dạng Opinion — bố cục luận 4 đoạn", skills: ["Viết", "Ngữ pháp"] },
+      { phase: "Giai đoạn 3: Luyện Task 2", topic: "Dạng Advantages/Disadvantages — cân bằng lợi ích", skills: ["Viết", "Từ vựng"] },
+    ],
+  },
+  {
+    id: "tpl5",
+    name: "Phát âm & Nghe hiểu A1 → A2",
+    level: "A2",
+    goal: "Cải thiện phát âm, nghe hiểu hội thoại cơ bản",
+    usageCount: 2,
+    studentsUsing: [],
+    sessions: [
+      { phase: "Giai đoạn 1: Bảng phiên âm IPA", topic: "Nguyên âm đơn, nguyên âm đôi — nhận diện và phát âm", skills: ["Nói", "Nghe"] },
+      { phase: "Giai đoạn 1: Bảng phiên âm IPA", topic: "Phụ âm hữu thanh/vô thanh — luyện nói phân biệt", skills: ["Nói"] },
+      { phase: "Giai đoạn 2: Nghe số và thông tin cơ bản", topic: "Nghe giờ giấc, ngày tháng, số đếm", skills: ["Nghe"] },
+      { phase: "Giai đoạn 2: Nghe số và thông tin cơ bản", topic: "Nghe hội thoại mua sắm, hỏi đường", skills: ["Nghe", "Nói"] },
     ],
   },
 ];
@@ -322,4 +362,13 @@ export const notifications = [
 
 export function getStudentById(id) {
   return students.find((s) => s.id === id);
+}
+
+export function getPathTemplateById(id) {
+  return pathTemplates.find((t) => t.id === id);
+}
+
+/** Đếm usageCount thực tế dựa trên students có templateSource === templateId */
+export function computeActualUsage(templateId) {
+  return students.filter((s) => s.templateSource === templateId).length;
 }
