@@ -3,20 +3,15 @@ import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
 
 const themePreviews = {
-  default: {
-    name: "Mặc định",
-    desc: "Xanh dương — giao diện gốc của EnglishPath",
+  dark: {
+    name: "Tối",
+    desc: "Speedtest — nền gradient xanh navy, glow cyan",
+    colors: ["bg-cyan-500", "bg-cyan-400", "bg-cyan-200", "bg-cyan-100"],
+  },
+  light: {
+    name: "Sáng",
+    desc: "Trắng — nền trắng sáng, tông xanh dương",
     colors: ["bg-blue-600", "bg-blue-400", "bg-blue-200", "bg-blue-100"],
-  },
-  forest: {
-    name: "Rừng xanh",
-    desc: "Xanh lá — tông màu thiên nhiên, dễ chịu cho mắt",
-    colors: ["bg-emerald-600", "bg-emerald-400", "bg-emerald-200", "bg-emerald-100"],
-  },
-  sunset: {
-    name: "Hoàng hôn",
-    desc: "Cam đỏ — tông màu ấm áp, năng động",
-    colors: ["bg-orange-600", "bg-orange-400", "bg-orange-200", "bg-orange-100"],
   },
 };
 
@@ -33,7 +28,7 @@ export default function SettingsPage() {
           Chọn theme màu sắc yêu thích. Thay đổi được áp dụng ngay lập tức.
         </p>
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           {Object.entries(themePreviews).map(([key, t]) => {
             const isActive = theme === key;
             return (

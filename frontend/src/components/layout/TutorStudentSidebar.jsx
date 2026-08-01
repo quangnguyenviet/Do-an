@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { to: "materials", label: "Tài liệu & video", icon: FileText },
 ];
 
-export default function StudentSidebar({ student }) {
+export default function TutorStudentSidebar({ student }) {
   const { studentId } = useParams();
   const location = useLocation();
 
@@ -58,7 +58,7 @@ export default function StudentSidebar({ student }) {
       {/* Section label */}
       <div className="mb-1 px-3">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-          Hồ sơ học sinh
+          Quản lý học sinh
         </p>
       </div>
 

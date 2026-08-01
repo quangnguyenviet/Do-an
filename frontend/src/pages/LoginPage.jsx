@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GraduationCap, User, ArrowLeft, BookOpenCheck, Users } from "lucide-react";
+import { GraduationCap, User, ArrowLeft, BookOpenCheck, Users, ShieldCheck } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { students } from "../data/mockData";
 import Card from "../components/ui/Card";
 import Avatar from "../components/ui/Avatar";
 
 const roles = [
+  {
+    key: "admin",
+    title: "Quản trị viên",
+    desc: "Quản lý đội ngũ gia sư, giám sát hoạt động toàn hệ thống",
+    icon: ShieldCheck,
+  },
   {
     key: "tutor",
     title: "Gia sư",
@@ -23,10 +29,15 @@ const roles = [
 
 export default function LoginPage() {
   const [picking, setPicking] = useState(false);
-  const { loginAsTutor, loginAsStudent } = useAuth();
+  const { loginAsAdmin, loginAsTutor, loginAsStudent } = useAuth();
   const navigate = useNavigate();
 
   function handleRoleClick(key) {
+    if (key === "admin") {
+      loginAsAdmin();
+      navigate("/admin");
+      return;
+    }
     if (key === "tutor") {
       loginAsTutor();
       navigate("/tutor");
@@ -55,7 +66,7 @@ export default function LoginPage() {
 
         {!picking ? (
           <>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-3">
               {roles.map((r) => (
                 <button key={r.key} onClick={() => handleRoleClick(r.key)} className="text-left">
                   <Card className="h-full transition hover:shadow-md">

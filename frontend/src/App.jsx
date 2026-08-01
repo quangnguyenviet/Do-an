@@ -4,14 +4,16 @@ import { ThemeProvider } from "./context/ThemeContext";
 import AppShell from "./components/layout/AppShell";
 import LoginPage from "./pages/LoginPage";
 
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import TutorManagement from "./pages/admin/TutorManagement";
 import TutorDashboard from "./pages/tutor/TutorDashboard";
 import StudentsList from "./pages/tutor/StudentsList";
 import StudentDetail from "./pages/tutor/StudentDetail";
-import StudentOverviewRoute from "./pages/tutor/student/StudentOverviewRoute";
-import StudentPathRoute from "./pages/tutor/student/StudentPathRoute";
-import StudentExercisesRoute from "./pages/tutor/student/StudentExercisesRoute";
-import AddExercisePage from "./pages/tutor/student/AddExercisePage";
-import StudentMaterialsRoute from "./pages/tutor/student/StudentMaterialsRoute";
+import ManageOverview from "./pages/tutor/manage/ManageOverview";
+import ManageLearningPathRoute from "./pages/tutor/manage/ManageLearningPathRoute";
+import ManageAssignmentsRoute from "./pages/tutor/manage/ManageAssignmentsRoute";
+import AddAssignmentPage from "./pages/tutor/manage/AddAssignmentPage";
+import ManageMaterialsRoute from "./pages/tutor/manage/ManageMaterialsRoute";
 import TutorExerciseDetail from "./pages/tutor/TutorExerciseDetail";
 import ExerciseGenerator from "./pages/tutor/ExerciseGenerator";
 import GradingQueue from "./pages/tutor/GradingQueue";
@@ -57,6 +59,19 @@ export default function App() {
         <Route path="/" element={<RootRedirect />} />
 
         <Route
+          path="/admin"
+          element={
+            <RequireRole role="admin">
+              <AppShell />
+            </RequireRole>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="tutors" element={<TutorManagement />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Route>
+
+        <Route
           path="/tutor"
           element={
             <RequireRole role="tutor">
@@ -68,17 +83,17 @@ export default function App() {
           <Route path="students" element={<StudentsList />} />
           <Route path="students/:studentId" element={<StudentDetailDefaultTab />} />
           <Route path="students/:studentId/overview" element={<StudentDetail />}>
-            <Route index element={<StudentOverviewRoute />} />
+            <Route index element={<ManageOverview />} />
           </Route>
           <Route path="students/:studentId/path" element={<StudentDetail />}>
-            <Route index element={<StudentPathRoute />} />
+            <Route index element={<ManageLearningPathRoute />} />
           </Route>
           <Route path="students/:studentId/exercises" element={<StudentDetail />}>
-            <Route index element={<StudentExercisesRoute />} />
-            <Route path="add" element={<AddExercisePage />} />
+            <Route index element={<ManageAssignmentsRoute />} />
+            <Route path="add" element={<AddAssignmentPage />} />
           </Route>
           <Route path="students/:studentId/materials" element={<StudentDetail />}>
-            <Route index element={<StudentMaterialsRoute />} />
+            <Route index element={<ManageMaterialsRoute />} />
           </Route>
           <Route path="students/:studentId/exercises/:exerciseId" element={<TutorExerciseDetail />} />
           <Route path="exercise-generator" element={<ExerciseGenerator />} />

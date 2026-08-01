@@ -16,6 +16,7 @@ import {
   LogOut,
   BookOpenCheck,
   Settings,
+  UserCog,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
@@ -23,9 +24,14 @@ import { gradingQueue, parentThreads, notifications, getStudentById } from "../.
 import Avatar from "../ui/Avatar";
 import AiAssistantPanel from "../tutor/AiAssistantPanel";
 import TopBar from "./TopBar";
-import StudentSidebar from "./StudentSidebar";
+import TutorStudentSidebar from "./TutorStudentSidebar";
 
 const navByRole = {
+  admin: [
+    { to: "/admin", label: "Tổng quan", icon: LayoutDashboard, end: true },
+    { to: "/admin/tutors", label: "Quản lý gia sư", icon: UserCog },
+    { to: "/admin/settings", label: "Cài đặt", icon: Settings },
+  ],
   tutor: [
     { to: "/tutor", label: "Tổng quan", icon: LayoutDashboard, end: true },
     { to: "/tutor/students", label: "Học sinh", icon: Users },
@@ -50,7 +56,7 @@ const tutorLibraryNav = [
   { to: "/tutor/library/materials", label: "Kho video & tài liệu", icon: Video },
 ];
 
-const roleLabel = { tutor: "Gia sư", student: "Học sinh" };
+const roleLabel = { admin: "Quản trị viên", tutor: "Gia sư", student: "Học sinh" };
 
 export default function AppShell() {
   return (
@@ -81,7 +87,7 @@ function AppShellInner() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950">
-      <aside className="flex h-full w-64 shrink-0 flex-col border-r border-slate-200 dark:border-slate-800">
+      <aside className="flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
         {/* Logo */}
         <div className="flex items-center gap-2 px-5 py-5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg accent-bg text-white">
@@ -92,7 +98,7 @@ function AppShellInner() {
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3">
           {isStudentDetail ? (
-            <StudentSidebar student={student} />
+            <TutorStudentSidebar student={student} />
           ) : (
             <>
               {/* Main nav */}
@@ -106,7 +112,7 @@ function AppShellInner() {
                       "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
                       isActive
                         ? "accent-bg-light accent-text-dark dark:accent-bg-dark dark:accent-text-dark"
-                        : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900"
+                        : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                     )
                   }
                 >
@@ -135,7 +141,7 @@ function AppShellInner() {
                           "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
                           isActive
                             ? "accent-bg-light accent-text-dark dark:accent-bg-dark dark:accent-text-dark"
-                            : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900"
+                            : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                         )
                       }
                     >
@@ -179,7 +185,7 @@ function AppShellInner() {
           </main>
 
           {showAssistant && chatOpen && (
-            <aside className="w-80 shrink-0 overflow-y-auto border-l border-slate-200 dark:border-slate-800">
+            <aside className="w-80 shrink-0 overflow-y-auto border-l border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
               <AiAssistantPanel />
             </aside>
           )}

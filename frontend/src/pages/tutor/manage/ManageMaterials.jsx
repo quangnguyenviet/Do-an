@@ -4,13 +4,13 @@ import { materialLibrary, skillList } from "../../../data/mockData";
 import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
-import { materialTypeOptions } from "./studentHelpers";
+import { materialTypeOptions } from "./manageHelpers";
 
 function emptyMaterialForm(sessionId) {
   return { title: "", type: "doc", topic: skillList[0], date: "", duration: "", sessionId: sessionId ?? "" };
 }
 
-export default function StudentMaterials({
+export default function ManageMaterials({
   materialsList,
   setMaterialsList,
   pathItems,

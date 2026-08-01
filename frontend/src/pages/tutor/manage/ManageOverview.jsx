@@ -4,9 +4,9 @@ import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import ProgressBar from "../../../components/ui/ProgressBar";
 import ProgressChart from "../../../components/charts/ProgressChart";
-import { findFocusSession } from "./studentHelpers";
+import { findFocusSession } from "./manageHelpers";
 
-export default function StudentOverviewRoute() {
+export default function ManageOverview() {
   const { student, pathItems } = useOutletContext();
   const focusSession = findFocusSession(pathItems);
 

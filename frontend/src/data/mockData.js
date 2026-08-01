@@ -7,6 +7,65 @@ export const tutor = {
   initials: "LA",
 };
 
+// Danh sách gia sư — chỉ admin mới quản lý được
+export const tutors = [
+  {
+    id: "t1",
+    name: "Cô Lan Anh",
+    email: "lananh.tutor@example.com",
+    initials: "LA",
+    phone: "0987 654 321",
+    status: "active",
+    joinedDate: "2025-09-01",
+    studentsCount: 3,
+    specialization: ["IELTS", "Giao tiếp cơ bản", "Ngữ pháp"],
+  },
+  {
+    id: "t2",
+    name: "Thầy Minh Quân",
+    email: "minhquan.tutor@example.com",
+    initials: "MQ",
+    phone: "0912 345 678",
+    status: "active",
+    joinedDate: "2025-10-15",
+    studentsCount: 2,
+    specialization: ["IELTS Writing", "Từ vựng nâng cao"],
+  },
+  {
+    id: "t3",
+    name: "Cô Thu Hà",
+    email: "thuha.tutor@example.com",
+    initials: "TH",
+    phone: "0909 111 222",
+    status: "inactive",
+    joinedDate: "2025-07-20",
+    studentsCount: 0,
+    specialization: ["Phát âm", "Nghe hiểu"],
+  },
+  {
+    id: "t4",
+    name: "Thầy Đức Anh",
+    email: "ducanh.tutor@example.com",
+    initials: "ĐA",
+    phone: "0933 444 555",
+    status: "active",
+    joinedDate: "2026-01-05",
+    studentsCount: 4,
+    specialization: ["Speaking nâng cao", "Debate"],
+  },
+  {
+    id: "t5",
+    name: "Cô Mai Phương",
+    email: "maiphuong.tutor@example.com",
+    initials: "MP",
+    phone: "0966 777 888",
+    status: "pending",
+    joinedDate: "2026-03-01",
+    studentsCount: 0,
+    specialization: ["IELTS Reading", "Từ vựng học thuật"],
+  },
+];
+
 export const skillList = [
   "Nghe",
   "Nói",
