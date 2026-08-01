@@ -27,7 +27,7 @@ import {
   difficultyOptions,
   materialTypeOptions,
   findFocusSession,
-} from "./studentHelpers";
+} from "./manageHelpers";
 
 function emptyForm(phase, session) {
   return {
@@ -48,7 +48,7 @@ const DETAIL_TABS = [
   { key: "materials", label: "Tài liệu" },
 ];
 
-export default function StudentPath({
+export default function ManageLearningPath({
   pathItems,
   setPathItems,
   exercisesList,

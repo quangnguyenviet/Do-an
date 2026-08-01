@@ -5,7 +5,7 @@ import { skillList, exerciseBank } from "../../../data/mockData";
 import Card from "../../../components/ui/Card";
 import Button from "../../../components/ui/Button";
 import PageHeader from "../../../components/ui/PageHeader";
-import { difficultyOptions } from "./studentHelpers";
+import { difficultyOptions } from "./manageHelpers";
 import { buildMockQuestions } from "../../../lib/generateExercise";
 
 const kindOptions = [
@@ -25,7 +25,7 @@ function blankQuestion(kind) {
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:ring-blue-950";
 
-export default function AddExercisePage() {
+export default function AddAssignmentPage() {
   const navigate = useNavigate();
   const { student, pathItems, setExercisesList } = useOutletContext();
 

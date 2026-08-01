@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { to: "materials", label: "Tài liệu & video", icon: FileText },
 ];
 
-export default function StudentSidebar({ student }) {
+export default function TutorStudentSidebar({ student }) {
   const { studentId } = useParams();
   const location = useLocation();
 

@@ -1,11 +1,11 @@
 import { useOutletContext } from "react-router-dom";
-import StudentMaterials from "./StudentMaterials";
+import ManageMaterials from "./ManageMaterials";
 
-export default function StudentMaterialsRoute() {
+export default function ManageMaterialsRoute() {
   const { pathItems, materialsList, setMaterialsList } = useOutletContext();
 
   return (
-    <StudentMaterials
+    <ManageMaterials
       materialsList={materialsList}
       setMaterialsList={setMaterialsList}
       pathItems={pathItems}

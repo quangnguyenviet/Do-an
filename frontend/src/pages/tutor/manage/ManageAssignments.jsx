@@ -5,9 +5,9 @@ import { exerciseBank } from "../../../data/mockData";
 import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
-import { exerciseStatus } from "./studentHelpers";
+import { exerciseStatus } from "./manageHelpers";
 
-export default function StudentExercises({
+export default function ManageAssignments({
   exercisesList,
   setExercisesList,
   pathItems,

@@ -1,12 +1,12 @@
 import { useOutletContext } from "react-router-dom";
-import StudentPath from "./StudentPath";
+import ManageLearningPath from "./ManageLearningPath";
 
-export default function StudentPathRoute() {
+export default function ManageLearningPathRoute() {
   const { student, pathItems, setPathItems, exercisesList, setExercisesList, materialsList, setMaterialsList } =
     useOutletContext();
 
   return (
-    <StudentPath
+    <ManageLearningPath
       pathItems={pathItems}
       setPathItems={setPathItems}
       exercisesList={exercisesList}

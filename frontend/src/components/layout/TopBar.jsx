@@ -7,9 +7,14 @@ import ThemeSwitcher from "../ui/ThemeSwitcher";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
 
-const roleLabel = { tutor: "Gia sư", student: "Học sinh" };
+const roleLabel = { admin: "Quản trị viên", tutor: "Gia sư", student: "Học sinh" };
 
 const routeMeta = {
+  admin: {
+    "/admin": { label: "Tổng quan" },
+    "/admin/tutors": { label: "Quản lý gia sư" },
+    "/admin/settings": { label: "Cài đặt" },
+  },
   tutor: {
     "/tutor": { label: "Tổng quan" },
     "/tutor/students": { label: "Học sinh" },
@@ -44,7 +49,9 @@ function buildBreadcrumbs(pathname, studentId) {
   const crumbs = [];
 
   // Root: role-based
-  if (pathname.startsWith("/tutor")) {
+  if (pathname.startsWith("/admin")) {
+    crumbs.push({ label: "Quản trị", to: "/admin" });
+  } else if (pathname.startsWith("/tutor")) {
     crumbs.push({ label: "Gia sư", to: "/tutor" });
   } else if (pathname.startsWith("/student")) {
     crumbs.push({ label: "Học sinh", to: "/student" });
@@ -64,7 +71,7 @@ function buildBreadcrumbs(pathname, studentId) {
     }
   } else {
     // Non-student pages: look up from routeMeta
-    const role = pathname.startsWith("/tutor") ? "tutor" : "student";
+    const role = pathname.startsWith("/admin") ? "admin" : pathname.startsWith("/tutor") ? "tutor" : "student";
     const meta = routeMeta[role];
     if (meta) {
       // Try exact match first
@@ -90,6 +97,7 @@ export default function TopBar() {
   const navigate = useNavigate();
   const { open: chatOpen, setOpen: setChatOpen } = useAiAssistant();
   const isTutor = session?.role === "tutor";
+  const isAdmin = session?.role === "admin";
 
   const crumbs = buildBreadcrumbs(location.pathname, studentId);
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -124,7 +132,7 @@ export default function TopBar() {
         ))}
         {crumbs.length === 0 && (
           <span className="text-slate-500 dark:text-slate-400">
-            {isTutor ? "Gia sư" : "Học sinh"}
+            {isAdmin ? "Quản trị viên" : isTutor ? "Gia sư" : "Học sinh"}
           </span>
         )}
       </nav>
@@ -154,7 +162,7 @@ export default function TopBar() {
         <ThemeSwitcher />
 
         {/* Notifications — only for tutor */}
-        {isTutor && (
+        {isTutor && !isAdmin && (
           <button
             title="Thông báo"
             onClick={() => navigate("/tutor/notifications")}
@@ -169,7 +177,7 @@ export default function TopBar() {
           </button>
         )}
 
-        {/* Avatar + logout — for student (tutor already has this in sidebar) */}
+        {/* Avatar + logout — for student & admin (tutor already has this in sidebar) */}
         {!isTutor && session && (
           <div className="flex items-center gap-2 border-l border-slate-200 pl-3 dark:border-slate-800">
             <Avatar initials={session.initials} size="sm" />

@@ -16,6 +16,7 @@ import {
   LogOut,
   BookOpenCheck,
   Settings,
+  UserCog,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
@@ -23,9 +24,14 @@ import { gradingQueue, parentThreads, notifications, getStudentById } from "../.
 import Avatar from "../ui/Avatar";
 import AiAssistantPanel from "../tutor/AiAssistantPanel";
 import TopBar from "./TopBar";
-import StudentSidebar from "./StudentSidebar";
+import TutorStudentSidebar from "./TutorStudentSidebar";
 
 const navByRole = {
+  admin: [
+    { to: "/admin", label: "Tổng quan", icon: LayoutDashboard, end: true },
+    { to: "/admin/tutors", label: "Quản lý gia sư", icon: UserCog },
+    { to: "/admin/settings", label: "Cài đặt", icon: Settings },
+  ],
   tutor: [
     { to: "/tutor", label: "Tổng quan", icon: LayoutDashboard, end: true },
     { to: "/tutor/students", label: "Học sinh", icon: Users },
@@ -50,7 +56,7 @@ const tutorLibraryNav = [
   { to: "/tutor/library/materials", label: "Kho video & tài liệu", icon: Video },
 ];
 
-const roleLabel = { tutor: "Gia sư", student: "Học sinh" };
+const roleLabel = { admin: "Quản trị viên", tutor: "Gia sư", student: "Học sinh" };
 
 export default function AppShell() {
   return (
@@ -92,7 +98,7 @@ function AppShellInner() {
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3">
           {isStudentDetail ? (
-            <StudentSidebar student={student} />
+            <TutorStudentSidebar student={student} />
           ) : (
             <>
               {/* Main nav */}
