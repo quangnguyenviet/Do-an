@@ -58,7 +58,7 @@ export default function TutorStudentSidebar({ student }) {
       {/* Section label */}
       <div className="mb-1 px-3">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-          Hồ sơ học sinh
+          Quản lý học sinh
         </p>
       </div>
 
