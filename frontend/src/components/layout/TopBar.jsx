@@ -100,30 +100,30 @@ export default function TopBar() {
   }
 
   return (
-    <header className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-white px-6 py-2.5 dark:border-slate-800 dark:bg-slate-950">
+    <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-slate-900/50 px-6 py-2.5 backdrop-blur">
       {/* Breadcrumb */}
       <nav className="flex min-w-0 items-center gap-1.5 text-sm">
         {crumbs.map((crumb, i) => (
           <span key={i} className="flex items-center gap-1.5 min-w-0">
             {i > 0 && (
-              <ChevronRight size={14} className="shrink-0 text-slate-400" />
+              <ChevronRight size={14} className="shrink-0 text-slate-500" />
             )}
             {crumb.to ? (
               <a
                 href={crumb.to}
-                className="truncate text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition"
+                className="truncate text-slate-400 hover:text-white transition"
               >
                 {crumb.label}
               </a>
             ) : (
-              <span className="truncate font-medium text-slate-900 dark:text-slate-50">
+              <span className="truncate font-medium text-white">
                 {crumb.label}
               </span>
             )}
           </span>
         ))}
         {crumbs.length === 0 && (
-          <span className="text-slate-500 dark:text-slate-400">
+          <span className="text-slate-400">
             {isTutor ? "Gia sư" : "Học sinh"}
           </span>
         )}
@@ -145,7 +145,7 @@ export default function TopBar() {
         {/* Search */}
         <button
           title="Tìm kiếm"
-          className="rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300 transition"
+          className="rounded-md p-2 text-slate-400 hover:bg-white/10 hover:text-white transition"
         >
           <Search size={16} />
         </button>
@@ -158,7 +158,7 @@ export default function TopBar() {
           <button
             title="Thông báo"
             onClick={() => navigate("/tutor/notifications")}
-            className="relative rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300 transition"
+            className="relative rounded-md p-2 text-slate-400 hover:bg-white/10 hover:text-white transition"
           >
             <Bell size={16} />
             {unreadCount > 0 && (
@@ -171,20 +171,20 @@ export default function TopBar() {
 
         {/* Avatar + logout — for student (tutor already has this in sidebar) */}
         {!isTutor && session && (
-          <div className="flex items-center gap-2 border-l border-slate-200 pl-3 dark:border-slate-800">
+          <div className="flex items-center gap-2 border-l border-white/10 pl-3">
             <Avatar initials={session.initials} size="sm" />
             <div className="hidden min-w-0 sm:block">
-              <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-50">
+              <p className="truncate text-sm font-medium text-white">
                 {session.name}
               </p>
-              <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+              <p className="truncate text-xs text-slate-400">
                 {roleLabel[session.role]}
               </p>
             </div>
             <button
               onClick={handleLogout}
               title="Đăng xuất"
-              className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300 transition"
+              className="rounded-md p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition"
             >
               <LogOut size={15} />
             </button>

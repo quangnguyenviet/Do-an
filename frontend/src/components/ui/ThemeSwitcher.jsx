@@ -4,7 +4,7 @@ export default function ThemeSwitcher() {
   const { theme, setTheme, themes } = useTheme();
 
   return (
-    <div className="flex items-center gap-1.5 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
+    <div className="flex items-center gap-1.5 rounded-lg bg-white/10 p-1">
       {Object.entries(themes).map(([key, t]) => (
         <button
           key={key}
@@ -12,8 +12,8 @@ export default function ThemeSwitcher() {
           title={t.name}
           className={`h-5 w-5 rounded-full transition ${
             theme === key
-              ? `${t.dot} ring-2 ring-offset-1 ring-offset-slate-100 dark:ring-offset-slate-800`
-              : "bg-slate-300 dark:bg-slate-600"
+              ? `${t.dot} ring-2 ring-offset-1 ring-offset-slate-900`
+              : "bg-white/20"
           }`}
         />
       ))}
