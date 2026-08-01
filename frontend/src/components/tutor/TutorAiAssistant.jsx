@@ -92,13 +92,13 @@ export default function TutorAiAssistant({ student, nextSession, pathItems, focu
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2 border-b border-white/10 p-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-400">
+      <div className="flex items-center gap-2 border-b border-slate-200 p-3 dark:border-slate-800">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
           <Bot size={16} />
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-white">Trợ lý AI</p>
-          <p className="truncate text-xs text-slate-400">Soạn nháp lộ trình & bài tập</p>
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Trợ lý AI</p>
+          <p className="truncate text-xs text-slate-500 dark:text-slate-400">Soạn nháp lộ trình &amp; bài tập</p>
         </div>
       </div>
 
@@ -108,28 +108,28 @@ export default function TutorAiAssistant({ student, nextSession, pathItems, focu
             <div
               className={
                 m.role === "user"
-                  ? "ml-auto rounded-xl bg-cyan-500 px-3 py-2 text-sm text-white"
-                  : "rounded-xl bg-white/10 px-3 py-2 text-sm text-slate-200"
+                  ? "ml-auto rounded-xl bg-blue-600 px-3 py-2 text-sm text-white"
+                  : "rounded-xl bg-slate-100 px-3 py-2 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-300"
               }
             >
               {m.text}
             </div>
 
             {m.draft?.type === "path" && (
-              <div className="mt-2 space-y-2 rounded-lg border border-white/10 bg-white/5 p-3 text-xs">
-                <p className="font-medium text-slate-400">Bản nháp lộ trình</p>
+              <div className="mt-2 space-y-2 rounded-lg border border-slate-200 bg-white p-3 text-xs dark:border-slate-800 dark:bg-slate-900">
+                <p className="font-medium text-slate-500 dark:text-slate-400">Bản nháp lộ trình</p>
                 {m.draft.items.map((it) => (
-                  <div key={it.id} className="rounded-md bg-white/5 p-2">
-                    <p className="font-medium text-slate-100">
+                  <div key={it.id} className="rounded-md bg-slate-50 p-2 dark:bg-slate-800">
+                    <p className="font-medium text-slate-800 dark:text-slate-100">
                       Buổi {it.session}: {it.topic}
                     </p>
-                    <p className="mt-0.5 text-slate-400">
+                    <p className="mt-0.5 text-slate-500 dark:text-slate-400">
                       {it.phase} &middot; {it.skills.join(", ")}
                     </p>
                   </div>
                 ))}
                 {m.applied ? (
-                  <div className="flex items-center gap-1.5 text-emerald-400">
+                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 size={14} /> Đã thêm vào lộ trình
                   </div>
                 ) : onApplyPath ? (
@@ -143,19 +143,19 @@ export default function TutorAiAssistant({ student, nextSession, pathItems, focu
             )}
 
             {m.draft?.type === "exercise" && (
-              <div className="mt-2 space-y-2 rounded-lg border border-white/10 bg-white/5 p-3 text-xs">
-                <p className="font-medium text-slate-400">
+              <div className="mt-2 space-y-2 rounded-lg border border-slate-200 bg-white p-3 text-xs dark:border-slate-800 dark:bg-slate-900">
+                <p className="font-medium text-slate-500 dark:text-slate-400">
                   Bản nháp bài tập &middot; {m.draft.exercise.skill} &middot; {m.draft.exercise.difficulty}
                 </p>
-                <p className="text-slate-400">
+                <p className="text-slate-500 dark:text-slate-400">
                   Gắn với:{" "}
-                  <span className="font-medium text-slate-200">
+                  <span className="font-medium text-slate-700 dark:text-slate-200">
                     {m.draft.exercise.sessionLabel ?? "Chưa gắn buổi học"}
                   </span>
                 </p>
                 <div className="max-h-32 space-y-1.5 overflow-y-auto">
                   {m.draft.exercise.questions.slice(0, 3).map((q, i) => (
-                    <p key={i} className="rounded-md bg-white/5 p-2 text-slate-300">
+                    <p key={i} className="rounded-md bg-slate-50 p-2 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                       {q.prompt}
                     </p>
                   ))}
@@ -164,7 +164,7 @@ export default function TutorAiAssistant({ student, nextSession, pathItems, focu
                   )}
                 </div>
                 {m.applied ? (
-                  <div className="flex items-center gap-1.5 text-emerald-400">
+                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 size={14} /> Đã thêm vào danh sách bài tập
                   </div>
                 ) : onApplyExercise ? (
@@ -186,7 +186,7 @@ export default function TutorAiAssistant({ student, nextSession, pathItems, focu
         )}
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="border-t border-slate-200 dark:border-slate-800">
         {chips.length > 0 && (
           <div className="flex flex-wrap gap-1.5 px-3 pt-3">
             {chips.map((c) => (
@@ -195,7 +195,7 @@ export default function TutorAiAssistant({ student, nextSession, pathItems, focu
                 type="button"
                 onClick={() => handleChipClick(c)}
                 disabled={thinking}
-                className="rounded-full border border-white/10 px-2.5 py-1 text-xs font-medium text-slate-300 transition hover:border-cyan-400 hover:text-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:border-blue-300 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-300 dark:hover:text-blue-400"
               >
                 {c.label}
               </button>
@@ -214,7 +214,7 @@ export default function TutorAiAssistant({ student, nextSession, pathItems, focu
             }}
             placeholder="VD: Tạo 2 buổi tiếp theo tập trung Writing..."
             rows={2}
-            className="flex-1 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 placeholder:text-slate-500"
+            className="flex-1 resize-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:ring-blue-950"
           />
           <Button size="sm" onClick={handleSend} disabled={thinking} className="shrink-0">
             <Send size={14} />

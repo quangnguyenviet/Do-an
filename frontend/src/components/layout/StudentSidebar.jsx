@@ -19,7 +19,7 @@ export default function StudentSidebar({ student }) {
       {/* Back button */}
       <NavLink
         to="/tutor/students"
-        className="group flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition"
+        className="group flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/80 transition"
       >
         <ArrowLeft size={16} className="transition group-hover:-translate-x-0.5" strokeWidth={1.75} />
         <span>Danh sách học sinh</span>
@@ -27,14 +27,14 @@ export default function StudentSidebar({ student }) {
 
       {/* Student profile card */}
       {student && (
-        <div className="mx-1 mt-3 mb-4 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-4 ring-1 ring-cyan-500/20">
+        <div className="mx-1 mt-3 mb-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 p-4 dark:from-blue-950/40 dark:to-indigo-950/40 ring-1 ring-blue-200/50 dark:ring-blue-800/30">
           <div className="flex items-center gap-3.5">
             <Avatar initials={student.initials} size="md" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-white">
+              <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-50">
                 {student.name}
               </p>
-              <p className="truncate text-xs text-slate-400">
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">
                 {student.level} &middot; {student.goal}
               </p>
             </div>
@@ -42,13 +42,13 @@ export default function StudentSidebar({ student }) {
 
           {/* Progress bar */}
           <div className="mt-3 flex items-center gap-2.5">
-            <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div className="flex-1 h-1.5 rounded-full bg-white/70 dark:bg-slate-800/70 overflow-hidden">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-500"
                 style={{ width: `${student.overallProgress}%` }}
               />
             </div>
-            <span className="shrink-0 text-xs font-semibold tabular-nums text-cyan-400">
+            <span className="shrink-0 text-xs font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">
               {student.overallProgress}%
             </span>
           </div>
@@ -57,7 +57,7 @@ export default function StudentSidebar({ student }) {
 
       {/* Section label */}
       <div className="mb-1 px-3">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
           Hồ sơ học sinh
         </p>
       </div>
@@ -74,8 +74,8 @@ export default function StudentSidebar({ student }) {
               className={clsx(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
                 isActive
-                  ? "bg-white/10 text-cyan-300 ring-1 ring-cyan-500/30"
-                  : "text-slate-300 hover:bg-white/5 hover:text-white"
+                  ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-200 dark:bg-slate-800 dark:text-blue-300 dark:ring-blue-800/50"
+                  : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900/60"
               )}
             >
               <item.icon
@@ -83,7 +83,7 @@ export default function StudentSidebar({ student }) {
                 strokeWidth={isActive ? 2 : 1.75}
                 className={clsx(
                   "shrink-0 transition",
-                  isActive ? "text-cyan-400" : "text-slate-500"
+                  isActive ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500"
                 )}
               />
               <span>{item.label}</span>
