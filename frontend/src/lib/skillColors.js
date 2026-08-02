@@ -16,3 +16,6 @@ const FALLBACK_TONE = "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-s
 export function skillToneClass(skill) {
   return SKILL_TONES[skill] || FALLBACK_TONE;
 }
+
+// Fixed display order shared by every skill-series chart (line, radar, ...)
+export const SKILL_ORDER = Object.keys(SKILL_TONES);

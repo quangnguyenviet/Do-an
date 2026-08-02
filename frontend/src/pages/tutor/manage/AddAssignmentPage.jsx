@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Plus, Trash2, Sparkles, Check, Library } from "lucide-react";
 import { skillList, exerciseBank } from "../../../data/mockData";
 import Card from "../../../components/ui/Card";
@@ -28,12 +28,14 @@ const inputClass =
 export default function AddAssignmentPage() {
   const navigate = useNavigate();
   const { student, pathItems, setExercisesList } = useOutletContext();
+  const [searchParams] = useSearchParams();
+  const presetSkill = searchParams.get("skill");
 
   const [step, setStep] = useState(1);
   const [saveToLibrary, setSaveToLibrary] = useState(false);
   const [form, setForm] = useState({
     title: "",
-    skill: skillList[0],
+    skill: presetSkill && skillList.includes(presetSkill) ? presetSkill : skillList[0],
     difficulty: "Trung bình",
     sessionId: "",
   });
