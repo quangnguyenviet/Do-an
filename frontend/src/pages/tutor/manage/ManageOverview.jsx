@@ -102,8 +102,13 @@ export default function ManageOverview() {
           <h3 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Hồ sơ năng lực hiện tại</h3>
           <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
             Điểm từng kỹ năng ở tuần gần nhất — hình càng lệch, kỹ năng càng mất cân đối.
+            {student.progressHistory.length > 1 && " Viền đứt mờ là điểm ở tuần đầu tiên, để so sánh mức tiến bộ."}
           </p>
-          <CompetencyRadar scores={student.progressHistory[student.progressHistory.length - 1] ?? {}} height={240} />
+          <CompetencyRadar
+            scores={student.progressHistory[student.progressHistory.length - 1] ?? {}}
+            baselineScores={student.progressHistory.length > 1 ? student.progressHistory[0] : undefined}
+            height={240}
+          />
         </Card>
       </div>
     </div>
