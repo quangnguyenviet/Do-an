@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Search, X, Check } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, X, Check, UserCheck, UserX } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import PageHeader from "../../components/ui/PageHeader";
 import Card from "../../components/ui/Card";
@@ -46,15 +46,19 @@ export default function TutorManagement() {
   const { tutorList, addTutor, updateTutor, removeTutor } = useAuth();
 
   const [query, setQuery] = useState("");
+  const [statusTab, setStatusTab] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm());
 
   const filtered = tutorList.filter(
     (t) =>
-      t.name.toLowerCase().includes(query.toLowerCase()) ||
-      t.email.toLowerCase().includes(query.toLowerCase()) ||
-      t.specialization.some((s) => s.toLowerCase().includes(query.toLowerCase()))
+      (statusTab === "all" || t.status === statusTab) &&
+      (
+        t.name.toLowerCase().includes(query.toLowerCase()) ||
+        t.email.toLowerCase().includes(query.toLowerCase()) ||
+        t.specialization.some((s) => s.toLowerCase().includes(query.toLowerCase()))
+      )
   );
 
   function resetForm() {
@@ -124,6 +128,33 @@ export default function TutorManagement() {
           </Button>
         }
       />
+
+      {/* Status tab filter */}
+      <div className="mb-4 flex flex-wrap gap-2">
+        {[
+          { key: "all",      label: "Tất cả" },
+          { key: "active",   label: "Đang hoạt động" },
+          { key: "pending",  label: "Chờ duyệt" },
+          { key: "inactive", label: "Ngưng" },
+        ].map((opt) => (
+          <button
+            key={opt.key}
+            onClick={() => setStatusTab(opt.key)}
+            className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+              statusTab === opt.key
+                ? "border-blue-600 bg-blue-600 text-white"
+                : "border-slate-200 text-slate-600 hover:border-blue-300 dark:border-slate-700 dark:text-slate-300"
+            }`}
+          >
+            {opt.label}
+            {opt.key !== "all" && (
+              <span className="ml-1.5 tabular-nums">
+                ({tutorList.filter((t) => t.status === opt.key).length})
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
 
       {/* Search */}
       <div className="mb-4 relative max-w-sm">
@@ -263,6 +294,24 @@ export default function TutorManagement() {
               <div className="flex shrink-0 items-center gap-3">
                 <span className="text-xs text-slate-400">{t.studentsCount} học sinh</span>
                 <div className="flex items-center gap-1">
+                  {t.status === "pending" && (
+                    <>
+                      <button
+                        onClick={() => updateTutor(t.id, { status: "active" })}
+                        title="Duyệt"
+                        className="rounded-md p-1.5 text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 dark:hover:bg-emerald-950 dark:hover:text-emerald-400"
+                      >
+                        <UserCheck size={15} />
+                      </button>
+                      <button
+                        onClick={() => updateTutor(t.id, { status: "inactive" })}
+                        title="Từ chối"
+                        className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-rose-950 dark:hover:text-rose-400"
+                      >
+                        <UserX size={15} />
+                      </button>
+                    </>
+                  )}
                   <button
                     onClick={() => handleEdit(t)}
                     title="Chỉnh sửa"

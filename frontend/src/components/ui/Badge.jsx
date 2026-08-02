@@ -8,6 +8,7 @@ const tones = {
   amber: "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
   rose: "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
   slate: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
+  violet: "bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-300",
 };
 
 // Pass `skill` (e.g. "Viết") instead of `tone` to color-code by skill rather

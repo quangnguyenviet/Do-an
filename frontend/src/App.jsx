@@ -6,6 +6,10 @@ import LoginPage from "./pages/LoginPage";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import TutorManagement from "./pages/admin/TutorManagement";
+import StudentManagement from "./pages/admin/StudentManagement";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminMaterials from "./pages/admin/AdminMaterials";
+import AdminLogs from "./pages/admin/AdminLogs";
 import TutorDashboard from "./pages/tutor/TutorDashboard";
 import StudentsList from "./pages/tutor/StudentsList";
 import StudentDetail from "./pages/tutor/StudentDetail";
@@ -68,6 +72,10 @@ export default function App() {
         >
           <Route index element={<AdminDashboard />} />
           <Route path="tutors" element={<TutorManagement />} />
+          <Route path="students" element={<StudentManagement />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="materials" element={<AdminMaterials />} />
+          <Route path="logs" element={<AdminLogs />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
