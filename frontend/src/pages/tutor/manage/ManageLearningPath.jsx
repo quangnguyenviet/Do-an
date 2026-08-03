@@ -401,7 +401,6 @@ export default function ManageLearningPath({
                       <p className="text-sm font-medium text-slate-900 dark:text-slate-50">
                         Buổi {item.session}: {item.topic}
                       </p>
-                      <span className="text-xs text-slate-400">{item.date}</span>
                     </div>
                     <div className="mt-1.5 flex flex-wrap items-center gap-1">
                       {item.skills.map((sk) => (
@@ -486,7 +485,7 @@ export default function ManageLearningPath({
                       )}
                     </div>
                     <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
-                      {selectedSession.phase} &middot; {selectedSession.date}
+                      {selectedSession.phase}
                     </p>
                   </div>
                 </div>
