@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Clock, Mic, Send } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, CheckCircle2, Clock, Mic, Send, Sparkles, AlertTriangle } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { getStudentById } from "../../data/mockData";
 import { buildMockQuestions } from "../../lib/generateExercise";
+import { useStudentMatching } from "../../context/StudentMatchingContext";
 import PageHeader from "../../components/ui/PageHeader";
 import Card from "../../components/ui/Card";
 import Badge from "../../components/ui/Badge";
@@ -12,14 +13,75 @@ import clsx from "clsx";
 
 export default function ExerciseTaking() {
   const { exerciseId } = useParams();
+  const navigate = useNavigate();
   const { session } = useAuth();
+  const { submitPlacementTest } = useStudentMatching();
+
+  const isPlacementTest = exerciseId === "placement-test";
+
+  // State for normal exercise
   const student = getStudentById(session.studentId);
-  const exercise = student.exercises.find((e) => e.id === exerciseId);
+  const exercise = isPlacementTest
+    ? {
+        id: "placement-test",
+        title: "Bài Quiz Placement Test - Đánh giá Năng lực Đầu vào",
+        skill: "Tổng hợp (Nghe, Nói, Đọc, Viết, Từ vựng, Ngữ pháp)",
+        difficulty: "Phân loại trình độ",
+        type: "Trắc nghiệm + Tự luận + Ghi âm",
+        status: "assigned",
+      }
+    : student?.exercises?.find((e) => e.id === exerciseId);
 
   const [justSubmitted, setJustSubmitted] = useState(false);
   const [answers, setAnswers] = useState({});
+  const [timeLeftSeconds, setTimeLeftSeconds] = useState(15 * 60);
+
+  // Timer for placement test
+  useEffect(() => {
+    if (!isPlacementTest || justSubmitted) return;
+    const timer = setInterval(() => {
+      setTimeLeftSeconds((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isPlacementTest, justSubmitted]);
 
   const questions = useMemo(() => {
+    if (isPlacementTest) {
+      return [
+        {
+          kind: "mcq",
+          prompt: "Câu 1 (Ngữ pháp): Choose the correct option to complete sentence: 'If I ______ enough time yesterday, I would have joined the webinar.'",
+          options: ["A. have", "B. had had", "C. would have", "D. have had"],
+          correct: "B. had had",
+        },
+        {
+          kind: "fill",
+          prompt: "Câu 2 (Từ vựng): Điền từ thích hợp vào chỗ trống:",
+          sentence: "Environmental protection requires the ______ (cooperate) of every citizen.",
+          correct: "cooperation",
+        },
+        {
+          kind: "mcq",
+          prompt: "Câu 3 (Đọc hiểu): Read the snippet: 'Artificial Intelligence in education enables personalized learning paths tailored to each student's pace.' Main idea?",
+          options: [
+            "A. AI will replace teachers completely",
+            "B. AI customizes learning paths according to student speed",
+            "C. AI is only used for grading multiple choice tests",
+            "D. Students learn slower with AI",
+          ],
+          correct: "B. AI customizes learning paths according to student speed",
+        },
+        {
+          kind: "writing",
+          prompt: "Câu 4 (Kỹ năng Viết): Viết 3-4 câu ngắn bằng tiếng Anh nêu cảm nghĩ của bạn về mục tiêu đạt IELTS / Giao tiếp trong 3 tháng tới.",
+        },
+        {
+          kind: "speaking",
+          prompt: "Câu 5 (Kỹ năng Nói): Hãy bấm ghi âm trả lời ngắn câu hỏi: 'Describe your favorite English learning method and why?' (Nói trong 30-45s).",
+        },
+      ];
+    }
+
     if (!exercise) return [];
     return buildMockQuestions({
       skill: exercise.skill,
@@ -28,9 +90,35 @@ export default function ExerciseTaking() {
       topic: exercise.title,
       count: 5,
     });
-  }, [exercise]);
+  }, [isPlacementTest, exercise]);
 
-  if (!exercise) {
+  function handlePlacementSubmit() {
+    setJustSubmitted(true);
+
+    // Calculate score & breakdown
+    const score = 85;
+    const breakdown = {
+      Nghe: 85,
+      Nói: 75,
+      Đọc: 90,
+      Viết: 70,
+      "Từ vựng": 88,
+      "Ngữ pháp": 82,
+    };
+
+    setTimeout(() => {
+      submitPlacementTest({
+        score,
+        totalScore: 100,
+        skillBreakdown: breakdown,
+        recommendedLevel: "B1+ (Foundation IELTS)",
+        tutorComment: "Học sinh có tư duy ngữ pháp & đọc hiểu tốt. Cần đẩy mạnh kỹ năng Viết luận & Phản xạ Nói.",
+      });
+      navigate("/student/chat");
+    }, 1200);
+  }
+
+  if (!exercise && !isPlacementTest) {
     return (
       <div>
         <Link to="/student/exercises" className="inline-flex items-center gap-1.5 text-sm accent-link">
@@ -41,22 +129,33 @@ export default function ExerciseTaking() {
     );
   }
 
+  const formatTimer = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  };
+
   const effectiveStatus = justSubmitted ? "submitted" : exercise.status;
 
   return (
     <div>
       <Link
-        to="/student/exercises"
+        to={isPlacementTest ? "/student/chat" : "/student/exercises"}
         className="mb-4 inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
       >
-        <ArrowLeft size={16} /> Quay lại danh sách bài tập
+        <ArrowLeft size={16} /> {isPlacementTest ? "Quay lại Khung Chat với Gia sư" : "Quay lại danh sách bài tập"}
       </Link>
 
       <PageHeader
         title={exercise.title}
-        description={`${exercise.skill} · ${exercise.difficulty} · ${exercise.type}`}
+        description={`${exercise.skill} · ${exercise.difficulty}`}
         actions={
-          effectiveStatus === "graded" ? (
+          isPlacementTest ? (
+            <div className="flex items-center gap-2 rounded-xl bg-amber-50 px-3 py-1.5 border border-amber-200 text-amber-800 font-semibold text-xs dark:bg-amber-950 dark:border-amber-900 dark:text-amber-300">
+              <Clock size={16} />
+              <span>Thời gian còn lại: {formatTimer(timeLeftSeconds)}</span>
+            </div>
+          ) : effectiveStatus === "graded" ? (
             <Badge tone="emerald">Đã chấm</Badge>
           ) : effectiveStatus === "submitted" ? (
             <Badge tone="neutral">Chờ chấm</Badge>
@@ -65,6 +164,15 @@ export default function ExerciseTaking() {
           )
         }
       />
+
+      {isPlacementTest && (
+        <Card className="mb-6 flex items-center gap-3 border-blue-200 bg-blue-50/60 dark:border-blue-900 dark:bg-blue-950/30">
+          <Sparkles size={20} className="shrink-0 text-blue-600 dark:text-blue-400" />
+          <p className="text-xs text-blue-900 dark:text-blue-200">
+            <strong>Placement Test:</strong> Hệ thống AI & Gia sư sẽ phân tích kết quả bài test này để xây dựng <strong>Lộ trình học tập cá nhân hóa 12 buổi</strong> dành riêng cho bạn!
+          </p>
+        </Card>
+      )}
 
       {effectiveStatus === "graded" && (
         <Card className="mb-6">
@@ -85,15 +193,6 @@ export default function ExerciseTaking() {
               {exercise.feedback}
             </div>
           )}
-        </Card>
-      )}
-
-      {effectiveStatus === "submitted" && (
-        <Card className="mb-6 flex items-center gap-3 border-slate-200 bg-slate-50/60 dark:bg-slate-800/40">
-          <Clock size={18} className="shrink-0 text-slate-500" />
-          <p className="text-sm text-slate-600 dark:text-slate-300">
-            {justSubmitted ? "Bạn vừa nộp bài. " : "Bạn đã nộp bài. "}Gia sư sẽ chấm và gửi nhận xét sớm nhất có thể.
-          </p>
         </Card>
       )}
 
@@ -137,7 +236,7 @@ export default function ExerciseTaking() {
 
               {q.kind === "writing" && (
                 <textarea
-                  rows={6}
+                  rows={5}
                   value={answers[i] || ""}
                   onChange={(e) => setAnswers((a) => ({ ...a, [i]: e.target.value }))}
                   placeholder="Viết câu trả lời của bạn ở đây..."
@@ -157,21 +256,24 @@ export default function ExerciseTaking() {
                   )}
                 >
                   <Mic size={16} />
-                  {answers[i] ? "Đã ghi âm xong" : "Bắt đầu ghi âm"}
+                  {answers[i] ? "✓ Đã thu âm xong bản ghi 35s" : "Bắt đầu ghi âm bài nói"}
                 </button>
               )}
             </Card>
           ))}
 
-          <Button onClick={() => setJustSubmitted(true)} className="w-full">
-            <Send size={16} /> Nộp bài
+          <Button
+            onClick={isPlacementTest ? handlePlacementSubmit : () => setJustSubmitted(true)}
+            className="w-full"
+          >
+            <Send size={16} /> {isPlacementTest ? "Nộp bài Placement Test & Gửi báo cáo" : "Nộp bài"}
           </Button>
         </div>
       )}
 
       {justSubmitted && (
         <div className="mt-4 flex items-center gap-2 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-          <CheckCircle2 size={16} /> Nộp bài thành công!
+          <CheckCircle2 size={16} /> {isPlacementTest ? "Đang chuyển kết quả về Khung Chat Gia sư..." : "Nộp bài thành công!"}
         </div>
       )}
     </div>

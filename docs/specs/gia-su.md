@@ -30,7 +30,7 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 
 | Mã | Chức năng | Mô tả | Trạng thái prototype |
 |---|---|---|---|
-| TS-01 | Khai báo hồ sơ cá nhân | Môn/kỹ năng có thể dạy, trình độ (giáo viên/sinh viên), kinh nghiệm, bằng cấp/chứng chỉ | ✅ TutorProfile |
+| TS-01 | Khai báo hồ sơ cá nhân | Môn/kỹ năng dạy, trình độ (giáo viên/sinh viên), kinh nghiệm, lý lịch học tập (năm sinh, quê quán, nơi ở, trường Cấp 3, điểm thi THPT/ĐH, GPA) & giải thưởng khen thưởng | ✅ `TutorProfile.jsx` |
 | TS-02 | Cập nhật hồ sơ | Sửa thông tin năng lực bất kỳ lúc nào | ✅ TutorProfile (chỉnh sửa trực tiếp trên trang, chưa lưu bền vững) |
 | TS-03 | Khai báo khu vực & lịch rảnh | Khu vực có thể nhận lớp, khung giờ rảnh — dùng cho Admin tra cứu | ✅ TutorProfile |
 

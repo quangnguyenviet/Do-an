@@ -18,39 +18,18 @@ import {
   Settings,
   UserCog,
   IdCard,
+  Search,
+  Lock,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
+import { StudentMatchingProvider, useStudentMatching } from "../../context/StudentMatchingContext";
 import { gradingQueue, parentThreads, notifications, getStudentById } from "../../data/mockData";
 import Avatar from "../ui/Avatar";
 import AiAssistantPanel from "../tutor/AiAssistantPanel";
 import TopBar from "./TopBar";
 import TutorStudentSidebar from "./TutorStudentSidebar";
-
-const navByRole = {
-  admin: [
-    { to: "/admin", label: "Tổng quan", icon: LayoutDashboard, end: true },
-    { to: "/admin/tutors", label: "Quản lý gia sư", icon: UserCog },
-    { to: "/admin/settings", label: "Cài đặt", icon: Settings },
-  ],
-  tutor: [
-    { to: "/tutor", label: "Tổng quan", icon: LayoutDashboard, end: true },
-    { to: "/tutor/students", label: "Học sinh", icon: Users },
-    { to: "/tutor/grading", label: "Chấm bài", icon: ClipboardCheck, badge: () => gradingQueue.length },
-    { to: "/tutor/inbox", label: "Inbox", icon: MessageCircle, badge: () => parentThreads.filter((t) => t.status === "pending").length },
-    { to: "/tutor/notifications", label: "Notification", icon: Bell, badge: () => notifications.filter((n) => !n.read).length },
-    { to: "/tutor/profile", label: "Hồ sơ năng lực", icon: IdCard },
-    { to: "/tutor/settings", label: "Cài đặt", icon: Settings },
-  ],
-  student: [
-    { to: "/student", label: "Tổng quan", icon: LayoutDashboard, end: true },
-    { to: "/student/schedule", label: "Lịch học", icon: CalendarDays },
-    { to: "/student/exercises", label: "Bài tập & kiểm tra", icon: NotebookPen },
-    { to: "/student/progress", label: "Kết quả & tiến bộ", icon: LineChart },
-    { to: "/student/materials", label: "Tài liệu & video", icon: FolderOpen },
-    { to: "/student/settings", label: "Cài đặt", icon: Settings },
-  ],
-};
 
 const tutorLibraryNav = [
   { to: "/tutor/library/paths", label: "Kho lộ trình", icon: Map },
@@ -62,9 +41,11 @@ const roleLabel = { admin: "Quản trị viên", tutor: "Gia sư", student: "H�
 
 export default function AppShell() {
   return (
-    <AiAssistantProvider>
-      <AppShellInner />
-    </AiAssistantProvider>
+    <StudentMatchingProvider>
+      <AiAssistantProvider>
+        <AppShellInner />
+      </AiAssistantProvider>
+    </StudentMatchingProvider>
   );
 }
 
@@ -73,10 +54,57 @@ function AppShellInner() {
   const navigate = useNavigate();
   const location = useLocation();
   const { studentId } = useParams();
-  const items = navByRole[session.role] || [];
-  const isTutor = session.role === "tutor";
   const { open: chatOpen } = useAiAssistant();
+  
+  let studentMatching = null;
+  try {
+    studentMatching = useStudentMatching();
+  } catch {
+    studentMatching = null;
+  }
+
+  const isTutor = session?.role === "tutor";
+  const isStudent = session?.role === "student";
+  const isAdmin = session?.role === "admin";
   const showAssistant = isTutor;
+
+  // Build dynamic nav items
+  let items = [];
+  if (isAdmin) {
+    items = [
+      { to: "/admin", label: "Tổng quan", icon: LayoutDashboard, end: true },
+      { to: "/admin/tutors", label: "Quản lý gia sư", icon: UserCog },
+      { to: "/admin/settings", label: "Cài đặt", icon: Settings },
+    ];
+  } else if (isTutor) {
+    items = [
+      { to: "/tutor", label: "Tổng quan", icon: LayoutDashboard, end: true },
+      { to: "/tutor/students", label: "Học sinh", icon: Users },
+      { to: "/tutor/grading", label: "Chấm bài", icon: ClipboardCheck, badge: () => gradingQueue.length },
+      { to: "/tutor/inbox", label: "Inbox", icon: MessageCircle, badge: () => parentThreads.filter((t) => t.status === "pending").length },
+      { to: "/tutor/notifications", label: "Notification", icon: Bell, badge: () => notifications.filter((n) => !n.read).length },
+      { to: "/tutor/profile", label: "Hồ sơ năng lực", icon: IdCard },
+      { to: "/tutor/settings", label: "Cài đặt", icon: Settings },
+    ];
+  } else if (isStudent) {
+    const isMatched = studentMatching?.studentStatus === "MATCHED";
+
+    items = [
+      { to: "/student/marketplace", label: "Khám phá Gia sư", icon: Search },
+      {
+        to: "/student/chat",
+        label: "Hộp thư & Bài Test",
+        icon: MessageCircle,
+        badge: () => (studentMatching?.studentStatus === "WAITING_APPROVAL" ? "1" : null),
+      },
+      { to: "/student", label: "Tổng quan LMS", icon: LayoutDashboard, end: true, locked: !isMatched },
+      { to: "/student/schedule", label: "Lịch học", icon: CalendarDays, locked: !isMatched },
+      { to: "/student/exercises", label: "Bài tập & kiểm tra", icon: NotebookPen, locked: !isMatched },
+      { to: "/student/progress", label: "Kết quả & tiến bộ", icon: LineChart, locked: !isMatched },
+      { to: "/student/materials", label: "Tài liệu & video", icon: FolderOpen, locked: !isMatched },
+      { to: "/student/settings", label: "Cài đặt", icon: Settings },
+    ];
+  }
 
   // Detect if we're on a student detail page
   const isStudentDetail = isTutor && studentId && location.pathname.includes(`/tutor/students/${studentId}`);
@@ -103,30 +131,53 @@ function AppShellInner() {
             <TutorStudentSidebar student={student} />
           ) : (
             <>
+              {/* Section Header for Student */}
+              {isStudent && (
+                <p className="mb-1 px-3 pt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                  Adaptive Matching
+                </p>
+              )}
+
               {/* Main nav */}
-              {items.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.end}
-                  className={({ isActive }) =>
-                    clsx(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
-                      isActive
-                        ? "accent-bg-light accent-text-dark dark:accent-bg-dark dark:accent-text-dark"
-                        : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-                    )
-                  }
-                >
-                  <item.icon size={18} strokeWidth={1.75} />
-                  <span className="flex-1">{item.label}</span>
-                  {item.badge?.() > 0 && (
-                    <span className="rounded-full bg-rose-100 px-1.5 py-0.5 text-[10px] font-semibold text-rose-600 dark:bg-rose-950 dark:text-rose-400">
-                      {item.badge()}
-                    </span>
-                  )}
-                </NavLink>
-              ))}
+              {items.map((item, idx) => {
+                // Divider before LMS items for student
+                const isLmsStart = isStudent && item.to === "/student";
+                return (
+                  <div key={item.to}>
+                    {isLmsStart && (
+                      <p className="mb-1 mt-4 px-3 pt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400 flex items-center justify-between">
+                        <span>LMS Cá nhân hóa</span>
+                        {item.locked && <Lock size={12} className="text-amber-500" />}
+                      </p>
+                    )}
+                    <NavLink
+                      to={item.to}
+                      end={item.end}
+                      className={({ isActive }) =>
+                        clsx(
+                          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
+                          isActive
+                            ? "accent-bg-light accent-text-dark dark:accent-bg-dark dark:accent-text-dark"
+                            : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
+                          item.locked && "opacity-60"
+                        )
+                      }
+                    >
+                      <item.icon size={18} strokeWidth={1.75} />
+                      <span className="flex-1">{item.label}</span>
+                      {item.locked ? (
+                        <Lock size={13} className="text-amber-500" />
+                      ) : (
+                        item.badge?.() && (
+                          <span className="rounded-full bg-rose-100 px-1.5 py-0.5 text-[10px] font-semibold text-rose-600 dark:bg-rose-950 dark:text-rose-400">
+                            {item.badge()}
+                          </span>
+                        )
+                      )}
+                    </NavLink>
+                  </div>
+                );
+              })}
 
               {/* Library section (tutor only) */}
               {isTutor && (
@@ -160,10 +211,10 @@ function AppShellInner() {
         {/* User footer */}
         <div className="border-t border-slate-200 p-3 dark:border-slate-800">
           <div className="flex items-center gap-3 rounded-lg px-2 py-2">
-            <Avatar initials={session.initials} size="sm" />
+            <Avatar initials={session?.initials} size="sm" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-50">{session.name}</p>
-              <p className="truncate text-xs text-slate-500 dark:text-slate-400">{roleLabel[session.role]}</p>
+              <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-50">{session?.name}</p>
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">{roleLabel[session?.role]}</p>
             </div>
             <button
               onClick={handleLogout}

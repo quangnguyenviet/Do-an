@@ -48,6 +48,16 @@ export default function TutorProfile() {
   const [level, setLevel] = useState(tutorProfile.qualificationLevel);
   const [experienceYears, setExperienceYears] = useState(tutorProfile.experienceYears);
   const [bio, setBio] = useState(tutorProfile.bio);
+  
+  // Academic Background & Credentials state
+  const [birthYear, setBirthYear] = useState(tutorProfile.birthYear || "2001 (25 tuổi)");
+  const [hometown, setHometown] = useState(tutorProfile.hometown || "Nam Định");
+  const [currentAddress, setCurrentAddress] = useState(tutorProfile.currentAddress || "Quận 3, TP.HCM");
+  const [university, setUniversity] = useState(tutorProfile.university || "Đại học Sư Phạm TP.HCM - Ngôn ngữ Anh");
+  const [highSchool, setHighSchool] = useState(tutorProfile.highSchool || "THPT Chuyên Lê Hồng Phong (Nam Định)");
+  const [graduationScore, setGraduationScore] = useState(tutorProfile.graduationScore || "28.5 điểm khối D01");
+  const [academicRank, setAcademicRank] = useState(tutorProfile.academicRank || "Xuất sắc (GPA 3.85/4.0)");
+
   const [certificates, setCertificates] = useState(tutorProfile.certificates);
   const [serviceAreas, setServiceAreas] = useState(tutorProfile.serviceAreas);
   const [availability, setAvailability] = useState(tutorProfile.availability);
@@ -129,6 +139,113 @@ export default function TutorProfile() {
                 {s}
               </button>
             ))}
+          </div>
+        </Card>
+
+        <Card>
+          <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Lý lịch Học tập &amp; Xuất thân Sinh viên / Giáo viên</h2>
+          <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
+            Thông tin thực tế (Năm sinh, Quê quán, Điểm tốt nghiệp THPT/ĐH, GPA) giúp Phụ huynh &amp; Học sinh thêm tin tưởng.
+          </p>
+
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Năm sinh / Tuổi</label>
+              <input
+                type="text"
+                value={birthYear}
+                onChange={(e) => {
+                  setBirthYear(e.target.value);
+                  setSaved(false);
+                }}
+                placeholder="VD: 2002 (24 tuổi)"
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Quê quán</label>
+              <input
+                type="text"
+                value={hometown}
+                onChange={(e) => {
+                  setHometown(e.target.value);
+                  setSaved(false);
+                }}
+                placeholder="VD: Nam Định"
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Nơi ở hiện tại</label>
+              <input
+                type="text"
+                value={currentAddress}
+                onChange={(e) => {
+                  setCurrentAddress(e.target.value);
+                  setSaved(false);
+                }}
+                placeholder="VD: Quận 3, TP.HCM"
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Trường THPT Cấp 3</label>
+              <input
+                type="text"
+                value={highSchool}
+                onChange={(e) => {
+                  setHighSchool(e.target.value);
+                  setSaved(false);
+                }}
+                placeholder="VD: THPT Chuyên Lê Hồng Phong"
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Trường ĐH &amp; Chuyên ngành</label>
+              <input
+                type="text"
+                value={university}
+                onChange={(e) => {
+                  setUniversity(e.target.value);
+                  setSaved(false);
+                }}
+                placeholder="VD: ĐH Ngoại Thương - Ngôn ngữ Anh"
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Điểm tốt nghiệp THPT / Thi ĐH</label>
+              <input
+                type="text"
+                value={graduationScore}
+                onChange={(e) => {
+                  setGraduationScore(e.target.value);
+                  setSaved(false);
+                }}
+                placeholder="VD: 28.5 điểm khối D01"
+                className={inputClass}
+              />
+            </div>
+
+            <div className="sm:col-span-2 md:col-span-3">
+              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Xếp loại Học lực &amp; GPA Đại học</label>
+              <input
+                type="text"
+                value={academicRank}
+                onChange={(e) => {
+                  setAcademicRank(e.target.value);
+                  setSaved(false);
+                }}
+                placeholder="VD: Xuất sắc (GPA 3.85/4.0)"
+                className={inputClass}
+              />
+            </div>
           </div>
         </Card>
 
