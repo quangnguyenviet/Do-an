@@ -4,7 +4,7 @@
 
 ### 1.1. Quy trình vận hành hiện tại (thủ công)
 
-Một trung tâm/cá nhân vận hành dịch vụ gia sư tiếng Anh theo mô hình 1-1 hoặc nhóm nhỏ hiện đang xử lý toàn bộ quy trình kết nối phụ huynh — gia sư một cách thủ công, gồm 5 bước:
+Một trung tâm/cá nhân vận hành dịch vụ gia sư tiếng Anh theo mô hình 1-1 hiện đang xử lý toàn bộ quy trình kết nối phụ huynh — gia sư gồm 5 bước:
 
 1. **Phụ huynh liên hệ và đăng ký nhu cầu**: qua điện thoại, đến trực tiếp văn phòng, hoặc website/nền tảng trực tuyến. Trung tâm thu thập thủ công các thông tin: môn học/lớp của con, lịch học mong muốn (số buổi/tuần, khung giờ), địa chỉ, mục tiêu học tập (điểm yếu, mục tiêu điểm số, kỳ thi sắp tới), yêu cầu đặc biệt với gia sư (giáo viên/sinh viên, giới tính, kinh nghiệm...).
 2. **Trung tâm tư vấn và tìm gia sư phù hợp**: nhân viên tư vấn, báo giá học phí tham khảo, rồi tra cứu thủ công (thường qua trí nhớ, Excel hoặc tin nhắn nội bộ) trong đội ngũ gia sư đã qua sàng lọc để tìm ứng viên phù hợp.
