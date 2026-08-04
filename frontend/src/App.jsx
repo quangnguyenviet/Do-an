@@ -17,6 +17,7 @@ import ManageMaterialsRoute from "./pages/tutor/manage/ManageMaterialsRoute";
 import TutorExerciseDetail from "./pages/tutor/TutorExerciseDetail";
 import ExerciseGenerator from "./pages/tutor/ExerciseGenerator";
 import GradingQueue from "./pages/tutor/GradingQueue";
+import ClassRequests from "./pages/tutor/ClassRequests";
 import ParentInbox from "./pages/tutor/ParentInbox";
 import Notifications from "./pages/tutor/Notifications";
 import LibraryPaths from "./pages/tutor/LibraryPaths";
@@ -98,6 +99,7 @@ export default function App() {
           </Route>
           <Route path="students/:studentId/exercises/:exerciseId" element={<TutorExerciseDetail />} />
           <Route path="exercise-generator" element={<ExerciseGenerator />} />
+          <Route path="requests" element={<ClassRequests />} />
           <Route path="grading" element={<GradingQueue />} />
           <Route path="inbox" element={<ParentInbox />} />
           <Route path="notifications" element={<Notifications />} />

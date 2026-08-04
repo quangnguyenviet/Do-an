@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ClipboardCheck, MessageCircle, CalendarClock, Sparkles, CheckCheck } from "lucide-react";
+import { ClipboardCheck, ClipboardList, MessageCircle, CalendarClock, Sparkles, CheckCheck } from "lucide-react";
 import { notifications as initialNotifications } from "../../data/mockData";
 import PageHeader from "../../components/ui/PageHeader";
 import Card from "../../components/ui/Card";
@@ -8,6 +8,7 @@ import Button from "../../components/ui/Button";
 import clsx from "clsx";
 
 const typeMeta = {
+  request: { icon: ClipboardList, tone: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-950" },
   grading: { icon: ClipboardCheck, tone: "text-amber-600 dark:text-amber-400", bg: "bg-amber-50 dark:bg-amber-950" },
   parent: { icon: MessageCircle, tone: "text-rose-600 dark:text-rose-400", bg: "bg-rose-50 dark:bg-rose-950" },
   schedule: { icon: CalendarClock, tone: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-950" },

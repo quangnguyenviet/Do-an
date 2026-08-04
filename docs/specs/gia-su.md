@@ -40,10 +40,10 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 
 | Mã | Chức năng | Mô tả | Trạng thái prototype |
 |---|---|---|---|
-| TC-01 | Nhận thông báo yêu cầu | Nhận thông báo khi Admin phân công yêu cầu từ phụ huynh | ⚠️ Một phần (Notifications chung) |
-| TC-02 | Xem chi tiết yêu cầu | Môn học, lịch mong muốn, địa chỉ/khu vực, mục tiêu học tập, yêu cầu đặc biệt | ⬜ Chưa có màn hình chuyên dụng |
-| TC-03 | Nhận lớp / từ chối | Xác nhận nhận lớp hoặc từ chối kèm lý do ngay trên hệ thống | ⬜ Chưa có màn hình chuyên dụng |
-| TC-04 | Theo dõi trạng thái yêu cầu | Các trạng thái: chờ dạy thử → đang dạy thử → đã nhận lớp chính thức | ⬜ Chưa có màn hình chuyên dụng |
+| TC-01 | Nhận thông báo yêu cầu | Nhận thông báo khi Admin phân công yêu cầu từ phụ huynh | ✅ Notifications (loại "request") + ClassRequests |
+| TC-02 | Xem chi tiết yêu cầu | Môn học, lịch mong muốn, địa chỉ/khu vực, mục tiêu học tập, yêu cầu đặc biệt | ✅ ClassRequests |
+| TC-03 | Nhận lớp / từ chối | Xác nhận nhận lớp hoặc từ chối kèm lý do ngay trên hệ thống | ✅ ClassRequests |
+| TC-04 | Theo dõi trạng thái yêu cầu | Các trạng thái: chờ dạy thử → đang dạy thử → đã nhận lớp chính thức | ✅ ClassRequests (dữ liệu mock, chuyển trạng thái thủ công — chưa gắn với lịch dạy thử thực ở mục 3.3) |
 
 ### 3.3. Dạy thử
 
@@ -112,7 +112,7 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 | Nhóm chức năng | Đã có màn hình | Chưa có / một phần |
 |---|---|---|
 | 3.1 Hồ sơ năng lực | ✅ TS-01 → TS-03 | — |
-| 3.2 Nhận & phản hồi yêu cầu | ⚠️ Thông báo chung | ⬜ TC-02 → TC-04 |
+| 3.2 Nhận & phản hồi yêu cầu | ✅ TC-01 → TC-04 (ClassRequests) | — |
 | 3.3 Dạy thử | — | ⬜ Toàn bộ (TT-01 → TT-03) |
 | 3.4 Nghĩa vụ tài chính | — | ⬜ Toàn bộ (TC-FIN-01 → 02) |
 | 3.5 Quản lý học sinh & lộ trình | ✅ TL-01 → TL-03 | — |
@@ -133,4 +133,4 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 
 - **AI assistant:** thay module mock (`frontend/src/lib/aiAssistant.js`, `generateExercise.js`) bằng API OpenAI-compatible thực khi có backend; giữ nguyên nguyên tắc "gia sư duyệt trước khi giao".
 - **Kênh Telegram:** luồng hỏi đáp phụ huynh (3.9) sẽ chuyển từ ParentInbox web sang tích hợp bot Telegram khi triển khai.
-- **Số hóa quy trình vận hành:** các nhóm 3.1, 3.2, 3.3, 3.4 là phần số hóa các bước 2-5 của quy trình vận hành. Đã có màn hình cho 3.1 (`TutorProfile`); 3.2, 3.3, 3.4 vẫn thiếu màn hình, cần ưu tiên bổ sung để hoàn thiện prototype Gia sư.
+- **Số hóa quy trình vận hành:** các nhóm 3.1, 3.2, 3.3, 3.4 là phần số hóa các bước 2-5 của quy trình vận hành. Đã có màn hình cho 3.1 (`TutorProfile`) và 3.2 (`ClassRequests`); 3.3, 3.4 vẫn thiếu màn hình, cần ưu tiên bổ sung để hoàn thiện prototype Gia sư.
