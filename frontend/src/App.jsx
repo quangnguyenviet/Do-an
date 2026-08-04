@@ -25,6 +25,9 @@ import LibraryExercises from "./pages/tutor/LibraryExercises";
 import LibraryMaterials from "./pages/tutor/LibraryMaterials";
 import TutorProfile from "./pages/tutor/TutorProfile";
 
+import StudentMarketplace from "./pages/student/StudentMarketplace";
+import StudentOnboarding from "./pages/student/StudentOnboarding";
+import StudentChat from "./pages/student/StudentChat";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentSchedule from "./pages/student/StudentSchedule";
 import StudentExercises from "./pages/student/StudentExercises";
@@ -43,6 +46,7 @@ function RequireRole({ role, children }) {
 function RootRedirect() {
   const { session } = useAuth();
   if (!session) return <Navigate to="/login" replace />;
+  if (session.role === "student") return <Navigate to="/student/marketplace" replace />;
   return <Navigate to={`/${session.role}`} replace />;
 }
 
@@ -56,76 +60,79 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<RootRedirect />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<RootRedirect />} />
 
-        <Route
-          path="/admin"
-          element={
-            <RequireRole role="admin">
-              <AppShell />
-            </RequireRole>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="tutors" element={<TutorManagement />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
+          <Route
+            path="/admin"
+            element={
+              <RequireRole role="admin">
+                <AppShell />
+              </RequireRole>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="tutors" element={<TutorManagement />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
 
-        <Route
-          path="/tutor"
-          element={
-            <RequireRole role="tutor">
-              <AppShell />
-            </RequireRole>
-          }
-        >
-          <Route index element={<TutorDashboard />} />
-          <Route path="students" element={<StudentsList />} />
-          <Route path="students/:studentId" element={<StudentDetailDefaultTab />} />
-          <Route path="students/:studentId/overview" element={<StudentDetail />}>
-            <Route index element={<ManageOverview />} />
+          <Route
+            path="/tutor"
+            element={
+              <RequireRole role="tutor">
+                <AppShell />
+              </RequireRole>
+            }
+          >
+            <Route index element={<TutorDashboard />} />
+            <Route path="students" element={<StudentsList />} />
+            <Route path="students/:studentId" element={<StudentDetailDefaultTab />} />
+            <Route path="students/:studentId/overview" element={<StudentDetail />}>
+              <Route index element={<ManageOverview />} />
+            </Route>
+            <Route path="students/:studentId/path" element={<StudentDetail />}>
+              <Route index element={<ManageLearningPathRoute />} />
+            </Route>
+            <Route path="students/:studentId/exercises" element={<StudentDetail />}>
+              <Route index element={<ManageAssignmentsRoute />} />
+              <Route path="add" element={<AddAssignmentPage />} />
+            </Route>
+            <Route path="students/:studentId/materials" element={<StudentDetail />}>
+              <Route index element={<ManageMaterialsRoute />} />
+            </Route>
+            <Route path="students/:studentId/exercises/:exerciseId" element={<TutorExerciseDetail />} />
+            <Route path="exercise-generator" element={<ExerciseGenerator />} />
+            <Route path="grading" element={<GradingQueue />} />
+            <Route path="inbox" element={<ParentInbox />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="library/paths" element={<LibraryPaths />} />
+            <Route path="library/paths/:templateId" element={<LibraryPathDetail />} />
+            <Route path="library/exercises" element={<LibraryExercises />} />
+            <Route path="library/materials" element={<LibraryMaterials />} />
+            <Route path="profile" element={<TutorProfile />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
-          <Route path="students/:studentId/path" element={<StudentDetail />}>
-            <Route index element={<ManageLearningPathRoute />} />
-          </Route>
-          <Route path="students/:studentId/exercises" element={<StudentDetail />}>
-            <Route index element={<ManageAssignmentsRoute />} />
-            <Route path="add" element={<AddAssignmentPage />} />
-          </Route>
-          <Route path="students/:studentId/materials" element={<StudentDetail />}>
-            <Route index element={<ManageMaterialsRoute />} />
-          </Route>
-          <Route path="students/:studentId/exercises/:exerciseId" element={<TutorExerciseDetail />} />
-          <Route path="exercise-generator" element={<ExerciseGenerator />} />
-          <Route path="grading" element={<GradingQueue />} />
-          <Route path="inbox" element={<ParentInbox />} />
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="library/paths" element={<LibraryPaths />} />
-          <Route path="library/paths/:templateId" element={<LibraryPathDetail />} />
-          <Route path="library/exercises" element={<LibraryExercises />} />
-          <Route path="library/materials" element={<LibraryMaterials />} />
-          <Route path="profile" element={<TutorProfile />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
 
-        <Route
-          path="/student"
-          element={
-            <RequireRole role="student">
-              <AppShell />
-            </RequireRole>
-          }
-        >
-          <Route index element={<StudentDashboard />} />
-          <Route path="schedule" element={<StudentSchedule />} />
-          <Route path="exercises" element={<StudentExercises />} />
-          <Route path="exercises/:exerciseId" element={<ExerciseTaking />} />
-          <Route path="progress" element={<StudentProgress />} />
-          <Route path="materials" element={<StudentMaterials />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="/student"
+            element={
+              <RequireRole role="student">
+                <AppShell />
+              </RequireRole>
+            }
+          >
+            <Route index element={<StudentDashboard />} />
+            <Route path="marketplace" element={<StudentMarketplace />} />
+            <Route path="onboarding" element={<StudentOnboarding />} />
+            <Route path="chat" element={<StudentChat />} />
+            <Route path="schedule" element={<StudentSchedule />} />
+            <Route path="exercises" element={<StudentExercises />} />
+            <Route path="exercises/:exerciseId" element={<ExerciseTaking />} />
+            <Route path="progress" element={<StudentProgress />} />
+            <Route path="materials" element={<StudentMaterials />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
     </ThemeProvider>
