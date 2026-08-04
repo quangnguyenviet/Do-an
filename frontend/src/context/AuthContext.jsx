@@ -17,6 +17,7 @@ export function AuthProvider({ children }) {
 
   // State quản lý danh sách gia sư — dùng cho module admin
   const [tutorList, setTutorList] = useState(() => [...tutors]);
+  const [studentList, setStudentList] = useState(() => [...students]);
 
   useEffect(() => {
     if (session) localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
@@ -55,6 +56,30 @@ export function AuthProvider({ children }) {
     setTutorList((prev) => prev.filter((t) => t.id !== id));
   }
 
+  // Admin CRUD helpers for students
+  function addStudent(newStudent) {
+    const id = `s-${Date.now()}`;
+    const initials = newStudent.name
+      .trim()
+      .split(/\s+/)
+      .slice(-2)
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase();
+    setStudentList((prev) => [
+      { ...newStudent, id, initials, overallProgress: 0, learningPath: [], exercises: [], progressHistory: [], materials: [] },
+      ...prev,
+    ]);
+  }
+
+  function updateStudent(id, patch) {
+    setStudentList((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)));
+  }
+
+  function removeStudent(id) {
+    setStudentList((prev) => prev.filter((s) => s.id !== id));
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -68,6 +93,11 @@ export function AuthProvider({ children }) {
         addTutor,
         updateTutor,
         removeTutor,
+        studentList,
+        setStudentList,
+        addStudent,
+        updateStudent,
+        removeStudent,
       }}
     >
       {children}

@@ -7,6 +7,7 @@ const toneText = {
   amber: "text-amber-600 dark:text-amber-400",
   rose: "text-rose-600 dark:text-rose-400",
   slate: "text-slate-600 dark:text-slate-400",
+  violet: "text-violet-600 dark:text-violet-400",
 };
 
 export default function StatCard({ icon: Icon, label, value, tone = "blue", hint }) {

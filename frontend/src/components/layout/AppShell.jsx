@@ -21,6 +21,8 @@ import {
   Search,
   Lock,
   Sparkles,
+  BarChart2,
+  Activity,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
@@ -72,9 +74,13 @@ function AppShellInner() {
   let items = [];
   if (isAdmin) {
     items = [
-      { to: "/admin", label: "Tổng quan", icon: LayoutDashboard, end: true },
-      { to: "/admin/tutors", label: "Quản lý gia sư", icon: UserCog },
-      { to: "/admin/settings", label: "Cài đặt", icon: Settings },
+      { to: "/admin",           label: "Tổng quan",         icon: LayoutDashboard, end: true },
+      { to: "/admin/tutors",    label: "Quản lý gia sư",    icon: UserCog },
+      { to: "/admin/students",  label: "Quản lý học sinh",  icon: Users },
+      { to: "/admin/analytics", label: "Báo cáo & Phân tích", icon: BarChart2 },
+      { to: "/admin/materials", label: "Kho tài liệu mẫu",   icon: BookOpenCheck },
+      { to: "/admin/logs",      label: "Nhật ký hoạt động",  icon: Activity },
+      { to: "/admin/settings",  label: "Cài đặt",            icon: Settings },
     ];
   } else if (isTutor) {
     items = [

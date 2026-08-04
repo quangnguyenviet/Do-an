@@ -253,6 +253,7 @@ export const students = [
     parentName: "Anh Nguyễn Văn Hùng",
     parentTelegram: "@hung_nguyen",
     joinedDate: "2026-02-10",
+    assignedTutorId: "t1",
     overallProgress: 68,
     weakSkill: "Viết",
     templateSource: "tpl1",
@@ -1392,6 +1393,7 @@ export const students = [
     parentName: "Chị Trần Thu Hà",
     parentTelegram: "@ha_tran92",
     joinedDate: "2026-03-01",
+    assignedTutorId: "t1",
     overallProgress: 42,
     weakSkill: "Ngữ pháp",
     templateSource: "tpl2",
@@ -1425,6 +1427,7 @@ export const students = [
     parentName: "Anh Phạm Quốc Việt",
     parentTelegram: "@viet_pham",
     joinedDate: "2026-01-15",
+    assignedTutorId: "t4",
     overallProgress: 81,
     weakSkill: "Nghe",
     templateSource: "tpl3",
@@ -1694,3 +1697,68 @@ export function getPathTemplateById(id) {
 export function computeActualUsage(templateId) {
   return students.filter((s) => s.templateSource === templateId).length;
 }
+
+// === Doanh thu & học phí — prototype mock ===
+export const revenueData = [
+  { month: "T10/2025", total: 5000000,  collected: 5000000,  pending: 0 },
+  { month: "T11/2025", total: 7500000,  collected: 7500000,  pending: 0 },
+  { month: "T12/2025", total: 7500000,  collected: 6000000,  pending: 1500000 },
+  { month: "T1/2026",  total: 10000000, collected: 10000000, pending: 0 },
+  { month: "T2/2026",  total: 12500000, collected: 11000000, pending: 1500000 },
+  { month: "T3/2026",  total: 15000000, collected: 13500000, pending: 1500000 },
+];
+
+export const studentFees = [
+  { studentId: "s1", name: "Nguy\u1ec5n Minh Kh\u00f4i", tutorId: "t1", monthlyFee: 2500000, status: "paid",    month: "2026-03" },
+  { studentId: "s2", name: "Tr\u1ea7n B\u1ea3o Ng\u1ecdc",    tutorId: "t1", monthlyFee: 2000000, status: "pending", month: "2026-03" },
+];
+
+// === Kho tài liệu mẫu theo cấp độ & kỹ năng ===
+export const adminMaterials = [
+  // A1
+  { id: "am1",  level: "A1", skill: "Nói",      type: "video",    title: "Video: Phát âm bảng chữ cái & âm cơ bản",                     description: "Hướng dẫn phát âm 26 chữ cái, nguyên âm và phụ âm cơ bản, luyện đọc từ đơn.",        duration: "12:30", source: "EnglishPath" },
+  { id: "am2",  level: "A1", skill: "Từ vựng",  type: "doc",      title: "Tài liệu: 200 từ vựng thiết yếu A1",                           description: "Danh sách 200 từ vựng cơ bản nhất kèm phiên âm, nghĩa việt và ví dụ câu.",        source: "EnglishPath" },
+  { id: "am3",  level: "A1", skill: "Nghe",     type: "audio",    title: "Bài nghe: Hội thoại chào hỏi & giới thiệu bản thân",           description: "10 đoạn hội thoại ngắn về chào hỏi, tự giới thiệu và hỏi thăm đời sống.",           duration: "08:45", source: "EnglishPath" },
+  { id: "am4",  level: "A1", skill: "Ngữ pháp", type: "doc",      title: "Tài liệu: Thì hiện tại đơn — công thức & bài tập",             description: "Bảng công thức khẳng định/phủ định/nghi vấn kèm 40 bài tập áp dụng.",               source: "EnglishPath" },
+  // A2
+  { id: "am5",  level: "A2", skill: "Nghe",     type: "video",    title: "Video: Nghe số đếm, ngày tháng & giờ giấc",                    description: "Luyện nghe nhận diện số 0–1000, ngày tháng năm và giờ giấc qua video tương tác.",    duration: "15:00", source: "BBC Learning English" },
+  { id: "am6",  level: "A2", skill: "Nói",      type: "exercise", title: "Bài tập: Hội thoại tình huống mua sắm & nhà hàng",             description: "20 cặp hội thoại role-play: mua sắm, gọi món, hỏi đường, đặt phòng khách sạn.",     source: "EnglishPath" },
+  { id: "am7",  level: "A2", skill: "Đọc",      type: "doc",      title: "Tài liệu: Đọc hiểu đoạn ngắn — gia đình & cuộc sống",          description: "5 bài đọc 100–150 từ với câu hỏi trắc nghiệm và từ vựng được chú thích chi tiết.",   source: "EnglishPath" },
+  { id: "am8",  level: "A2", skill: "Viết",     type: "doc",      title: "Tài liệu: Viết email đơn giản — cấu trúc & mẫu câu",           description: "Hướng dẫn viết email giới thiệu bản thân, cảm ơn và xin lỗi kèm 10 email mẫu.",       source: "EnglishPath" },
+  // B1
+  { id: "am9",  level: "B1", skill: "Nghe",     type: "video",    title: "Video: Chiến lược nghe IELTS — Section 1 & 2",                  description: "Kỹ thuật đọc câu hỏi trước, lọc từ khóa và dự đoán đáp án cho bài nghe IELTS.",     duration: "20:15", source: "IELTS Liz" },
+  { id: "am10", level: "B1", skill: "Đọc",      type: "video",    title: "Video: Kỹ thuật Skimming & Scanning cho IELTS Reading",         description: "Hướng dẫn đọc nhanh tìm ý chính và định vị thông tin trong bài đọc IELTS.",            duration: "18:40", source: "IELTS Simon" },
+  { id: "am11", level: "B1", skill: "Từ vựng",  type: "doc",      title: "Tài liệu: 500 collocations thông dụng theo chủ đề IELTS",       description: "Collocation phân 10 chủ đề: môi trường, giáo dục, công nghệ, xã hội...",          source: "EnglishPath" },
+  { id: "am12", level: "B1", skill: "Ngữ pháp", type: "doc",      title: "Tài liệu: Câu điều kiện loại 1, 2 & 3 — đầy đủ",              description: "Bảng so sánh 3 loại câu điều kiện, điểm phân biệt và 50 bài tập từ dễ đến khó.",     source: "EnglishPath" },
+  { id: "am13", level: "B1", skill: "Viết",     type: "video",    title: "Video: Chiến lược IELTS Writing Task 1 — Biểu đồ",             description: "Cách mô tả biểu đồ đường, cột, tròn, so sánh dữ liệu và viết overview.",            duration: "18:20", source: "EnglishPath" },
+  // B2
+  { id: "am14", level: "B2", skill: "Nói",      type: "video",    title: "Video: IELTS Speaking Part 2 — Cue card & follow-up",         description: "Ghi chú nhanh, sắp xếp ý, nói trôi chảy 2 phút và xử lý câu hỏi follow-up Part 3.",   duration: "22:00", source: "IELTS Advantage" },
+  { id: "am15", level: "B2", skill: "Viết",     type: "doc",      title: "Tài liệu: IELTS Task 2 — Từ nối & Hedging phrases",           description: "80 từ nối phân loại theo chức năng và hedging expressions dùng trong bài luận.",     source: "EnglishPath" },
+  { id: "am16", level: "B2", skill: "Nghe",     type: "audio",    title: "Bài nghe: Podcast tốc độ tự nhiên — TED Talks tóm tắt",       description: "5 đoạn TED Talk ngắn (~3 phút) với câu hỏi kiểm tra hiểu và full transcript.",       duration: "25:00", source: "TED.com" },
+  { id: "am17", level: "B2", skill: "Đọc",      type: "doc",      title: "Tài liệu: Bài đọc nâng cao — khoa học & xã hội",               description: "3 bài đọc 500–700 từ dạng IELTS Academic kèm câu hỏi phân tích ý và từ vựng.",         source: "EnglishPath" },
+  { id: "am18", level: "B2", skill: "Từ vựng",  type: "doc",      title: "Tài liệu: Academic Word List — 570 từ học thuật",             description: "AWL đầy đủ phân sublists 1–10, kèm ví dụ trong văn bản học thuật chuẩn.",            source: "Coxhead (2000)" },
+  // C1
+  { id: "am19", level: "C1", skill: "Nói",      type: "video",    title: "Video: Kỹ năng Debate học thuật — lập luận & phản biện",       description: "Cấu trúc lập luận persuasive, cách phản biện và respond under pressure.",                 duration: "28:10", source: "EnglishPath" },
+  { id: "am20", level: "C1", skill: "Viết",     type: "doc",      title: "Tài liệu: Essay học thuật C1 — cấu trúc & academic style",    description: "Viết introduction, body, conclusion chuẩn C1/IELTS 7.0+ với bài mẫu annotated.",      source: "Cambridge English" },
+  { id: "am21", level: "C1", skill: "Nghe",     type: "audio",    title: "Bài nghe: TED Talks nguyên bản — Công nghệ & Tương lai",      description: "3 bài nghe nguyên bản không subtitle, dài 8–12 phút mỗi bài, có câu hỏi phân tích.",   duration: "35:00", source: "TED.com" },
+  { id: "am22", level: "C1", skill: "Ngữ pháp", type: "doc",      title: "Tài liệu: Inversion & Cleft sentences — ngữ pháp nâng cao",   description: "Cấu trúc đảo ngữ và câu chẻ dùng trong văn học thuật và văn nói trang trọng.",           source: "EnglishPath" },
+  // C2
+  { id: "am23", level: "C2", skill: "Nói",      type: "video",    title: "Video: Public speaking chuyên nghiệp — Toastmasters style",   description: "Kiểm soát giọng điệu, ngôn ngữ cơ thể và pause chiến lược trong diễn thuyết.",             duration: "32:00", source: "Toastmasters Int'l" },
+  { id: "am24", level: "C2", skill: "Viết",     type: "doc",      title: "Tài liệu: Research paper & báo cáo học thuật chuẩn APA",      description: "Cấu trúc research paper, trích dẫn APA 7th ed. và paraphrasing tránh đạo văn.",         source: "Cambridge English" },
+  { id: "am25", level: "C2", skill: "Đọc",      type: "doc",      title: "Tài liệu: Critical reading — Phân tích văn bản học thuật",      description: "Nhận biết bias, evaluate evidence và synthesis thông tin từ nhiều nguồn.",               source: "EnglishPath" },
+  { id: "am26", level: "C2", skill: "Từ vựng",  type: "doc",      title: "Tài liệu: Idioms & Phrasal verbs nâng cao — 300 cụm",         description: "300 idiom và phrasal verb học thuật kèm ngữ cảnh văn phong trang trọng.",              source: "EnglishPath" },
+];
+
+// === Nhật ký hoạt động hệ thống ===
+export const activityLogs = [
+  { id: "log1",  ts: "2026-03-07T20:05:00", actor: "H\u1ec7 th\u1ed1ng",       role: "system", action: "ai_grade",        detail: "AI ch\u1ea5m s\u01a1 b\u1ed9: Luy\u1ec7n nghe s\u1ed1 \u0111\u1ebfm (Tr\u1ea7n B\u1ea3o Ng\u1ecdc)" },
+  { id: "log2",  ts: "2026-03-07T19:42:00", actor: "C\u00f4 Lan Anh",     role: "tutor",  action: "reply_parent",    detail: "Tr\u1ea3 l\u1eddi ph\u1ee5 huynh Ch\u1ecb Tr\u1ea7n Thu H\u00e0 (@ha_tran92)" },
+  { id: "log3",  ts: "2026-03-06T21:02:00", actor: "Qu\u1ea3n tr\u1ecb vi\u00ean",  role: "admin",  action: "mark_paid",       detail: "X\u00e1c nh\u1eadn \u0111\u00e3 thu h\u1ecdc ph\u00ed th\u00e1ng 3 \u2014 Nguy\u1ec5n Minh Kh\u00f4i" },
+  { id: "log4",  ts: "2026-03-05T14:22:00", actor: "Qu\u1ea3n tr\u1ecb vi\u00ean",  role: "admin",  action: "add_student",     detail: "Th\u00eam h\u1ecdc sinh m\u1edbi: Ph\u1ea1m Gia H\u00e2n" },
+  { id: "log5",  ts: "2026-03-05T09:12:00", actor: "C\u00f4 Lan Anh",     role: "tutor",  action: "create_exercise", detail: "T\u1ea1o b\u00e0i t\u1eadp Writing Task 2 cho Nguy\u1ec5n Minh Kh\u00f4i" },
+  { id: "log6",  ts: "2026-03-04T10:00:00", actor: "Qu\u1ea3n tr\u1ecb vi\u00ean",  role: "admin",  action: "approve_tutor",   detail: "Duy\u1ec7t gia s\u01b0: Th\u1ea7y \u0110\u1ee9c Anh" },
+  { id: "log7",  ts: "2026-03-02T10:30:00", actor: "Qu\u1ea3n tr\u1ecb vi\u00ean",  role: "admin",  action: "add_template",    detail: "Th\u00eam m\u1eabu l\u1ed9 tr\u00ecnh: Ph\u1ea3n x\u1ea1 giao ti\u1ebfp n\u00e2ng cao B2" },
+  { id: "log8",  ts: "2026-02-25T08:00:00", actor: "C\u00f4 Lan Anh",     role: "tutor",  action: "create_exercise", detail: "T\u1ea1o b\u00e0i t\u1eadp Writing Task 1 cho Nguy\u1ec5n Minh Kh\u00f4i" },
+  { id: "log9",  ts: "2026-02-10T09:00:00", actor: "Qu\u1ea3n tr\u1ecb vi\u00ean",  role: "admin",  action: "add_student",     detail: "Th\u00eam h\u1ecdc sinh m\u1edbi: Nguy\u1ec5n Minh Kh\u00f4i" },
+  { id: "log10", ts: "2025-09-01T08:00:00", actor: "Qu\u1ea3n tr\u1ecb vi\u00ean",  role: "admin",  action: "approve_tutor",   detail: "Duy\u1ec7t gia s\u01b0: C\u00f4 Lan Anh" },
+];
