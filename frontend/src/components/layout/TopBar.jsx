@@ -25,6 +25,7 @@ const routeMeta = {
     "/tutor/library/paths": { label: "Kho lộ trình" },
     "/tutor/library/exercises": { label: "Kho bài tập" },
     "/tutor/library/materials": { label: "Kho video & tài liệu" },
+    "/tutor/profile": { label: "Hồ sơ năng lực" },
     "/tutor/settings": { label: "Cài đặt" },
   },
   student: {

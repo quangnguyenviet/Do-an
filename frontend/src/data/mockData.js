@@ -75,6 +75,22 @@ export const skillList = [
   "Ngữ pháp",
 ];
 
+// Hồ sơ năng lực của gia sư đang đăng nhập (TS-01 → TS-03) — dùng để Admin tra cứu/giới thiệu.
+export const tutorProfile = {
+  tutorId: "t1",
+  subjects: ["IELTS", "Giao tiếp cơ bản", "Ngữ pháp", "Phát âm"],
+  qualificationLevel: "teacher", // "teacher" | "student"
+  experienceYears: 5,
+  bio: "Giáo viên tiếng Anh với 5 năm kinh nghiệm luyện thi IELTS và giao tiếp cho học sinh cấp 2-3.",
+  certificates: [
+    { id: "c1", name: "IELTS 8.5 Overall", issuer: "British Council", year: "2022" },
+    { id: "c2", name: "Chứng chỉ nghiệp vụ sư phạm", issuer: "ĐH Sư phạm TP.HCM", year: "2019" },
+  ],
+  serviceAreas: ["Quận 1, TP.HCM", "Quận 3, TP.HCM", "Dạy online"],
+  // Mỗi phần tử: "Ngày|Buổi"
+  availability: ["Thứ 2|Tối", "Thứ 4|Tối", "Thứ 6|Tối", "Thứ 7|Sáng", "Thứ 7|Chiều", "Chủ nhật|Sáng"],
+};
+
 export const students = [
   {
     id: "s1",

@@ -23,6 +23,7 @@ import LibraryPaths from "./pages/tutor/LibraryPaths";
 import LibraryPathDetail from "./pages/tutor/LibraryPathDetail";
 import LibraryExercises from "./pages/tutor/LibraryExercises";
 import LibraryMaterials from "./pages/tutor/LibraryMaterials";
+import TutorProfile from "./pages/tutor/TutorProfile";
 
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentSchedule from "./pages/student/StudentSchedule";
@@ -104,6 +105,7 @@ export default function App() {
           <Route path="library/paths/:templateId" element={<LibraryPathDetail />} />
           <Route path="library/exercises" element={<LibraryExercises />} />
           <Route path="library/materials" element={<LibraryMaterials />} />
+          <Route path="profile" element={<TutorProfile />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 

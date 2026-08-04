@@ -17,6 +17,7 @@ import {
   BookOpenCheck,
   Settings,
   UserCog,
+  IdCard,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
@@ -38,6 +39,7 @@ const navByRole = {
     { to: "/tutor/grading", label: "Chấm bài", icon: ClipboardCheck, badge: () => gradingQueue.length },
     { to: "/tutor/inbox", label: "Inbox", icon: MessageCircle, badge: () => parentThreads.filter((t) => t.status === "pending").length },
     { to: "/tutor/notifications", label: "Notification", icon: Bell, badge: () => notifications.filter((n) => !n.read).length },
+    { to: "/tutor/profile", label: "Hồ sơ năng lực", icon: IdCard },
     { to: "/tutor/settings", label: "Cài đặt", icon: Settings },
   ],
   student: [
