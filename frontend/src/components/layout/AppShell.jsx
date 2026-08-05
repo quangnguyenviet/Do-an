@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Users,
   ClipboardCheck,
+  ClipboardList,
   MessageCircle,
   Bell,
   Map,
@@ -27,7 +28,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
 import { StudentMatchingProvider, useStudentMatching } from "../../context/StudentMatchingContext";
-import { gradingQueue, parentThreads, notifications, getStudentById } from "../../data/mockData";
+import { gradingQueue, parentThreads, notifications, classRequests, getStudentById } from "../../data/mockData";
 import Avatar from "../ui/Avatar";
 import AiAssistantPanel from "../tutor/AiAssistantPanel";
 import TopBar from "./TopBar";
@@ -86,6 +87,7 @@ function AppShellInner() {
     items = [
       { to: "/tutor", label: "Tổng quan", icon: LayoutDashboard, end: true },
       { to: "/tutor/students", label: "Học sinh", icon: Users },
+      { to: "/tutor/requests", label: "Yêu cầu lớp", icon: ClipboardList, badge: () => classRequests.filter((r) => r.status === "pending_response").length },
       { to: "/tutor/grading", label: "Chấm bài", icon: ClipboardCheck, badge: () => gradingQueue.length },
       { to: "/tutor/inbox", label: "Inbox", icon: MessageCircle, badge: () => parentThreads.filter((t) => t.status === "pending").length },
       { to: "/tutor/notifications", label: "Notification", icon: Bell, badge: () => notifications.filter((n) => !n.read).length },

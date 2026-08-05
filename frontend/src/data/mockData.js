@@ -242,6 +242,81 @@ export const tutorProfile = {
   availability: ["Thứ 2|Tối", "Thứ 4|Tối", "Thứ 6|Tối", "Thứ 7|Sáng", "Thứ 7|Chiều", "Chủ nhật|Sáng"],
 };
 
+// Yêu cầu lớp từ phụ huynh do Admin phân công (TC-01 → TC-04).
+// Vòng đời trạng thái: pending_response → (rejected) | waiting_trial → in_trial → accepted.
+export const classRequests = [
+  {
+    id: "cr1",
+    parentName: "Chị Nguyễn Thị Lan",
+    studentName: "Đặng Gia Bảo",
+    studentAge: 12,
+    subject: "Tiếng Anh giao tiếp thiếu niên",
+    desiredSchedule: "Thứ 2 - 4 - 6, 18:00-19:30",
+    area: "Quận 7, TP.HCM",
+    goal: "Tự tin giao tiếp cơ bản, chuẩn bị cho kỳ du học hè",
+    specialRequirements: "Bé khá nhút nhát, cần gia sư kiên nhẫn, ưu tiên gia sư nữ.",
+    status: "pending_response",
+    assignedAt: "2026-08-01",
+    rejectReason: null,
+  },
+  {
+    id: "cr2",
+    parentName: "Chị Đỗ Thị Mai",
+    studentName: "Đỗ Anh Tuấn",
+    studentAge: 15,
+    subject: "IELTS Foundation",
+    desiredSchedule: "Thứ 3 - 5 - 7, 19:30-21:00",
+    area: "Quận Bình Thạnh, TP.HCM",
+    goal: "Đạt IELTS 5.5 trong 6 tháng",
+    specialRequirements: "Đã học nền tảng ở trung tâm khác, cần đánh giá lại trình độ đầu vào.",
+    status: "waiting_trial",
+    assignedAt: "2026-07-20",
+    rejectReason: null,
+  },
+  {
+    id: "cr3",
+    parentName: "Anh Trần Quốc Bảo",
+    studentName: "Trần Bảo Nam",
+    studentAge: 10,
+    subject: "Tiếng Anh nền tảng tiểu học",
+    desiredSchedule: "Thứ 2 - 4 - 6, 17:00-18:00",
+    area: "Dạy online",
+    goal: "Củng cố ngữ pháp và từ vựng cơ bản theo chương trình lớp 5",
+    specialRequirements: "Không có",
+    status: "in_trial",
+    assignedAt: "2026-07-10",
+    rejectReason: null,
+  },
+  {
+    id: "cr4",
+    parentName: "Chị Lê Thị Hồng",
+    studentName: "Lê Minh Anh",
+    studentAge: 14,
+    subject: "Tiếng Anh giao tiếp",
+    desiredSchedule: "Thứ 3 - 5, Chủ nhật 9:00-10:30",
+    area: "Quận 3, TP.HCM",
+    goal: "Cải thiện phản xạ nghe nói trước kỳ thi học kỳ",
+    specialRequirements: "Không có",
+    status: "accepted",
+    assignedAt: "2026-06-15",
+    rejectReason: null,
+  },
+  {
+    id: "cr5",
+    parentName: "Anh Võ Thành Long",
+    studentName: "Võ Gia Hưng",
+    studentAge: 16,
+    subject: "IELTS Writing chuyên sâu",
+    desiredSchedule: "Thứ 7, Chủ nhật 14:00-16:00",
+    area: "Quận 10, TP.HCM",
+    goal: "Nâng band Writing từ 5.0 lên 6.5",
+    specialRequirements: "Cần gia sư có kinh nghiệm chấm Writing chuyên sâu.",
+    status: "rejected",
+    assignedAt: "2026-06-01",
+    rejectReason: "Lịch mong muốn của phụ huynh trùng với lịch dạy hiện tại, không thể sắp xếp thêm.",
+  },
+];
+
 export const students = [
   {
     id: "s1",
@@ -1630,6 +1705,15 @@ export const materialLibrary = [
 // Thông báo cho gia sư: gộp các sự kiện cần chú ý (bài chờ chấm, câu hỏi phụ huynh, lịch học, cập nhật kho).
 export const notifications = [
   {
+    id: "n0",
+    type: "request",
+    title: "Yêu cầu lớp mới được phân công",
+    body: "Admin vừa giới thiệu yêu cầu từ Chị Nguyễn Thị Lan cho con Đặng Gia Bảo (Tiếng Anh giao tiếp thiếu niên).",
+    time: "2026-08-01 10:20",
+    read: false,
+    link: "/tutor/requests",
+  },
+  {
     id: "n1",
     type: "grading",
     title: "Bài chờ chấm mới",
@@ -1687,6 +1771,10 @@ export const notifications = [
 
 export function getStudentById(id) {
   return students.find((s) => s.id === id);
+}
+
+export function getClassRequestById(id) {
+  return classRequests.find((r) => r.id === id);
 }
 
 export function getPathTemplateById(id) {
