@@ -49,8 +49,7 @@ Xây dựng một nền tảng web single-tenant giúp gia sư tiếng Anh và t
 1. **Gia sư tạo lộ trình học tập** cá nhân hóa cho từng học sinh dựa trên trình độ đầu vào, mục tiêu (ví dụ: giao tiếp, thi chứng chỉ, lấy lại gốc) và thời gian học.
 2. **Gia sư soạn bài tập cho từng buổi học với sự hỗ trợ của AI bên thứ ba theo chuẩn OpenAI-compatible**, bám sát nội dung/kỹ năng đã lên trong lộ trình, có thể tùy chỉnh độ khó và dạng bài, bao gồm cả bài nói; gia sư luôn xem lại và duyệt trước khi giao cho học sinh.
 3. **Đánh giá học sinh** tự động dựa trên kết quả các bài luyện tập và bài kiểm tra, thể hiện tiến bộ theo thời gian; học sinh tự xem được kết quả và tiến bộ của mình.
-4. **Kênh hỏi đáp giữa phụ huynh và gia sư** về tình hình học tập của con, trong đó bot sẽ trả lời trước; nếu bot không thể trả lời thì mới chuyển câu hỏi tới gia sư để phản hồi.
-5. **Quản trị toàn diện hệ thống (Admin)**: Duyệt và quản lý gia sư, phân công gia sư phụ trách học sinh, quản lý kho lộ trình mẫu & tài liệu dùng chung, giám sát báo cáo doanh thu/học phí và nhật ký hoạt động hệ thống.
+4. **Quản trị toàn diện hệ thống (Admin)**: Duyệt và quản lý gia sư, phân công gia sư phụ trách học sinh, quản lý kho lộ trình mẫu & tài liệu dùng chung, giám sát báo cáo doanh thu/học phí và nhật ký hoạt động hệ thống.
 
 Ở giai đoạn hiện tại, tài liệu này tập trung mô tả chi tiết phạm vi chức năng cho vai trò **Gia sư** (mục 4.2), bao gồm cả phần số hóa quy trình vận hành (mục A) lẫn phần nâng cao chất lượng giảng dạy (mục B) áp dụng cho vai trò này. Các vai trò Admin, Học sinh và Phụ huynh giữ mô tả ở mức tổng quan, sẽ được chi tiết hóa ở giai đoạn sau.
 
@@ -61,13 +60,13 @@ Nền tảng được xây dựng cho **một đơn vị/cá nhân vận hành d
 | Vai trò | Nhu cầu chính |
 |---|---|
 | Admin (Quản trị viên) | Tiếp nhận nhu cầu phụ huynh, duyệt/quản lý tài khoản gia sư (tạo/khóa/xóa, phân quyền), phân công học sinh, quản lý thư viện lộ trình mẫu & tài liệu dùng chung, giám sát báo cáo tài chính/doanh thu, theo dõi nhật ký hoạt động hệ thống và giám sát toàn bộ hoạt động hệ thống; không trực tiếp dạy hay tạo lộ trình cho học sinh |
-| Gia sư | Xem/phản hồi yêu cầu lớp được phân công, dạy thử, quản lý các học sinh được gán cho mình, tạo lộ trình, soạn bài tập với sự hỗ trợ của AI, chấm/đánh giá kết quả, trả lời phụ huynh |
+| Gia sư | Xem/phản hồi yêu cầu lớp được phân công, dạy thử, quản lý các học sinh được gán cho mình, tạo lộ trình, soạn bài tập với sự hỗ trợ của AI, chấm/đánh giá kết quả |
 | Học sinh | Xem lịch học, bài tập và bài kiểm tra của mình, làm bài được giao, xem kết quả và tiến bộ của bản thân |
-| Phụ huynh | Tìm kiếm gia sư qua trang công khai (không cần đăng nhập), đăng ký nhu cầu ban đầu; xem tình hình học tập của con qua tài khoản của học sinh hoặc hỏi qua Telegram bot |
+| Phụ huynh | Tìm kiếm gia sư qua trang công khai (không cần đăng nhập), đăng ký nhu cầu ban đầu; xem tình hình học tập của con qua tài khoản của học sinh |
 
 ## 4. Phạm vi chức năng (dự kiến)
 
-Chức năng được phân theo 3 vai trò tài khoản (Admin, Gia sư, Học sinh); Phụ huynh tương tác gián tiếp qua tài khoản học sinh hoặc Telegram bot.
+Chức năng được phân theo 3 vai trò tài khoản (Admin, Gia sư, Học sinh); Phụ huynh tương tác gián tiếp qua tài khoản học sinh.
 
 ### 4.1. Admin (tổng quan — sẽ chi tiết hóa sau)
 - Tiếp nhận và quản lý các yêu cầu đăng ký nhu cầu từ phụ huynh (bước 1-2 của quy trình vận hành).
@@ -117,9 +116,6 @@ Chức năng được phân theo 3 vai trò tài khoản (Admin, Gia sư, Học 
 - Xem báo cáo tổng hợp năng lực học sinh theo từng kỹ năng, theo thời gian (biểu đồ tiến bộ).
 - Nhận gợi ý/cảnh báo khi học sinh yếu ở một kỹ năng cụ thể.
 
-#### 4.2.9. Trả lời phụ huynh
-- Nhận và phản hồi qua Telegram các câu hỏi của phụ huynh mà bot không đủ khả năng trả lời tự động.
-
 ### 4.3. Học sinh (tổng quan — sẽ chi tiết hóa sau)
 - Xem lịch học, bài tập và bài kiểm tra được giao.
 - Làm bài tập/bài kiểm tra trên hệ thống.
@@ -130,14 +126,13 @@ Chức năng được phân theo 3 vai trò tài khoản (Admin, Gia sư, Học 
 - **Trang tìm kiếm gia sư:** phụ huynh xem danh sách gia sư đang nhận lớp (hồ sơ công khai do trung tâm giới thiệu) và lọc theo môn/kỹ năng, trình độ, khu vực, lịch học; từ đó đăng ký nhu cầu cho con. Xem chi tiết tại docs/specs/phu-huynh.md mục 3.1.
 - Đăng ký nhu cầu ban đầu (bước 1 của quy trình vận hành) qua form trực tuyến hoặc được Admin nhập hộ khi liên hệ qua điện thoại/trực tiếp.
 - Xem tình hình học tập, kết quả các buổi học của con thông qua tài khoản của học sinh.
-- Gửi câu hỏi/thắc mắc qua Telegram: bot trả lời tự động trước; nếu LLM đánh giá không đủ khả năng trả lời thì hệ thống chuyển câu hỏi cho gia sư phản hồi qua Telegram.
 
 ### 4.6. Quản trị hệ thống & Báo cáo (Dành cho Admin)
 - **Quản lý & Phê duyệt gia sư**: Tiếp nhận đăng ký, phê duyệt/từ chối tài khoản gia sư mới, tạm khóa hoặc kích hoạt lại tài khoản gia sư.
 - **Phân công học sinh - gia sư**: Quản lý danh sách học sinh toàn hệ thống, thực hiện gán hoặc điều chuyển gia sư phụ trách.
 - **Quản lý tài nguyên mẫu dùng chung**: Khởi tạo và quản lý thư viện khung lộ trình học mẫu (templates) và kho tài liệu tham khảo cho gia sư toàn hệ thống.
 - **Báo cáo & Phân tích tổng thể**: Theo dõi biến động doanh thu, tình hình nộp học phí, tỷ lệ học sinh được gán lớp, và điểm kỹ năng trung bình toàn trung tâm.
-- **Nhật ký hoạt động & Giám sát hệ thống**: Theo dõi nhật ký thao tác người dùng (Audit logs) và kiểm tra trạng thái hoạt động của AI API (OpenAI-compatible) cùng Telegram Bot Webhook.
+- **Nhật ký hoạt động & Giám sát hệ thống**: Theo dõi nhật ký thao tác người dùng (Audit logs) và kiểm tra trạng thái hoạt động của AI API (OpenAI-compatible).
 
 ## 5. Ngoài phạm vi (giai đoạn đầu)
 
@@ -155,7 +150,7 @@ Chức năng được phân theo 3 vai trò tài khoản (Admin, Gia sư, Học 
 - Hệ thống có 3 vai trò tài khoản: **Admin** (quản lý gia sư, tiếp nhận/giới thiệu yêu cầu, giám sát hệ thống), **Gia sư**, **Học sinh**; Phụ huynh không có tài khoản riêng nhưng có thể sử dụng **trang tìm kiếm gia sư công khai** (xem hồ sơ gia sư, lọc theo nhu cầu, đăng ký nhu cầu) mà không cần đăng nhập (04/08/2026).
 - Nguồn AI sử dụng để hỗ trợ soạn bài tập sẽ là API bên thứ ba theo chuẩn OpenAI-compatible; AI chỉ hỗ trợ gợi ý/sinh nháp, gia sư luôn là người xem, chỉnh sửa và quyết định nội dung cuối cùng trước khi giao cho học sinh.
 - Gia sư chỉ xem và quản lý các học sinh được gán cho mình; học sinh chỉ xem lịch học, bài tập và bài kiểm tra của mình.
-- Phụ huynh không có tài khoản riêng; có thể xem hồ sơ gia sư qua **trang tìm kiếm gia sư công khai** (không cần đăng nhập) và xem tình hình học tập của con qua tài khoản của học sinh hoặc hỏi qua Telegram bot.
+- Phụ huynh không có tài khoản riêng; có thể xem hồ sơ gia sư qua **trang tìm kiếm gia sư công khai** (không cần đăng nhập) và xem tình hình học tập của con qua tài khoản của học sinh.
 - **Ghép gia sư (bước 3, cập nhật 04/08/2026):** khi nhiều gia sư cùng thỏa mãn tiêu chí của một yêu cầu, hệ thống **tự động** lọc và gửi offer đồng thời tới tất cả gia sư thỏa mãn (không phải Admin chọn thủ công từng người); gia sư nào xác nhận nhận lớp **đầu tiên** thì được gán yêu cầu, các offer còn lại tự đóng. Nếu phụ huynh chỉ định đích danh một gia sư (qua trang tìm kiếm gia sư công khai), offer chỉ gửi tới gia sư đó. Offer không có hạn — tồn tại đến khi có gia sư nhận hoặc phụ huynh hủy yêu cầu. Vai trò Admin trong luồng này là giám sát/can thiệp khi cần (ví dụ yêu cầu treo quá lâu không ai nhận), không trực tiếp chọn hay gửi từng offer. Chi tiết cơ chế tránh tranh chấp khi nhiều gia sư cùng nhận (race condition) sẽ được đặc tả khi chi tiết hóa vai trò Admin.
 - Video bài giảng là nội dung có sẵn; tài liệu học tập có thể được tạo hoặc hỗ trợ tạo bằng AI.
 - Hệ thống chỉ theo dõi trạng thái phí nhận lớp và chính sách bảo lãnh, không xử lý thanh toán thực qua cổng thanh toán (áp dụng cho cả học phí phụ huynh-gia sư và phí nhận lớp gia sư-trung tâm).
