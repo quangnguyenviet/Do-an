@@ -4,7 +4,7 @@
 
 ## 1. Tổng quan vai trò
 
-Gia sư là người trực tiếp giảng dạy học sinh sau khi được Admin phân công lớp. Vai trò này trải dài từ khâu nhận lớp (tương tác với yêu cầu từ phụ huynh) đến khâu giảng dạy hàng ngày (lộ trình, bài tập, đánh giá) và trao đổi với phụ huynh.
+Gia sư là người trực tiếp giảng dạy học sinh sau khi được Admin phân công lớp. Vai trò này trải dài từ khâu nhận lớp (tương tác với yêu cầu từ phụ huynh) đến khâu giảng dạy hàng ngày (lộ trình, bài tập, đánh giá).
 
 **Nguyên tắc cốt lõi:**
 - **Mô hình dạy:** hệ thống hỗ trợ dạy kèm **1-1** (1 gia sư – 1 học sinh). Dạy nhóm nhỏ (nhiều học sinh trong một buổi học) nằm **ngoài phạm vi** giai đoạn này.
@@ -19,7 +19,7 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 | Phạm vi học sinh | Chỉ các học sinh được Admin gán cho gia sư (sau khi nhận lớp chính thức); mỗi học sinh thuộc một lớp 1-1 riêng |
 | Phạm vi yêu cầu lớp | Chỉ các yêu cầu được Admin giới thiệu/phân công cho gia sư |
 | Quyền chỉnh sửa | Tạo/sửa hồ sơ của bản thân; tạo/sửa lộ trình, bài tập, tài liệu, điểm số cho học sinh được gán |
-| Quyền xem | Báo cáo năng lực học sinh, inbox phụ huynh, thông báo, thư viện dùng chung |
+| Quyền xem | Báo cáo năng lực học sinh, thông báo, thư viện dùng chung |
 | Không có quyền | Quản lý tài khoản gia sư khác, xem học sinh của gia sư khác, xử lý thanh toán |
 
 > **Mô hình dữ liệu (hệ quả của mô hình 1-1):** mỗi lớp học (Class) gắn đúng 1 gia sư và 1 học sinh. Việc giao bài, lộ trình, chấm điểm, phí nhận lớp đều quy về theo cặp gia sư–học sinh này.
@@ -98,15 +98,6 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 | TG-03 | Báo cáo năng lực tổng hợp | Thống kê theo kỹ năng, theo thời gian (biểu đồ tiến bộ) | ✅ StudentDetail (Overview + ProgressChart + CompetencyRadar) |
 | TG-04 | Gợi ý/cảnh báo kỹ năng yếu | Nhận cảnh báo khi học sinh yếu một kỹ năng cụ thể | ⚠️ Một phần (dữ liệu mock hiển thị, chưa có cơ chế gợi ý chủ động) |
 
-### 3.9. Trả lời phụ huynh
-
-| Mã | Chức năng | Mô tả | Trạng thái prototype |
-|---|---|---|---|
-| TH-01 | Nhận câu hỏi phụ huynh | Nhận câu hỏi mà bot không đủ khả năng trả lời tự động | ✅ ParentInbox |
-| TH-02 | Phản hồi phụ huynh | Trả lời qua kênh trong hệ thống (prototype) / Telegram (sau này) | ✅ ParentInbox |
-
-> **Lưu ý:** theo đặc tả, kênh chính thức là Telegram (bot trả lời trước, chuyển cho gia sư khi cần). Prototype hiện dùng ParentInbox trong web để mô phỏng luồng này.
-
 ## 4. Tổng hợp trạng thái prototype
 
 | Nhóm chức năng | Đã có màn hình | Chưa có / một phần |
@@ -119,7 +110,6 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 | 3.6 Soạn bài tập với AI | ✅ TB-01 → TB-04 | — |
 | 3.7 Bài giảng video & tài liệu | ⚠️ TL-MAT-02, 03 | ⬜ TL-MAT-01 |
 | 3.8 Đánh giá học sinh | ✅ TG-01 → TG-03 | ⚠️ TG-04 |
-| 3.9 Trả lời phụ huynh | ✅ TH-01 → TH-02 | — |
 
 ## 5. Ngoài phạm vi (vai trò Gia sư)
 
@@ -132,5 +122,4 @@ Gia sư là người trực tiếp giảng dạy học sinh sau khi được Adm
 ## 6. Ghi chú triển khai
 
 - **AI assistant:** thay module mock (`frontend/src/lib/aiAssistant.js`, `generateExercise.js`) bằng API OpenAI-compatible thực khi có backend; giữ nguyên nguyên tắc "gia sư duyệt trước khi giao".
-- **Kênh Telegram:** luồng hỏi đáp phụ huynh (3.9) sẽ chuyển từ ParentInbox web sang tích hợp bot Telegram khi triển khai.
 - **Số hóa quy trình vận hành:** các nhóm 3.1, 3.2, 3.3, 3.4 là phần số hóa các bước 2-5 của quy trình vận hành. Đã có màn hình cho 3.1 (`TutorProfile`) và 3.2 (`ClassRequests`); 3.3, 3.4 vẫn thiếu màn hình, cần ưu tiên bổ sung để hoàn thiện prototype Gia sư.
