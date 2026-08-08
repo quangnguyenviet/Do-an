@@ -2,6 +2,17 @@
 
 > Tài liệu tóm tắt hệ thống dùng để trình bày với thầy/cô khi xin nhận hướng dẫn đồ án. Nội dung tổng hợp từ `docs/problem-statement.md` và `docs/specs/` — xem các tài liệu đó để biết chi tiết đầy đủ.
 
+## Mục lục
+
+- [1. Tên đề tài (dự kiến)](#1-tên-đề-tài-dự-kiến)
+- [2. Lý do chọn đề tài](#2-lý-do-chọn-đề-tài)
+- [3. Mục tiêu đề tài](#3-mục-tiêu-đề-tài)
+- [4. Đối tượng người dùng & phạm vi quyền](#4-đối-tượng-người-dùng--phạm-vi-quyền)
+- [5. Mô hình chức năng sản phẩm](#5-mô-hình-chức-năng-sản-phẩm)
+- [6. Giới hạn phạm vi (đã cân nhắc và chủ động loại trừ)](#6-giới-hạn-phạm-vi-đã-cân-nhắc-và-chủ-động-loại-trừ)
+- [7. Kiến trúc tổng quan](#7-kiến-trúc-tổng-quan)
+- [8. Định hướng công nghệ](#8-định-hướng-công-nghệ)
+
 ## 1. Tên đề tài (dự kiến)
 
 Ứng dụng AI hỗ trợ vận hành và giảng dạy cho mô hình gia sư tiếng Anh 1-1.
@@ -31,20 +42,9 @@ Hệ thống hỗ trợ toàn bộ luồng vận hành từ tiếp nhận nhu c�
 1. AI hỗ trợ tạo lộ trình học và soạn bài tập cho gia sư, cá nhân hóa theo trình độ và mục tiêu từng học sinh — gia sư luôn là người duyệt và quyết định nội dung cuối cùng.
 2. Đánh giá năng lực học sinh tự động, thể hiện tiến bộ theo thời gian.
 3. Ứng dụng hỗ trợ học sinh: xem lịch học, làm bài tập/kiểm tra trực tuyến, xem kết quả và tiến bộ của bản thân; có AI tích hợp để học sinh hỏi đáp nhanh chóng, tiện lợi khi cần.
-4. Admin quản trị toàn diện: duyệt gia sư, phân công học sinh, quản lý thư viện mẫu dùng chung, giám sát báo cáo và nhật ký hoạt động.
+4. Admin quản trị toàn diện: duyệt gia sư, phân công học sinh, giám sát báo cáo và nhật ký hoạt động.
 
-## 4. Trọng tâm kỹ thuật
-
-Đây là phần "chất xám" chính mà đồ án muốn tập trung giải quyết, ngoài phần xây dựng ứng dụng nghiệp vụ thông thường:
-
-- **Trích xuất tiêu chí có cấu trúc từ hội thoại tự nhiên** (NLU/intent extraction): chuyển mô tả tự do của phụ huynh thành các tiêu chí lọc (môn, trình độ, lịch, khu vực, yêu cầu đặc biệt...).
-- **Tool-calling / tra cứu có kiểm soát**: AI agent gọi đúng công cụ tra cứu database gia sư thay vì tự "bịa" thông tin, đảm bảo danh sách đề xuất luôn khớp dữ liệu thật.
-- **Thuật toán xếp hạng gia sư đa tiêu chí** khi nhiều gia sư cùng phù hợp.
-- **Cơ chế fallback/escalate**: AI agent tự nhận biết khi không đủ tin cậy để trả lời hoặc phụ huynh yêu cầu người thật, và chuyển tiếp cho nhân viên tư vấn.
-- **Sinh bài tập cá nhân hóa có kiểm soát chất lượng**: AI đề xuất, gia sư luôn duyệt/chỉnh sửa trước khi giao cho học sinh.
-- **Mô hình đánh giá năng lực định lượng** theo từng kỹ năng (Nghe, Nói, Đọc, Viết, Từ vựng, Ngữ pháp), thể hiện tiến bộ theo thời gian.
-
-## 5. Đối tượng người dùng & phạm vi quyền
+## 4. Đối tượng người dùng & phạm vi quyền
 
 Hệ thống có 3 vai trò tài khoản; phụ huynh tương tác gián tiếp (không có tài khoản riêng):
 
@@ -57,19 +57,92 @@ Hệ thống có 3 vai trò tài khoản; phụ huynh tương tác gián tiếp 
 
 **Nguyên tắc phân quyền:** gia sư chỉ xem học sinh được gán cho mình; học sinh chỉ xem nội dung của bản thân; AI (agent tư vấn lẫn AI hỗ trợ soạn bài/đánh giá) chỉ hỗ trợ và đề xuất, không tự quyết định nội dung, điểm số, hay xác nhận nhận lớp cuối cùng — luôn có thể chuyển cho người thật xử lý, và mọi hành động của AI đều được ghi log để admin giám sát.
 
+## 5. Mô hình chức năng sản phẩm
+
+Chức năng hệ thống phân theo 4 nhóm người dùng:
+
+```
+Nền tảng gia sư tiếng Anh
+├── Phụ huynh   (không có tài khoản)
+├── Admin
+├── Gia sư
+└── Học sinh
+```
+
+**Phụ huynh** (không có tài khoản riêng)
+- Trang tìm kiếm gia sư công khai: xem hồ sơ, lọc theo môn/trình độ/khu vực/lịch — không cần đăng nhập.
+- Trò chuyện với AI agent tư vấn: mô tả nhu cầu tự nhiên, được trích xuất tiêu chí và đề xuất gia sư phù hợp, hỏi đáp các câu hỏi thường gặp.
+- Đăng ký nhu cầu — qua form trực tuyến, qua AI agent, hoặc Admin nhập hộ khi liên hệ điện thoại/trực tiếp.
+
+**Admin**
+- Tiếp nhận và giám sát các yêu cầu đăng ký nhu cầu (kể cả giám sát AI agent tư vấn).
+- Giám sát/can thiệp cơ chế ghép lớp tự động khi cần (VD: yêu cầu treo quá lâu không ai nhận).
+- Theo dõi trạng thái phí nhận lớp và chính sách bảo lãnh của từng gia sư.
+- Duyệt/quản lý tài khoản gia sư (tạo, khóa, xóa, phân quyền).
+- Phân công và điều chuyển gia sư — học sinh.
+- Báo cáo doanh thu, tỷ lệ gán lớp, điểm kỹ năng trung bình toàn trung tâm.
+- Nhật ký hoạt động (audit log) và giám sát trạng thái hoạt động của AI.
+
+**Gia sư**
+- Khai báo hồ sơ năng lực: môn/kỹ năng, trình độ, kinh nghiệm, khu vực, khung giờ rảnh.
+- Nhận và phản hồi (xác nhận/từ chối) offer nhận lớp do hệ thống tự động gửi.
+- Dạy thử: lên lịch, ghi nhận kết quả và nhận xét sau mỗi buổi.
+- Xem và theo dõi nghĩa vụ phí nhận lớp, trạng thái áp dụng chính sách bảo lãnh.
+- Quản lý học sinh được gán, tạo lộ trình học cá nhân hóa theo giai đoạn/tuần/buổi.
+- Soạn bài tập với AI hỗ trợ gợi ý/sinh nháp — luôn xem, chỉnh sửa và duyệt trước khi giao.
+- Tạo/quản lý bài giảng video và tài liệu học tập.
+- Chấm điểm và đánh giá năng lực học sinh theo từng kỹ năng, theo thời gian.
+
+**Học sinh**
+- Xem lịch học, bài tập/bài kiểm tra được giao.
+- Làm bài trên hệ thống.
+- Xem lại video bài giảng và tài liệu được gán.
+- Xem kết quả và báo cáo tiến bộ theo từng kỹ năng, theo thời gian.
+- Hỏi đáp nhanh với AI tích hợp khi cần.
+
 ## 6. Giới hạn phạm vi (đã cân nhắc và chủ động loại trừ)
 
 - **Mô hình dạy:** chỉ hỗ trợ dạy kèm **1-1** (1 gia sư – 1 học sinh) ở giai đoạn này; dạy nhóm nhỏ (2-5 học sinh) nằm ngoài phạm vi để giữ đồ án tập trung vào phần lõi (AI agent tư vấn, lộ trình, bài tập AI, đánh giá).
-- **Không xử lý thanh toán thực** qua cổng thanh toán (học phí phụ huynh–gia sư, phí nhận lớp gia sư–trung tâm) — hệ thống chỉ ghi nhận trạng thái.
 - **Không dạy trực tuyến qua video call tích hợp** — dùng công cụ bên thứ ba (Zoom/Meet/Jitsi) nếu cần.
 - **AI agent tư vấn chỉ hoạt động trong phạm vi đã định nghĩa**: đề xuất/tra cứu gia sư theo dữ liệu có sẵn và trả lời các câu hỏi thường gặp đã chuẩn bị trước; không tự thương lượng giá, không tự xác nhận nhận lớp thay nhân viên.
 - Giao diện chỉ hỗ trợ tiếng Việt và tiếng Anh.
 
-## 7. Định hướng công nghệ
+## 7. Kiến trúc tổng quan
 
-| Thành phần | Hiện tại | Ghi chú |
-|---|---|---|
-| Frontend | React 19 + Vite + Tailwind v4 + react-router-dom v7 | Đã triển khai |
-| Backend | Chưa có | Cần chọn stack (Node/Express, hoặc khác) + database |
-| AI | Dự kiến API bên thứ ba chuẩn OpenAI-compatible, dùng cho 2 nhóm chức năng: (1) AI agent tư vấn — trích xuất tiêu chí từ hội thoại, tool-calling tra cứu gia sư, trả lời FAQ; (2) AI hỗ trợ soạn bài tập & gợi ý lộ trình | Hiện chỉ có phần (2) ở dạng mock heuristic; phần (1) chưa triển khai |
+Hệ thống dự kiến chia thành 3 thành phần độc lập, giao tiếp qua API:
+
+- **Frontend** — React SPA, giao diện cho cả 3 vai trò (admin/gia sư/học sinh) và trang công khai cho phụ huynh.
+- **Backend Service** (Spring Boot, Java + PostgreSQL) — nắm toàn bộ dữ liệu và logic nghiệp vụ: xác thực/phân quyền, CRUD gia sư/học sinh/lớp/bài tập, và là **API gateway duy nhất** mà frontend gọi tới (kể cả các tính năng có AI).
+- **AI Service** (Python, LangGraph) — chạy các agent/graph AI: agent tư vấn cho phụ huynh (trích xuất tiêu chí, tool-calling, FAQ, fallback/escalate) và các flow hỗ trợ soạn bài tập/đánh giá năng lực.
+
+Cả 3 thành phần đóng gói bằng **Docker** (mỗi service một container riêng).
+
+```
+┌────────────┐                  ┌────────────────────────┐                 ┌──────────────────────┐
+│  Frontend  │ ───────────────▶ │     Backend Service      │ ──────────────▶ │      AI Service        │
+│ (React SPA)│ ◀─────────────── │ (Spring Boot + PostgreSQL)│ ◀────────────── │ (Python, LangGraph)    │
+└────────────┘                  └────────────────────────┘   tool-calling   └──────────────────────┘
+                                                              (tra cứu dữ liệu
+                                                               qua Backend)
+```
+
+- Frontend ↔ Backend, và Backend ↔ AI Service: đều qua REST/HTTPS, hỗ trợ **cả streaming (SSE/WS) lẫn non-streaming** — streaming dùng cho chat với AI agent (trả lời dần theo thời gian thực), non-streaming cho các tác vụ khác.
+- AI Service gọi ngược lại Backend (mũi tên phải sang trái) khi cần tool-calling để tra cứu dữ liệu thật.
+
+**Nguyên tắc luồng dữ liệu:**
+
+1. Frontend **chỉ** gọi Backend Service — kể cả khi thao tác liên quan AI (chat với agent tư vấn, yêu cầu AI soạn bài tập...). Frontend không gọi thẳng AI Service.
+2. Backend Service là nguồn dữ liệu nghiệp vụ duy nhất (gia sư, học sinh, lớp, bài tập...), lưu trên **PostgreSQL**, và chịu trách nhiệm xác thực/phân quyền.
+3. Khi có yêu cầu cần AI xử lý, Backend gọi sang AI Service (API nội bộ) kèm ngữ cảnh cần thiết (lịch sử hội thoại, hồ sơ học sinh...). Với các tác vụ hội thoại (chat với agent tư vấn/AI hỗ trợ), giao thức hỗ trợ **cả streaming lẫn non-streaming** — streaming để trả lời dần theo thời gian thực trên giao diện chat, non-streaming cho các tác vụ chạy nền hoặc không cần hiển thị tức thời.
+4. Khi agent trong AI Service cần tra cứu dữ liệu thật (VD: tìm gia sư phù hợp), nó gọi **ngược lại** Backend Service qua tool-calling thay vì truy cập CSDL trực tiếp, đảm bảo danh sách đề xuất luôn khớp dữ liệu thật và Backend là nơi kiểm soát phân quyền dữ liệu duy nhất.
+
+**Câu hỏi mở / cần quyết định thêm:** cơ chế streaming cụ thể (SSE hay WebSocket) giữa Frontend↔Backend và Backend↔AI Service; cấu hình docker-compose/orchestration khi triển khai nhiều service cùng lúc.
+
+## 8. Định hướng công nghệ
+
+| Thành phần | Công nghệ |
+|---|---|
+| Frontend | React 19 + Vite + Tailwind v4 + react-router-dom v7 |
+| Backend Service | Spring Boot (Java) + PostgreSQL |
+| AI Service | Python + LangGraph |
 
