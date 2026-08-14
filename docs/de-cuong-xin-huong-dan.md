@@ -23,7 +23,7 @@
 
 Nhiều trung tâm/cá nhân dạy gia sư tiếng Anh 1-1 hiện nay đã có kênh trực tuyến để tiếp nhận nhu cầu (website, fanpage, form đăng ký), và một số nền tảng lớn đã cho phụ huynh tự lọc gia sư theo tiêu chí cơ bản (môn, khu vực, mức phí). Tuy vậy, hai khoảng trống vẫn tồn tại rõ:
 
-**Ở giai đoạn tìm gia sư:** các nền tảng/web gia sư hiện tại chủ yếu dừng ở mức đăng tin và tra cứu tĩnh — phụ huynh tự điền form hoặc tự chọn bộ lọc theo tiêu chí có sẵn, chưa có chatbot/AI agent tư vấn có khả năng hội thoại tự nhiên để hiểu nhu cầu và tự đề xuất gia sư phù hợp, hay trả lời trực tiếp các câu hỏi thường gặp (chính sách phí, quy trình dạy thử, bảo lãnh...). Đề tài đề xuất bổ sung một AI agent tư vấn cho giai đoạn này, kỳ vọng giúp phụ huynh được hỗ trợ nhanh hơn với các nhu cầu khó diễn đạt thành tiêu chí lọc cứng, đồng thời giảm bớt khối lượng câu hỏi lặp lại mà nhân viên tư vấn phải xử lý thủ công.
+**Ở giai đoạn tìm gia sư:** các nền tảng/web gia sư hiện tại chủ yếu dừng ở mức đăng tin và tra cứu tĩnh — phụ huynh tự điền form hoặc tự chọn bộ lọc theo tiêu chí có sẵn, chưa có chatbot/AI agent tư vấn có khả năng hội thoại tự nhiên để hiểu nhu cầu và tự đề xuất gia sư phù hợp, hay trả lời trực tiếp các câu hỏi thường gặp (chính sách phí, quy trình dạy thử,...). Đề tài đề xuất bổ sung một AI agent tư vấn cho giai đoạn này, kỳ vọng giúp phụ huynh được hỗ trợ nhanh hơn với các nhu cầu khó diễn đạt thành tiêu chí lọc cứng, đồng thời giảm bớt khối lượng câu hỏi lặp lại mà nhân viên tư vấn phải xử lý thủ công.
 
 **Ở giai đoạn sau khi đã nhận lớp:** phần lớn các nền tảng hiện có dừng lại ở việc kết nối phụ huynh–gia sư, gần như bỏ trống giai đoạn dạy thực tế — nơi chất lượng dạy được quyết định. Gia sư vẫn tự thiết kế lộ trình và soạn bài tập thủ công (tốn thời gian, dễ trùng lặp, khó cá nhân hóa), không có công cụ đánh giá năng lực học sinh định lượng theo thời gian; còn học sinh và phụ huynh cũng không có một nền tảng chính thức để theo dõi việc học — học sinh không có nơi tập trung xem lịch học, làm bài tập trực tuyến, và nhìn lại tiến bộ của chính mình, phụ huynh cũng không có kênh chính thức để theo dõi việc học của con.
 
@@ -35,7 +35,7 @@ Xây dựng nền tảng web **single-tenant** (phục vụ một trung tâm/cá
 
 **A. AI agent tư vấn (điểm mới) và luồng vận hành cơ bản:**
 
-Hệ thống hỗ trợ toàn bộ luồng vận hành từ tiếp nhận nhu cầu đến khi chính thức nhận lớp, có thêm hỗ trợ của AI ở bước tiếp nhận nhu cầu — đây là điểm mới của nhóm A. AI agent không chỉ tư vấn/đề xuất gia sư phù hợp mà còn có thể trực tiếp gửi yêu cầu của phụ huynh tới gia sư khi phụ huynh muốn liên hệ với một gia sư cụ thể.
+Hệ thống hỗ trợ toàn bộ luồng vận hành từ tiếp nhận nhu cầu đến khi chính thức nhận lớp, có thêm hỗ trợ của AI ở bước tiếp nhận nhu cầu — đây là điểm mới của nhóm A. AI agent không chỉ trả lời hội thoại mà còn có thể trực tiếp điều khiển giao diện: ví dụ khi phụ huynh nêu tiêu chí tìm gia sư, agent tự lọc và hiển thị ngay danh sách gia sư phù hợp trên giao diện, thay vì chỉ mô tả bằng văn bản.
 
 **B. Nâng cao chất lượng giảng dạy** sau khi gia sư đã nhận lớp:
 
@@ -46,14 +46,14 @@ Hệ thống hỗ trợ toàn bộ luồng vận hành từ tiếp nhận nhu c�
 
 ## 4. Đối tượng người dùng & phạm vi quyền
 
-Hệ thống có 3 vai trò tài khoản; phụ huynh tương tác gián tiếp (không có tài khoản riêng):
+Hệ thống có 4 đối tượng sử dụng:
 
 | Vai trò | Nhu cầu chính |
 |---|---|
 | **Admin** | Tiếp nhận nhu cầu (giám sát AI agent tư vấn), duyệt/quản lý tài khoản gia sư, phân công học sinh, giám sát báo cáo & nhật ký hệ thống. Không trực tiếp dạy hay tạo lộ trình. |
 | **Gia sư** | Xem/phản hồi yêu cầu lớp, dạy thử, quản lý học sinh được gán, tạo lộ trình, soạn bài tập AI, chấm/đánh giá. |
 | **Học sinh** | Xem lịch học, bài tập/kiểm tra, làm bài, xem kết quả và tiến bộ của bản thân. |
-| **Phụ huynh** (không có tài khoản) | Trước khi nhận lớp: tìm gia sư qua trang công khai, trò chuyện với AI agent tư vấn để được đề xuất gia sư phù hợp và giải đáp thắc mắc. Sau khi đã nhận lớp: theo dõi việc học của con qua tài khoản học sinh. |
+| **Phụ huynh** | Trước khi nhận lớp: tìm gia sư qua trang công khai, trò chuyện với AI agent tư vấn để được đề xuất gia sư phù hợp và giải đáp thắc mắc. Sau khi đã nhận lớp: theo dõi việc học của con qua tài khoản học sinh. |
 
 **Nguyên tắc phân quyền:** gia sư chỉ xem học sinh được gán cho mình; học sinh chỉ xem nội dung của bản thân; AI (agent tư vấn lẫn AI hỗ trợ soạn bài/đánh giá) chỉ hỗ trợ và đề xuất, không tự quyết định nội dung, điểm số, hay xác nhận nhận lớp cuối cùng — luôn có thể chuyển cho người thật xử lý, và mọi hành động của AI đều được ghi log để admin giám sát.
 
@@ -63,13 +63,13 @@ Chức năng hệ thống phân theo 4 nhóm người dùng:
 
 ```
 Nền tảng gia sư tiếng Anh
-├── Phụ huynh   (không có tài khoản)
+├── Phụ huynh 
 ├── Admin
 ├── Gia sư
 └── Học sinh
 ```
 
-**Phụ huynh** (không có tài khoản riêng)
+**Phụ huynh** 
 - Trang tìm kiếm gia sư công khai: xem hồ sơ, lọc theo môn/trình độ/khu vực/lịch — không cần đăng nhập.
 - Trò chuyện với AI agent tư vấn: mô tả nhu cầu tự nhiên, được trích xuất tiêu chí và đề xuất gia sư phù hợp, hỏi đáp các câu hỏi thường gặp.
 - Đăng ký nhu cầu — qua form trực tuyến, qua AI agent, hoặc Admin nhập hộ khi liên hệ điện thoại/trực tiếp.
@@ -79,28 +79,26 @@ Nền tảng gia sư tiếng Anh
 - Giám sát/can thiệp cơ chế ghép lớp tự động khi cần (VD: yêu cầu treo quá lâu không ai nhận).
 - Theo dõi trạng thái phí nhận lớp và chính sách bảo lãnh của từng gia sư.
 - Duyệt/quản lý tài khoản gia sư (tạo, khóa, xóa, phân quyền).
-- Phân công và điều chuyển gia sư — học sinh.
 - Báo cáo doanh thu, tỷ lệ gán lớp, điểm kỹ năng trung bình toàn trung tâm.
 - Nhật ký hoạt động (audit log) và giám sát trạng thái hoạt động của AI.
 
 **Gia sư**
 - Khai báo hồ sơ năng lực: môn/kỹ năng, trình độ, kinh nghiệm, khu vực, khung giờ rảnh.
 - Nhận và phản hồi (xác nhận/từ chối) offer nhận lớp do hệ thống tự động gửi.
-- Dạy thử: lên lịch, ghi nhận kết quả và nhận xét sau mỗi buổi.
-- Xem và theo dõi nghĩa vụ phí nhận lớp, trạng thái áp dụng chính sách bảo lãnh.
+- Dạy học: lên lịch, ghi nhận kết quả và nhận xét sau mỗi buổi.
+- Xem và theo dõi nghĩa vụ phí nhận lớp.
 - Quản lý học sinh được gán, tạo lộ trình học cá nhân hóa theo giai đoạn/tuần/buổi.
 - Soạn bài tập với AI hỗ trợ gợi ý/sinh nháp — luôn xem, chỉnh sửa và duyệt trước khi giao.
 - Tạo/quản lý bài giảng video và tài liệu học tập.
-- Chấm điểm và đánh giá năng lực học sinh theo từng kỹ năng, theo thời gian.
 
 **Học sinh**
 - Xem lịch học, bài tập/bài kiểm tra được giao.
 - Làm bài trên hệ thống.
-- Xem lại video bài giảng và tài liệu được gán.
+- Xem video bài giảng và tài liệu được gán.
 - Xem kết quả và báo cáo tiến bộ theo từng kỹ năng, theo thời gian.
 - Hỏi đáp nhanh với AI tích hợp khi cần.
 
-## 6. Giới hạn phạm vi (đã cân nhắc và chủ động loại trừ)
+## 6. Giới hạn phạm vi
 
 - **Mô hình dạy:** chỉ hỗ trợ dạy kèm **1-1** (1 gia sư – 1 học sinh) ở giai đoạn này; dạy nhóm nhỏ (2-5 học sinh) nằm ngoài phạm vi để giữ đồ án tập trung vào phần lõi (AI agent tư vấn, lộ trình, bài tập AI, đánh giá).
 - **Không dạy trực tuyến qua video call tích hợp** — dùng công cụ bên thứ ba (Zoom/Meet/Jitsi) nếu cần.
@@ -135,8 +133,6 @@ Cả 3 thành phần đóng gói bằng **Docker** (mỗi service một containe
 2. Backend Service là nguồn dữ liệu nghiệp vụ duy nhất (gia sư, học sinh, lớp, bài tập...), lưu trên **PostgreSQL**, và chịu trách nhiệm xác thực/phân quyền.
 3. Khi có yêu cầu cần AI xử lý, Backend gọi sang AI Service (API nội bộ) kèm ngữ cảnh cần thiết (lịch sử hội thoại, hồ sơ học sinh...). Với các tác vụ hội thoại (chat với agent tư vấn/AI hỗ trợ), giao thức hỗ trợ **cả streaming lẫn non-streaming** — streaming để trả lời dần theo thời gian thực trên giao diện chat, non-streaming cho các tác vụ chạy nền hoặc không cần hiển thị tức thời.
 4. Khi agent trong AI Service cần tra cứu dữ liệu thật (VD: tìm gia sư phù hợp), nó gọi **ngược lại** Backend Service qua tool-calling thay vì truy cập CSDL trực tiếp, đảm bảo danh sách đề xuất luôn khớp dữ liệu thật và Backend là nơi kiểm soát phân quyền dữ liệu duy nhất.
-
-**Câu hỏi mở / cần quyết định thêm:** cơ chế streaming cụ thể (SSE hay WebSocket) giữa Frontend↔Backend và Backend↔AI Service; cấu hình docker-compose/orchestration khi triển khai nhiều service cùng lúc.
 
 ## 8. Định hướng công nghệ
 
