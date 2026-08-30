@@ -3,3 +3,7 @@
 
 # Memory Bank
 docs/memory-bank/
+
+# Python bytecode
+__pycache__/
+*.pyc
