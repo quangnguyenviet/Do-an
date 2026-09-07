@@ -7,3 +7,7 @@ docs/memory-bank/
 # Python bytecode
 __pycache__/
 *.pyc
+
+
+# Github-project-management
+docs/pm-book/github-project-management/

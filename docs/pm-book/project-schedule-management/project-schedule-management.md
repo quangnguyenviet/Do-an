@@ -143,7 +143,7 @@ gantt
 
 | Mã WBS | Công việc                                                                       | Đầu ra chính                         | Tiêu chí hoàn thành                                                     |
 | ------- | --------------------------------------------------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------- |
-| 1.1     | Rà soát PRD, chốt phạm vi MVP, phân công vai trò                           | Scope Statement, phân công 3 người  | Đã chốt danh sách tính năng MVP & trách nhiệm từng thành viên    |
+| 1.1     | Rà soát PRD, chốt phạm vi MVP,phân công vai trò                            | Scope Statement, phân công 3 người  | Đã chốt danh sách tính năng MVP & trách nhiệm từng thành viên    |
 | 1.2     | Thiết kế kiến trúc hệ thống (FE–BE–AI, luồng REST nội bộ)              | Sơ đồ kiến trúc                    | Sơ đồ được cả nhóm duyệt; xác định API Gateway & luồng gọi AI |
 | 1.3     | Thiết kế CSDL (ERD: Enrollment, Match Request, Curriculum, Homework, Payment…) | ERD + DDL PostgreSQL                    | ERD v1 + DDL chạy được trên PostgreSQL local                           |
 | 1.4     | Dựng prototype ReactJS 4 cổng (Parent/Tutor/Student/Admin)                      | Prototype ReactJS 4 cổng chạy được | 4 cổng có luồng demo chạy được (mock data)                           |
@@ -166,7 +166,7 @@ gantt
 
 | Mã WBS | Công việc                                                                                           | Đầu ra chính                                      | Tiêu chí hoàn thành                                                                     |
 | ------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| 2.2     | Module Parent/Match Request (FR-1→FR-4) — khảo sát nhu cầu, matching score, đăng ký học thử | API khảo sát, matching score, đăng ký học thử | Luồng khảo sát → danh sách gia sư + matching score → tạo Match Request hoạt động |
+| 2.2     | Module Parent/Match Request (FR-1→FR-4) — Form tìm gia sư, matching score, đăng ký học thử | API tìm gia sư, matching score, đăng ký học thử | Luồng tìm gia sư → danh sách gia sư + matching score → tạo Match Request hoạt động |
 | 2.3     | Module Parent tra cứu FAQ & thông tin trung tâm (FR-4)                                             | API + giao diện FAQ & thông tin                    | Trang FAQ hiển thị dữ liệu thật từ BE                                                 |
 | 6.2     | Hoàn thiện Curriculum Agent Option A theo feedback gia sư                                          | Curriculum Agent ổn định                          | Sinh khung 2 cấp (goal → set bài) đúng cấu trúc, chất lượng tốt                  |
 

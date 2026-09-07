@@ -11,7 +11,7 @@ updated: 2026-09-04
 
 Hệ thống là nền tảng Web **single-tenant** thiết kế riêng để hỗ trợ vận hành mô hình gia sư tiếng Anh 1-1. Phạm vi sản phẩm được thiết kế tinh gọn, tập trung 100% giá trị đổi mới sáng tạo vào quy trình vận hành và giảng dạy thực tế sau khi nhận lớp (Giai đoạn B).
 
-Sản phẩm kết hợp giữa công nghệ Web hiện đại và Trí tuệ nhân tạo (AI): (A) **Giao diện Khảo sát & Đăng ký Học thử (Parent Portal)** giúp phụ huynh tra cứu danh sách gia sư, chọn tiêu chí và gửi đăng ký học thử tức thì mượt mà; và (B) **Bộ công cụ hỗ trợ giảng dạy tích hợp AI (Trọng tâm cốt lõi)** dành cho Gia sư với **Tutor Assistant Dual-Mode** (Soạn bài tập cá nhân hóa siêu tốc qua Direct AI Generation hoặc Import File từ ChatGPT ngoài) và **Hệ thống chấm điểm tự động kèm Lời giải thích chi tiết AI cho Học sinh**.
+Sản phẩm kết hợp giữa công nghệ Web hiện đại và Trí tuệ nhân tạo (AI): (A) **Form Tìm Gia Sư & Đăng ký Học thử (Parent Portal)** giúp phụ huynh tra cứu danh sách gia sư, chọn tiêu chí và gửi đăng ký học thử mượt mà; và (B) **Bộ công cụ hỗ trợ giảng dạy tích hợp AI (Trọng tâm cốt lõi)** dành cho Gia sư với **Tutor Assistant Dual-Mode** (Soạn bài tập cá nhân hóa siêu tốc qua Direct AI Generation hoặc Import File từ ChatGPT ngoài) và **Hệ thống chấm điểm tự động kèm Lời giải thích chi tiết AI cho Học sinh**.
 
 ## The Problem
 
@@ -25,9 +25,9 @@ Thị trường gia sư tiếng Anh 1-1 hiện tại đang đối mặt với n�
 
 Sản phẩm cung cấp một giải pháp web tích hợp gồm các thành phần chính hoạt động đồng bộ: Frontend React SPA, Backend Spring Boot và AI Service (Python / LangGraph):
 
-1. **Khảo sát Tìm kiếm & Đăng ký Học thử (Parent Portal)**:
-   * Phụ huynh chọn tiêu chí qua Form khảo sát nhu cầu trực quan (Lớp/Mục tiêu học sinh, Yêu cầu gia sư, Khung giờ học).
-   * Hệ thống hiển thị danh sách gia sư phù hợp kèm nút **"Đăng ký học thử"** (gửi yêu cầu tức thì tới Admin mà không cần điền lại thông tin rườm rà).
+1. **Form Tìm Gia Sư & Đăng ký Học thử (Parent Portal)**:
+   * Phụ huynh chọn tiêu chí qua Form tìm gia sư trực quan (Lớp/Mục tiêu học sinh, Yêu cầu gia sư, Khung giờ học).
+   * Hệ thống hiển thị danh sách gia sư phù hợp kèm nút **"Đăng ký học thử"** (gửi yêu cầu đăng ký tới Admin mà không cần điền lại thông tin rườm rà).
 
 2. **Trợ lý soạn bài Kép & Quản lý Khung chương trình (Tutor Portal)**:
    * **Quản lý Khung chương trình học (Curriculum Management)**: Gia sư tạo và quản lý khung chương trình học tinh gọn (tối đa 2 cấp: Ví dụ *Chủ đề/Chương ➔ Bài học*), hỗ trợ sinh nháp lộ trình siêu tốc bằng AI hoặc khởi tạo thủ công, giúp xây dựng lộ trình rõ ràng và định hướng nội dung cho bài tập AI.
@@ -54,7 +54,7 @@ Sản phẩm cung cấp một giải pháp web tích hợp gồm các thành ph�
 
 ## Who This Serves
 
-* **Phụ huynh**: Khảo sát nhu cầu và đăng ký học thử nhanh chóng qua Form tìm kiếm tinh gọn, đồng thời dễ dàng theo dõi báo cáo tiến độ định lượng của con.
+* **Phụ huynh**: Tìm gia sư và đăng ký học thử nhanh chóng qua Form tìm gia sư tinh gọn, đồng thời dễ dàng theo dõi báo cáo tiến độ định lượng của con.
 * **Gia sư**: Soạn và giao bài tập cá nhân hóa siêu tốc trong 1-3 phút trên điện thoại/máy tính, duy trì hình ảnh chuyên nghiệp.
 * **Học sinh**: Làm bài tập online tiện lợi, biết ngay điểm số và đọc lời giải thích chi tiết cho từng câu sai.
 * **Admin**: Duyệt ghép lớp nhanh chóng, quản lý gia sư và phê duyệt phí nhận lớp minh bạch.
@@ -63,14 +63,14 @@ Sản phẩm cung cấp một giải pháp web tích hợp gồm các thành ph�
 
 *(Ghi chú: Section này tạm thời ghi nhận và sẽ được rà soát, chuẩn hóa thành các chỉ số đo lường/nghiệm thu cụ thể [TBD] sau)*
 
-* **Tốc độ đăng ký học thử**: Phụ huynh hoàn thành form khảo sát nhu cầu và gửi yêu cầu đăng ký học thử dễ dàng, tinh gọn (gửi yêu cầu tức thì).
+* **Tốc độ đăng ký học thử**: Phụ huynh hoàn thành Form tìm gia sư và gửi yêu cầu đăng ký học thử dễ dàng, tinh gọn.
 * **Thời gian chuẩn bị bài của Gia sư**: Giảm thời gian soạn và giao bài tập cá nhân hóa xuống dưới 3 phút/buổi dạy.
 * **Trải nghiệm học tập**: 100% bài tập có đáp án và lời giải thích chi tiết giúp học sinh nắm vững lỗ hổng kiến thức.
 
 ## Scope
 
 ### Nằm trong phạm vi (In-Scope):
-* Trang Phụ huynh: Landing Page, Form Khảo sát nhu cầu & Đăng ký Học thử, Nút Đăng ký học thử tức thì.
+* Trang Phụ huynh: Landing Page, Form Tìm Gia Sư & Đăng ký Học thử, Nút Đăng ký học thử.
 * Cổng Admin: Quản lý hồ sơ gia sư, Quản lý yêu cầu ghép lớp (Match Request Management), Phê duyệt phí nhận lớp (QR proof upload).
 * Cổng Gia sư: Quản lý lớp, Quản lý khung chương trình học tinh gọn (Syllabus/Topics - tối đa 2 cấp: Chủ đề/Chương ➔ Bài học), Lịch dạy, **Tutor Assistant Dual-Mode** (Direct AI Generation + Import Structured File), Giao bài tức thì.
 * Cổng Học sinh: Làm bài tập online (Trắc nghiệm, Điền từ, Sửa lỗi), Chấm điểm tự động, Xem lời giải thích chi tiết AI từng câu, Báo cáo tiến độ.
@@ -78,7 +78,7 @@ Sản phẩm cung cấp một giải pháp web tích hợp gồm các thành ph�
 
 ### Nằm ngoài phạm vi (Out-of-Scope):
 * Không hỗ trợ khung chương trình học đa cấp phức tạp >2 cấp (chỉ thiết kế tinh gọn tối đa 2 cấp: Chủ đề/Chương ➔ Bài học).
-* Không AI Advisor Chatbot tư vấn trên trang chủ (thay bằng Form khảo sát nhu cầu trực quan).
+* Không AI Advisor Chatbot tư vấn trên trang chủ (thay bằng Form tìm gia sư trực quan).
 * Không Admin Live Chat Monitor & Takeover Mode.
 * Không Student Socratic Chat Assistant (thay bằng Auto-Grade + AI Explanations).
 * Không tích hợp cuộc gọi video trực tuyến (dạy qua Zoom/Meet bên ngoài).
