@@ -45,7 +45,6 @@ Tài liệu bao phủ toàn bộ **10 tuần triển khai + giai đoạn bàn gi
 | --------- | -------------------------------------------------- | ---------------------------------------------------------------------------- |
 | PRD       | PRD v.final                                        | `_bmad-output/planning-artifacts/prds/prd-final_project-2026-08-31/prd.md` |
 | KHKD      | Kế hoạch triển khai đề tài v1.1 (2026-09-04) | `docs/ke-hoach-trien-khai.md`                                              |
-| GIT       | Quy ước commit                                   | `frontend/GIT_CONVENTION.md`                                               |
 
 > ⚠️ Trong tài liệu này, số WBS (1.x → 8.x) và số FR (FR-1 → FR-30) dùng lại nguyên văn từ KHKD/PRD để tránh phát sinh định nghĩa mới.
 
@@ -443,7 +442,6 @@ Một đầu việc (WBS) chỉ được tính là **hoàn thành** khi **đủ 
 | Kế hoạch triển khai đề tài | `docs/ke-hoach-trien-khai.md`                                                    | Nguồn WBS, công việc, mốc, rủi ro (base của tài liệu này) |
 | PRD                              | `_bmad-output/planning-artifacts/prds/prd-final_project-2026-08-31/prd.md`       | Yêu cầu chức năng FR-1→FR-30, UJ-1→UJ-4, NFR                 |
 | Brief dự án                    | `_bmad-output/planning-artifacts/briefs/brief-final_project-2026-08-30/brief.md` | Bối cảnh & phạm vi tổng quan                                   |
-| Quy ước commit                 | `frontend/GIT_CONVENTION.md`                                                     | Trạng thái code & nhật ký commit phục vụ review              |
 | Source frontend                  | `frontend/`                                                                      | Prototype & implementation ReactJS hiện có                       |
 
 ---
