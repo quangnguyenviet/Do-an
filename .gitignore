@@ -1,13 +1,41 @@
-# Cline rules
-.clinerules
+# Environment variables
+.env
+*.env.local
 
-# Memory Bank
-docs/memory-bank/
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.DS_Store
 
-# Python bytecode
+# Node / Frontend
+node_modules/
+dist/
+build/
+.next/
+*.log
+
+# Java / Spring Boot Backend
+target/
+.gradle/
+build/
+*.jar
+*.war
+
+# Python / AI Service
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+venv/
+.venv/
+env/
 
+# Docker & Database
+postgres_data/
 
-# Github-project-management
+# Cline & Memory Bank
+.clinerules
+docs/memory-bank/
 docs/pm-book/github-project-management/
