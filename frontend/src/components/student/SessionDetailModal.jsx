@@ -25,12 +25,10 @@ import Badge from "../ui/Badge";
 import Button from "../ui/Button";
 
 export default function SessionDetailModal({ sessionItem, onClose }) {
-  if (!sessionItem) return null;
-
   const [activeTab, setActiveTab] = useState("summary"); // "summary" | "tutor_eval" | "student_feedback" | "quiz"
 
   // Pre-fill student feedback state if available
-  const existingFb = sessionItem.studentFeedback || {};
+  const existingFb = sessionItem?.studentFeedback || {};
   const [myRating, setMyRating] = useState(existingFb.rating || 5);
   const [selectedTags, setSelectedTags] = useState(
     existingFb.tags || ["Giảng bài dễ hiểu", "Nhiệt tình vui vẻ"]
@@ -38,6 +36,8 @@ export default function SessionDetailModal({ sessionItem, onClose }) {
   const [feedbackComment, setFeedbackComment] = useState(existingFb.comment || "");
   const [isSubmitted, setIsSubmitted] = useState(!!existingFb.comment);
   const [toastMsg, setToastMsg] = useState(null);
+
+  if (!sessionItem) return null;
 
   const availableTags = [
     "Giảng bài dễ hiểu",
