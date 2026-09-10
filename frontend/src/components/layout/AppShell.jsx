@@ -1,41 +1,42 @@
 import { NavLink, Outlet, useNavigate, useLocation, useParams } from "react-router-dom";
 import clsx from "clsx";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Users,
-  ClipboardCheck,
   ClipboardList,
-  MessageCircle,
-  Bell,
   Map,
   ListChecks,
   Video,
   CalendarDays,
-  NotebookPen,
-  LineChart,
-  FolderOpen,
   LogOut,
   BookOpenCheck,
   Settings,
-  UserCog,
   IdCard,
-  Search,
-  Lock,
   Sparkles,
+  Menu,
+  X,
+  UserCog,
   BarChart2,
   Activity,
+  Search,
+  MessageCircle,
+  NotebookPen,
+  LineChart,
+  FolderOpen,
+  Lock,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { AiAssistantProvider, useAiAssistant } from "../../context/AiAssistantContext";
 import { StudentMatchingProvider, useStudentMatching } from "../../context/StudentMatchingContext";
-import { gradingQueue, parentThreads, notifications, classRequests, getStudentById } from "../../data/mockData";
+import { classRequests, getStudentById } from "../../data/mockData";
 import Avatar from "../ui/Avatar";
 import AiAssistantPanel from "../tutor/AiAssistantPanel";
 import TopBar from "./TopBar";
 import TutorStudentSidebar from "./TutorStudentSidebar";
 
 const tutorLibraryNav = [
-  { to: "/tutor/library/paths", label: "Kho lộ trình", icon: Map },
+  { to: "/tutor/library/paths", label: "Khung chương trình", icon: Map },
   { to: "/tutor/library/exercises", label: "Kho bài tập", icon: ListChecks },
   { to: "/tutor/library/materials", label: "Kho video & tài liệu", icon: Video },
 ];
@@ -58,6 +59,7 @@ function AppShellInner() {
   const location = useLocation();
   const { studentId } = useParams();
   const { open: chatOpen } = useAiAssistant();
+  const [mobileOpen, setMobileOpen] = useState(false);
   
   let studentMatching = null;
   try {
@@ -88,10 +90,9 @@ function AppShellInner() {
       { to: "/tutor", label: "Tổng quan", icon: LayoutDashboard, end: true },
       { to: "/tutor/students", label: "Học sinh", icon: Users },
       { to: "/tutor/requests", label: "Yêu cầu lớp", icon: ClipboardList, badge: () => classRequests.filter((r) => r.status === "pending_response").length },
-      { to: "/tutor/grading", label: "Chấm bài", icon: ClipboardCheck, badge: () => gradingQueue.length },
-      { to: "/tutor/inbox", label: "Inbox", icon: MessageCircle, badge: () => parentThreads.filter((t) => t.status === "pending").length },
-      { to: "/tutor/notifications", label: "Notification", icon: Bell, badge: () => notifications.filter((n) => !n.read).length },
-      { to: "/tutor/profile", label: "Hồ sơ năng lực", icon: IdCard },
+      { to: "/tutor/schedule", label: "Lịch dạy", icon: CalendarDays },
+      { to: "/tutor/exercise-generator", label: "Soạn bài (AI)", icon: Sparkles },
+      { to: "/tutor/profile", label: "Hồ sơ", icon: IdCard },
       { to: "/tutor/settings", label: "Cài đặt", icon: Settings },
     ];
   } else if (isStudent) {
@@ -125,9 +126,41 @@ function AppShellInner() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950">
-      <aside className="flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        {/* Logo */}
-        <div className="flex items-center gap-2 px-5 py-5">
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar — desktop: always visible; mobile: drawer from left */}
+      <aside
+        className={clsx(
+          "flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900",
+          "fixed inset-y-0 left-0 z-50 lg:static",
+          "transform transition-transform duration-200 ease-out",
+          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
+      >
+        {/* Mobile header: logo + close button */}
+        <div className="flex items-center justify-between px-5 py-5 lg:hidden">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg accent-bg text-white">
+              <BookOpenCheck size={18} strokeWidth={1.75} />
+            </div>
+            <span className="font-semibold text-slate-900 dark:text-slate-50">EnglishPath</span>
+          </div>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Desktop logo */}
+        <div className="hidden items-center gap-2 px-5 py-5 lg:flex">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg accent-bg text-white">
             <BookOpenCheck size={18} strokeWidth={1.75} />
           </div>
@@ -161,6 +194,7 @@ function AppShellInner() {
                     <NavLink
                       to={item.to}
                       end={item.end}
+                      onClick={() => setMobileOpen(false)}
                       className={({ isActive }) =>
                         clsx(
                           "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
@@ -197,6 +231,7 @@ function AppShellInner() {
                     <NavLink
                       key={item.to}
                       to={item.to}
+                      onClick={() => setMobileOpen(false)}
                       className={({ isActive }) =>
                         clsx(
                           "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
@@ -235,12 +270,21 @@ function AppShellInner() {
         </div>
       </aside>
 
+      {/* Mobile hamburger button — visible only on small screens */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="fixed bottom-4 left-4 z-30 flex h-11 w-11 items-center justify-center rounded-full accent-bg text-white shadow-lg lg:hidden"
+        aria-label="Mở menu"
+      >
+        <Menu size={22} />
+      </button>
+
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar />
+        <TopBar onMenuToggle={() => setMobileOpen(true)} />
 
         <div className="flex min-h-0 flex-1">
           <main className="min-w-0 flex-1 overflow-y-auto">
-            <div className="mx-auto max-w-6xl px-6 py-8">
+            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-6 lg:py-8">
               <Outlet />
             </div>
           </main>

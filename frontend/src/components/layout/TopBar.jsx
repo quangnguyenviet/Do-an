@@ -1,9 +1,9 @@
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { Bell, Search, LogOut, ChevronRight, Bot, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, Bot, SlidersHorizontal, Menu, LogOut } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useAiAssistant } from "../../context/AiAssistantContext";
 import { useStudentMatching } from "../../context/StudentMatchingContext";
-import { notifications, getStudentById } from "../../data/mockData";
+import { getStudentById } from "../../data/mockData";
 import ThemeSwitcher from "../ui/ThemeSwitcher";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
@@ -19,11 +19,11 @@ const routeMeta = {
   tutor: {
     "/tutor": { label: "Tổng quan" },
     "/tutor/students": { label: "Học sinh" },
-    "/tutor/grading": { label: "Chấm bài" },
-    "/tutor/inbox": { label: "Inbox" },
-    "/tutor/notifications": { label: "Thông báo" },
-    "/tutor/exercise-generator": { label: "Sinh bài tập" },
-    "/tutor/library/paths": { label: "Kho lộ trình" },
+    "/tutor/students/:studentId": { label: "Chi tiết học sinh" },
+    "/tutor/schedule": { label: "Lịch dạy" },
+    "/tutor/requests": { label: "Yêu cầu lớp" },
+    "/tutor/exercise-generator": { label: "Soạn bài tập AI" },
+    "/tutor/library/paths": { label: "Khung chương trình" },
     "/tutor/library/exercises": { label: "Kho bài tập" },
     "/tutor/library/materials": { label: "Kho video & tài liệu" },
     "/tutor/profile": { label: "Hồ sơ năng lực" },
@@ -89,7 +89,7 @@ function buildBreadcrumbs(pathname, studentId) {
   return crumbs;
 }
 
-export default function TopBar() {
+export default function TopBar({ onMenuToggle }) {
   const location = useLocation();
   const { studentId } = useParams();
   const { session, logout } = useAuth();
@@ -109,7 +109,6 @@ export default function TopBar() {
   const isAdmin = session?.role === "admin";
 
   const crumbs = buildBreadcrumbs(location.pathname, studentId);
-  const unreadCount = notifications.filter((n) => !n.read).length;
 
   function handleLogout() {
     logout();
@@ -128,60 +127,96 @@ export default function TopBar() {
   }
 
   return (
-    <header className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-white px-6 py-2.5 dark:border-slate-800 dark:bg-slate-950">
-      {/* Breadcrumb */}
-      <nav className="flex min-w-0 items-center gap-1.5 text-sm">
-        {crumbs.map((crumb, i) => (
-          <span key={i} className="flex items-center gap-1.5 min-w-0">
-            {i > 0 && <ChevronRight size={14} className="shrink-0 text-slate-400" />}
-            {crumb.to ? (
-              <a
-                href={crumb.to}
-                className="truncate text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition"
-              >
-                {crumb.label}
-              </a>
-            ) : (
-              <span className="truncate font-medium text-slate-900 dark:text-slate-50">{crumb.label}</span>
-            )}
-          </span>
-        ))}
-      </nav>
+    <header className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-2.5 dark:border-slate-800 dark:bg-slate-950 lg:px-6">
+      {/* Mobile: hamburger button; Desktop: breadcrumb */}
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        {onMenuToggle && (
+          <button
+            onClick={onMenuToggle}
+            className="shrink-0 rounded-md p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
+            aria-label="Mở menu"
+          >
+            <Menu size={20} />
+          </button>
+        )}
+
+        {/* Breadcrumb — hidden on mobile, shown on lg+ */}
+        <nav className="hidden min-w-0 items-center gap-1.5 text-sm lg:flex">
+          {crumbs.map((crumb, i) => (
+            <span key={i} className="flex items-center gap-1.5 min-w-0">
+              {i > 0 && <ChevronRight size={14} className="shrink-0 text-slate-400" />}
+              {crumb.to ? (
+                <a
+                  href={crumb.to}
+                  className="truncate text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition"
+                >
+                  {crumb.label}
+                </a>
+              ) : (
+                <span className="truncate font-medium text-slate-900 dark:text-slate-50">{crumb.label}</span>
+              )}
+            </span>
+          ))}
+        </nav>
+
+        {/* Mobile: show only current page label */}
+        <span className="truncate text-sm font-medium text-slate-900 dark:text-slate-50 lg:hidden">
+          {crumbs[crumbs.length - 1]?.label ?? ""}
+        </span>
+      </div>
 
       {/* Right actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         {/* Demo Status Switcher for Student Prototype */}
         {isStudent && studentMatching && (
-          <div className="flex items-center gap-1.5 rounded-lg bg-indigo-50 px-2.5 py-1 text-xs border border-indigo-200 dark:bg-indigo-950/60 dark:border-indigo-900">
+          <div className="hidden items-center gap-1.5 rounded-lg bg-indigo-50 px-2.5 py-1 text-xs border border-indigo-200 dark:bg-indigo-950/60 dark:border-indigo-900 lg:flex">
             <SlidersHorizontal size={13} className="text-indigo-600 dark:text-indigo-400" />
-            <span className="font-medium text-indigo-900 dark:text-indigo-200 hidden md:inline">Trạng thái Demo:</span>
+            <span className="font-medium text-indigo-900 dark:text-indigo-200">Trạng thái Demo:</span>
             <select
               value={studentMatching.studentStatus}
               onChange={handleDemoStatusChange}
               className="bg-transparent font-bold text-indigo-700 outline-none dark:text-indigo-300 cursor-pointer"
             >
-              <option value="SEARCHING">1. SEARCHING (Marketplace)</option>
-              <option value="ONBOARDING">2. ONBOARDING (Khai báo)</option>
-              <option value="CHAT_&_QUIZ">3. CHAT_&_QUIZ (Làm test)</option>
-              <option value="WAITING_APPROVAL">4. WAITING_APPROVAL (Chờ duyệt)</option>
-              <option value="MATCHED">5. MATCHED (Mở khóa LMS 100%)</option>
+              <option value="SEARCHING">1. SEARCHING</option>
+              <option value="ONBOARDING">2. ONBOARDING</option>
+              <option value="CHAT_&_QUIZ">3. CHAT_&_QUIZ</option>
+              <option value="WAITING_APPROVAL">4. WAITING_APPROVAL</option>
+              <option value="MATCHED">5. MATCHED</option>
             </select>
           </div>
         )}
 
         {/* AI Assistant toggle — only for tutor */}
         {isTutor && (
-          <Button variant={chatOpen ? "secondary" : "ghost"} size="sm" onClick={() => setChatOpen((v) => !v)}>
-            <Bot size={16} /> Trợ lý AI
+          <Button
+            variant={chatOpen ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setChatOpen((v) => !v)}
+            className="hidden sm:flex"
+          >
+            <Bot size={16} /> <span className="hidden md:inline">Trợ lý AI</span>
+          </Button>
+        )}
+
+        {/* Mobile AI button: icon only */}
+        {isTutor && (
+          <Button
+            variant={chatOpen ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setChatOpen((v) => !v)}
+            className="sm:hidden"
+            aria-label="Trợ lý AI"
+          >
+            <Bot size={16} />
           </Button>
         )}
 
         {/* Theme switcher */}
         <ThemeSwitcher />
 
-        {/* Avatar + logout */}
-        {!isTutor && session && (
-          <div className="flex items-center gap-2 border-l border-slate-200 pl-3 dark:border-slate-800">
+        {/* Avatar + logout — tutor only */}
+        {isTutor && session && (
+          <div className="flex items-center gap-2 border-l border-slate-200 pl-2 dark:border-slate-800 sm:pl-3">
             <Avatar initials={session.initials} size="sm" />
             <div className="hidden min-w-0 sm:block">
               <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-50">{session.name}</p>
