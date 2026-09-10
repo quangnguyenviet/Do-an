@@ -1,11 +1,35 @@
 import { useState } from "react";
-import { Check, MapPin, Plus, Save, X } from "lucide-react";
+import {
+  Check,
+  MapPin,
+  Plus,
+  Save,
+  X,
+  Clock,
+  ShieldCheck,
+  AlertTriangle,
+  Info,
+  Lock,
+  Zap,
+  RefreshCw,
+  Upload,
+  Trash2,
+  CheckCircle2,
+  XCircle,
+  FileCheck,
+  ArrowRight,
+  Sliders,
+  FileText,
+  CreditCard,
+  GraduationCap
+} from "lucide-react";
 import clsx from "clsx";
-import { tutorProfile } from "../../data/mockData";
 import PageHeader from "../../components/ui/PageHeader";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
+import Badge from "../../components/ui/Badge";
 
+// Subject Options
 const subjectOptions = [
   "IELTS",
   "IELTS Writing",
@@ -21,438 +45,1431 @@ const subjectOptions = [
 ];
 
 const levelOptions = [
-  { value: "teacher", label: "Giáo viên" },
-  { value: "student", label: "Sinh viên" },
+  { value: "teacher", label: "Giáo viên chính thức" },
+  { value: "student", label: "Sinh viên các trường Đại học" },
 ];
 
 const weekDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
 const dayBlocks = ["Sáng", "Chiều", "Tối"];
 
+// Style utilities strictly following DESIGN.md
 const inputClass =
-  "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:ring-blue-950";
+  "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-950 transition-all";
+
+const pendingInputClass =
+  "w-full rounded-lg border border-amber-300 bg-amber-50/40 px-3 py-2 text-sm text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 dark:border-amber-700/80 dark:bg-amber-950/20 dark:text-slate-100 dark:focus:ring-amber-950 transition-all";
 
 const chipClass = (active) =>
   clsx(
-    "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+    "rounded-full border px-3 py-1.5 text-xs font-medium transition cursor-pointer select-none",
     active
       ? "border-blue-600 bg-blue-600 text-white"
-      : "border-slate-200 text-slate-600 hover:border-blue-300 dark:border-slate-700 dark:text-slate-300"
+      : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-700"
   );
 
+// Baseline approved profile data
+const defaultApprovedProfile = {
+  tutorId: "t1",
+  status: "approved", // "approved" | "pending_approval" | "rejected"
+  rejectionReason: "",
+
+  // Basic Info (Instant Update - No Admin approval required)
+  subjects: ["IELTS", "Giao tiếp cơ bản", "Ngữ pháp", "Phát âm"],
+  bio: "Giáo viên tiếng Anh với 5 năm kinh nghiệm luyện thi IELTS và giao tiếp cho học sinh cấp 2-3.",
+  serviceAreas: ["Quận 1, TP.HCM", "Quận 3, TP.HCM", "Dạy online"],
+  availability: ["Thứ 2|Tối", "Thứ 4|Tối", "Thứ 6|Tối", "Thứ 7|Sáng", "Thứ 7|Chiều", "Chủ nhật|Sáng"],
+  phone: "0987 654 321",
+  zalo: "0987 654 321",
+
+  // Important Info: Academic & Proof Documents (Requires Admin approval)
+  qualificationLevel: "teacher", // "teacher" | "student"
+  experienceYears: 5,
+  birthYear: "2001 (25 tuổi)",
+  hometown: "Nam Định",
+  currentAddress: "Quận 3, TP.HCM",
+  university: "Đại học Sư Phạm TP.HCM - Sư phạm Tiếng Anh",
+  highSchool: "THPT Chuyên Lê Hồng Phong (Nam Định)",
+  graduationScore: "28.5 điểm khối D01",
+  academicRank: "Xuất sắc (GPA 3.85/4.0)",
+
+  // Academic Proof & ID Verification Files
+  idCardNumber: "03620100**** (Đã xác thực)",
+  idCardFrontName: "cccd_mat_truoc_lananh.jpg",
+  idCardBackName: "cccd_mat_sau_lananh.jpg",
+  degreeScanName: "bang_dai_hoc_su_pham_lananh.pdf",
+  transcriptScanName: "bang_diem_gpa_su_pham_lananh.pdf",
+
+  // Extra Certificates
+  certificates: [
+    { id: "c1", name: "IELTS 8.5 Overall", issuer: "British Council", year: "2022", fileName: "ielts_8.5_certificate.pdf", status: "approved" },
+    { id: "c2", name: "Chứng chỉ Nghiệp vụ Sư phạm", issuer: "ĐH Sư phạm TP.HCM", year: "2019", fileName: "nghiep_vu_su_pham.pdf", status: "approved" },
+  ],
+};
+
 function emptyCertForm() {
-  return { name: "", issuer: "", year: "" };
+  return { name: "", issuer: "", year: "", fileName: "" };
 }
 
+// Important fields metadata
+const IMPORTANT_FIELDS_META = {
+  qualificationLevel: { label: "Trình độ phân loại", format: (v) => (v === "teacher" ? "Giáo viên chính thức" : "Sinh viên") },
+  experienceYears: { label: "Số năm kinh nghiệm", format: (v) => `${v} năm` },
+  birthYear: { label: "Năm sinh / Tuổi" },
+  hometown: { label: "Quê quán" },
+  currentAddress: { label: "Nơi ở hiện tại" },
+  university: { label: "Trường ĐH & Chuyên ngành" },
+  highSchool: { label: "Trường THPT Cấp 3" },
+  graduationScore: { label: "Điểm tốt nghiệp THPT / Thi ĐH" },
+  academicRank: { label: "Xếp loại Học lực / GPA" },
+  idCardNumber: { label: "Số CCCD / CMND" },
+  idCardFrontName: { label: "Ảnh Mặt trước CCCD" },
+  idCardBackName: { label: "Ảnh Mặt sau CCCD" },
+  degreeScanName: { label: "Minh chứng Bằng ĐH / Thẻ SV" },
+  transcriptScanName: { label: "Minh chứng Bảng điểm GPA / Học bạ" },
+};
+
 export default function TutorProfile() {
-  const [subjects, setSubjects] = useState(tutorProfile.subjects);
-  const [level, setLevel] = useState(tutorProfile.qualificationLevel);
-  const [experienceYears, setExperienceYears] = useState(tutorProfile.experienceYears);
-  const [bio, setBio] = useState(tutorProfile.bio);
-  
-  // Academic Background & Credentials state
-  const [birthYear, setBirthYear] = useState(tutorProfile.birthYear || "2001 (25 tuổi)");
-  const [hometown, setHometown] = useState(tutorProfile.hometown || "Nam Định");
-  const [currentAddress, setCurrentAddress] = useState(tutorProfile.currentAddress || "Quận 3, TP.HCM");
-  const [university, setUniversity] = useState(tutorProfile.university || "Đại học Sư Phạm TP.HCM - Ngôn ngữ Anh");
-  const [highSchool, setHighSchool] = useState(tutorProfile.highSchool || "THPT Chuyên Lê Hồng Phong (Nam Định)");
-  const [graduationScore, setGraduationScore] = useState(tutorProfile.graduationScore || "28.5 điểm khối D01");
-  const [academicRank, setAcademicRank] = useState(tutorProfile.academicRank || "Xuất sắc (GPA 3.85/4.0)");
+  // Official active approved profile
+  const [approvedProfile, setApprovedProfile] = useState(defaultApprovedProfile);
 
-  const [certificates, setCertificates] = useState(tutorProfile.certificates);
-  const [serviceAreas, setServiceAreas] = useState(tutorProfile.serviceAreas);
-  const [availability, setAvailability] = useState(tutorProfile.availability);
+  // Overall profile approval state: "approved" | "pending_approval" | "rejected"
+  const [profileStatus, setProfileStatus] = useState("approved");
+  const [rejectionReason, setRejectionReason] = useState("");
 
+  // Working form data state
+  const [formData, setFormData] = useState(defaultApprovedProfile);
+
+  // Pending changes dictionary for important fields: { [fieldName]: { oldVal, newVal } }
+  const [pendingChanges, setPendingChanges] = useState({});
+
+  // Pending certificates awaiting admin approval
+  const [pendingCertificates, setPendingCertificates] = useState([]);
+
+  // Certificate form state
   const [certForm, setCertForm] = useState(emptyCertForm());
-  const [newArea, setNewArea] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [simulatedCertFile, setSimulatedCertFile] = useState(null);
 
+  // New service area input
+  const [newArea, setNewArea] = useState("");
+
+  // System notification banner
+  const [notification, setNotification] = useState(null);
+
+  // ----------------------------------------------------
+  // Basic Info Handlers (Instant Update)
+  // ----------------------------------------------------
   function toggleSubject(s) {
-    setSaved(false);
-    setSubjects((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
+    setFormData((prev) => {
+      const nextSubjects = prev.subjects.includes(s)
+        ? prev.subjects.filter((x) => x !== s)
+        : [...prev, s];
+      return { ...prev, subjects: nextSubjects };
+    });
   }
 
   function toggleSlot(day, block) {
-    setSaved(false);
     const key = `${day}|${block}`;
-    setAvailability((prev) => (prev.includes(key) ? prev.filter((x) => x !== key) : [...prev, key]));
-  }
-
-  function addCertificate() {
-    if (!certForm.name.trim()) return;
-    setCertificates((prev) => [
-      ...prev,
-      { id: `c${Date.now()}`, name: certForm.name.trim(), issuer: certForm.issuer.trim(), year: certForm.year.trim() },
-    ]);
-    setCertForm(emptyCertForm());
-    setSaved(false);
-  }
-
-  function removeCertificate(id) {
-    setCertificates((prev) => prev.filter((c) => c.id !== id));
-    setSaved(false);
+    setFormData((prev) => {
+      const nextSlots = prev.availability.includes(key)
+        ? prev.availability.filter((x) => x !== key)
+        : [...prev, key];
+      return { ...prev, availability: nextSlots };
+    });
   }
 
   function addServiceArea() {
     const value = newArea.trim();
-    if (!value || serviceAreas.includes(value)) return;
-    setServiceAreas((prev) => [...prev, value]);
+    if (!value || formData.serviceAreas.includes(value)) return;
+    setFormData((prev) => ({ ...prev, serviceAreas: [...prev.serviceAreas, value] }));
     setNewArea("");
-    setSaved(false);
   }
 
   function removeServiceArea(area) {
-    setServiceAreas((prev) => prev.filter((a) => a !== area));
-    setSaved(false);
+    setFormData((prev) => ({
+      ...prev,
+      serviceAreas: prev.serviceAreas.filter((a) => a !== area),
+    }));
   }
 
-  function handleSave() {
-    setSaved(true);
+  // ----------------------------------------------------
+  // Academic & Proof File Selection Simulators
+  // ----------------------------------------------------
+  function handleProofFileUpload(fieldKey, e) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, [fieldKey]: file.name }));
+    }
   }
+
+  function handleCertFileSelect(e) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSimulatedCertFile(file.name);
+      setCertForm((f) => ({ ...f, fileName: file.name }));
+    }
+  }
+
+  function addCertificateRequest() {
+    if (!certForm.name.trim()) return;
+    const newCert = {
+      id: `cert-pending-${Date.now()}`,
+      name: certForm.name.trim(),
+      issuer: certForm.issuer.trim() || "Chưa cập nhật",
+      year: certForm.year.trim() || new Date().getFullYear().toString(),
+      fileName: certForm.fileName || `${certForm.name.trim().toLowerCase().replace(/\s+/g, "_")}_scan.pdf`,
+      status: "pending_approval",
+      submittedAt: new Date().toLocaleDateString("vi-VN"),
+    };
+
+    setPendingCertificates((prev) => [...prev, newCert]);
+    setCertForm(emptyCertForm());
+    setSimulatedCertFile(null);
+    setProfileStatus("pending_approval");
+    setNotification({
+      type: "important",
+      title: "Đã ghi nhận chứng chỉ mới",
+      message: "Chứng chỉ đã được xếp vào danh sách chờ Admin phê duyệt.",
+    });
+  }
+
+  function removePendingCert(id) {
+    setPendingCertificates((prev) => prev.filter((c) => c.id !== id));
+  }
+
+  function removeApprovedCert(id) {
+    const certToRemove = approvedProfile.certificates.find((c) => c.id === id);
+    if (!certToRemove) return;
+
+    setPendingChanges((prev) => ({
+      ...prev,
+      [`remove_cert_${id}`]: {
+        type: "remove_certificate",
+        certId: id,
+        certName: certToRemove.name,
+        label: `Yêu cầu gỡ chứng chỉ: ${certToRemove.name}`,
+        oldVal: certToRemove.name,
+        newVal: "[Yêu cầu xóa]",
+      },
+    }));
+
+    setProfileStatus("pending_approval");
+    setNotification({
+      type: "important",
+      title: "Yêu cầu gỡ chứng chỉ đang chờ duyệt",
+      message: `Admin sẽ xem xét yêu cầu gỡ chứng chỉ "${certToRemove.name}".`,
+    });
+  }
+
+  function cancelCertRemoveRequest(id) {
+    setPendingChanges((prev) => {
+      const next = { ...prev };
+      delete next[`remove_cert_${id}`];
+      return next;
+    });
+  }
+
+  // ----------------------------------------------------
+  // Save Logic
+  // ----------------------------------------------------
+  function handleSaveProfile() {
+    let hasBasicChanges = false;
+    let hasImportantChanges = false;
+    const newPendingObj = { ...pendingChanges };
+
+    // Check Basic fields
+    const basicKeys = ["subjects", "bio", "serviceAreas", "availability", "phone", "zalo"];
+    basicKeys.forEach((key) => {
+      if (JSON.stringify(formData[key]) !== JSON.stringify(approvedProfile[key])) {
+        hasBasicChanges = true;
+      }
+    });
+
+    // Check Important fields & Proof Files
+    const importantKeys = [
+      "qualificationLevel",
+      "experienceYears",
+      "birthYear",
+      "hometown",
+      "currentAddress",
+      "university",
+      "highSchool",
+      "graduationScore",
+      "academicRank",
+      "idCardNumber",
+      "idCardFrontName",
+      "idCardBackName",
+      "degreeScanName",
+      "transcriptScanName",
+    ];
+
+    importantKeys.forEach((key) => {
+      const oldVal = approvedProfile[key];
+      const newVal = formData[key];
+      if (String(oldVal).trim() !== String(newVal).trim()) {
+        hasImportantChanges = true;
+        const meta = IMPORTANT_FIELDS_META[key];
+        const formatFn = meta?.format || ((v) => String(v));
+        newPendingObj[key] = {
+          fieldKey: key,
+          label: meta?.label || key,
+          oldVal: formatFn(oldVal),
+          newVal: formatFn(newVal),
+          rawNewVal: newVal,
+        };
+      } else {
+        delete newPendingObj[key];
+      }
+    });
+
+    if (pendingCertificates.length > 0) {
+      hasImportantChanges = true;
+    }
+
+    let updatedApproved = { ...approvedProfile };
+
+    if (hasBasicChanges) {
+      basicKeys.forEach((key) => {
+        updatedApproved[key] = formData[key];
+      });
+      setApprovedProfile(updatedApproved);
+    }
+
+    if (hasImportantChanges || Object.keys(newPendingObj).length > 0) {
+      setPendingChanges(newPendingObj);
+      setProfileStatus("pending_approval");
+      setNotification({
+        type: "important",
+        title: "Đã cập nhật thông tin & Giấy tờ minh chứng",
+        message: "Thông tin cơ bản đã áp dụng ngay. Lý lịch học tập, giấy tờ CCCD & bằng cấp mới đã được chuyển sang hàng chờ Admin phê duyệt.",
+      });
+    } else if (hasBasicChanges) {
+      setNotification({
+        type: "basic",
+        title: "Cập nhật thành công",
+        message: "Thông tin cơ bản đã có hiệu lực ngay lập tức.",
+      });
+    } else {
+      setNotification({
+        type: "info",
+        title: "Không có thay đổi",
+        message: "Không có dữ liệu nào mới được thay đổi.",
+      });
+    }
+  }
+
+  function handleCancelAllPending() {
+    setPendingChanges({});
+    setPendingCertificates([]);
+    setFormData(approvedProfile);
+    setProfileStatus("approved");
+    setRejectionReason("");
+    setNotification({
+      type: "info",
+      title: "Đã hủy các thay đổi chờ duyệt",
+      message: "Hồ sơ đã được khôi phục về trạng thái được duyệt ban đầu.",
+    });
+  }
+
+  // ----------------------------------------------------
+  // Admin Simulation Actions (Prototype testing)
+  // ----------------------------------------------------
+  function simulateAdminApprove() {
+    const newApproved = { ...approvedProfile };
+
+    Object.keys(pendingChanges).forEach((key) => {
+      const item = pendingChanges[key];
+      if (item.type === "remove_certificate") {
+        newApproved.certificates = newApproved.certificates.filter((c) => c.id !== item.certId);
+      } else if (item.fieldKey) {
+        newApproved[item.fieldKey] = item.rawNewVal;
+      }
+    });
+
+    if (pendingCertificates.length > 0) {
+      const approvedCerts = pendingCertificates.map((c) => ({ ...c, status: "approved" }));
+      newApproved.certificates = [...newApproved.certificates, ...approvedCerts];
+    }
+
+    setApprovedProfile(newApproved);
+    setFormData(newApproved);
+    setPendingChanges({});
+    setPendingCertificates([]);
+    setProfileStatus("approved");
+    setRejectionReason("");
+
+    setNotification({
+      type: "basic",
+      title: "Admin đã phê duyệt",
+      message: "Tất cả thông tin lý lịch & minh chứng đã được phê duyệt và áp dụng chính thức.",
+    });
+  }
+
+  function simulateAdminReject() {
+    setProfileStatus("rejected");
+    setRejectionReason(
+      "Admin phản hồi: Ảnh chụp minh chứng Bằng ĐH / Thẻ Sinh Viên và CCCD chưa rõ nét. Vui lòng tải lại ảnh bản scan đầy đủ 4 góc."
+    );
+    setNotification({
+      type: "rejected",
+      title: "Yêu cầu bổ sung thông tin",
+      message: "Admin đã gửi yêu cầu chỉnh sửa/bổ sung file minh chứng.",
+    });
+  }
+
+  function applyPresetState(state) {
+    if (state === "approved") {
+      setProfileStatus("approved");
+      setPendingChanges({});
+      setPendingCertificates([]);
+      setFormData(approvedProfile);
+      setRejectionReason("");
+    } else if (state === "pending") {
+      const mockPending = {
+        university: {
+          fieldKey: "university",
+          label: "Trường ĐH & Chuyên ngành",
+          oldVal: "Đại học Sư Phạm TP.HCM - Sư phạm Tiếng Anh",
+          newVal: "Đại học Ngoại Thương TP.HCM - Kinh tế đối ngoại",
+          rawNewVal: "Đại học Ngoại Thương TP.HCM - Kinh tế đối ngoại",
+        },
+        degreeScanName: {
+          fieldKey: "degreeScanName",
+          label: "Minh chứng Bằng ĐH / Thẻ SV mới",
+          oldVal: "bang_dai_hoc_su_pham_lananh.pdf",
+          newVal: "bang_ngoai_thuong_scan_moi.pdf",
+          rawNewVal: "bang_ngoai_thuong_scan_moi.pdf",
+        },
+        experienceYears: {
+          fieldKey: "experienceYears",
+          label: "Số năm kinh nghiệm",
+          oldVal: "5 năm",
+          newVal: "6 năm",
+          rawNewVal: 6,
+        },
+      };
+      const mockPendingCert = [
+        {
+          id: "cert-demo-1",
+          name: "TESOL 120-hour Advanced Certificate",
+          issuer: "Australian International College",
+          year: "2025",
+          fileName: "tesol_120h_lananh.pdf",
+          status: "pending_approval",
+          submittedAt: "10/09/2026",
+        },
+      ];
+
+      setPendingChanges(mockPending);
+      setPendingCertificates(mockPendingCert);
+      setProfileStatus("pending_approval");
+      setFormData((prev) => ({
+        ...prev,
+        university: "Đại học Ngoại Thương TP.HCM - Kinh tế đối ngoại",
+        degreeScanName: "bang_ngoai_thuong_scan_moi.pdf",
+        experienceYears: 6,
+      }));
+    } else if (state === "rejected") {
+      setProfileStatus("rejected");
+      setRejectionReason(
+        "Admin phản hồi: Ảnh bản scan Bằng tốt nghiệp ĐH bị mờ mất phần dấu mộc. Vui lòng chụp lại rõ ràng phần mộc đỏ của nhà trường."
+      );
+    }
+  }
+
+  const pendingCount = Object.keys(pendingChanges).length + pendingCertificates.length;
 
   return (
-    <div>
+    <div className="space-y-6 pb-20">
+      {/* ---------------------------------------------------- */}
+      {/* PROTOTYPE TESTING BAR */}
+      {/* ---------------------------------------------------- */}
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <Sliders size={18} className="text-slate-600 dark:text-slate-400 shrink-0" />
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                Thử nghiệm prototype luồng duyệt hồ sơ &amp; minh chứng
+              </span>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Chuyển trạng thái hoặc giả lập thao tác Admin để kiểm thử giao diện:
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => applyPresetState("approved")}
+              className={clsx(
+                "rounded-md px-2.5 py-1 text-xs font-medium transition",
+                profileStatus === "approved" && pendingCount === 0
+                  ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
+                  : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              )}
+            >
+              1. Đã duyệt (Approved)
+            </button>
+            <button
+              type="button"
+              onClick={() => applyPresetState("pending")}
+              className={clsx(
+                "rounded-md px-2.5 py-1 text-xs font-medium transition",
+                profileStatus === "pending_approval" || pendingCount > 0
+                  ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
+                  : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              )}
+            >
+              2. Chờ duyệt (Pending)
+            </button>
+            <button
+              type="button"
+              onClick={() => applyPresetState("rejected")}
+              className={clsx(
+                "rounded-md px-2.5 py-1 text-xs font-medium transition",
+                profileStatus === "rejected"
+                  ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
+                  : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              )}
+            >
+              3. Yêu cầu sửa (Rejected)
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-3 dark:border-slate-800 text-xs">
+          <span className="font-medium text-slate-600 dark:text-slate-400">Giả lập thao tác Admin:</span>
+          <button
+            type="button"
+            onClick={simulateAdminApprove}
+            className="inline-flex items-center gap-1 rounded bg-emerald-600 px-2.5 py-1 text-white hover:bg-emerald-700 transition"
+          >
+            <CheckCircle2 size={13} /> Duyệt hồ sơ ngay
+          </button>
+          <button
+            type="button"
+            onClick={simulateAdminReject}
+            className="inline-flex items-center gap-1 rounded bg-rose-600 px-2.5 py-1 text-white hover:bg-rose-700 transition"
+          >
+            <XCircle size={13} /> Gửi yêu cầu sửa
+          </button>
+
+          {pendingCount > 0 && (
+            <button
+              type="button"
+              onClick={handleCancelAllPending}
+              className="inline-flex items-center gap-1 rounded bg-slate-200 px-2.5 py-1 text-slate-700 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition sm:ml-auto"
+            >
+              <RefreshCw size={13} /> Đặt lại mặc định
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ---------------------------------------------------- */}
+      {/* PAGE HEADER */}
+      {/* ---------------------------------------------------- */}
       <PageHeader
-        title="Hồ sơ năng lực"
-        description="Khai báo môn/kỹ năng giảng dạy, trình độ, kinh nghiệm, khu vực và lịch rảnh — Admin dùng thông tin này để giới thiệu bạn với yêu cầu phù hợp từ phụ huynh."
-        actions={
-          <Button size="sm" onClick={handleSave}>
-            <Save size={14} /> Lưu thay đổi
-          </Button>
-        }
+        title="Quản lý Hồ sơ Năng lực Gia sư"
+        description="Khai báo thông tin giảng dạy, lý lịch học tập kèm file minh chứng (Bằng ĐH, Bảng điểm, CCCD), bằng cấp khác và thời gian rảnh."
       />
 
-      {saved && (
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-          <Check size={16} /> Đã lưu thay đổi hồ sơ năng lực.
+      {/* SYSTEM NOTIFICATION */}
+      {notification && (
+        <div
+          className={clsx(
+            "flex items-start justify-between gap-3 rounded-lg p-3.5 text-sm transition border",
+            notification.type === "basic" && "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-200",
+            notification.type === "important" && "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:border-amber-900 dark:text-amber-200",
+            notification.type === "rejected" && "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-200",
+            notification.type === "info" && "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
+          )}
+        >
+          <div className="flex items-start gap-2.5">
+            {notification.type === "basic" && <Zap className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" size={16} />}
+            {notification.type === "important" && <Clock className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" size={16} />}
+            {notification.type === "rejected" && <AlertTriangle className="mt-0.5 shrink-0 text-rose-600 dark:text-rose-400" size={16} />}
+            {notification.type === "info" && <Info className="mt-0.5 shrink-0 text-slate-600 dark:text-slate-400" size={16} />}
+            <div>
+              <p className="font-semibold">{notification.title}</p>
+              <p className="text-xs opacity-90 mt-0.5">{notification.message}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setNotification(null)}
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5"
+          >
+            <X size={15} />
+          </button>
         </div>
       )}
 
-      <div className="space-y-4">
-        <Card>
-          <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Môn / kỹ năng có thể dạy</h2>
-          <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
-            Chọn các môn hoặc kỹ năng bạn có thể nhận dạy.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {subjectOptions.map((s) => (
-              <button type="button" key={s} onClick={() => toggleSubject(s)} className={chipClass(subjects.includes(s))}>
-                {s}
-              </button>
-            ))}
-          </div>
-        </Card>
-
-        <Card>
-          <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Lý lịch Học tập &amp; Xuất thân Sinh viên / Giáo viên</h2>
-          <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
-            Thông tin thực tế (Năm sinh, Quê quán, Điểm tốt nghiệp THPT/ĐH, GPA) giúp Phụ huynh &amp; Học sinh thêm tin tưởng.
-          </p>
-
-          <div className="grid gap-4 xs:grid-cols-2 lg:grid-cols-3">
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Năm sinh / Tuổi</label>
-              <input
-                type="text"
-                value={birthYear}
-                onChange={(e) => {
-                  setBirthYear(e.target.value);
-                  setSaved(false);
-                }}
-                placeholder="VD: 2002 (24 tuổi)"
-                className={inputClass}
-              />
+      {/* ---------------------------------------------------- */}
+      {/* STATUS CARDS */}
+      {/* ---------------------------------------------------- */}
+      {profileStatus === "approved" && pendingCount === 0 && (
+        <Card className="border-emerald-200 bg-emerald-50/40 dark:border-emerald-900/60 dark:bg-emerald-950/20">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-bold text-slate-900 dark:text-slate-50">
+                    Trạng thái hồ sơ: Đã phê duyệt chính thức
+                  </h3>
+                  <Badge tone="emerald">Đang hoạt động</Badge>
+                </div>
+                <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                  Lý lịch học tập, minh chứng bằng cấp &amp; định danh của bạn đã được Admin xác thực chính thức.
+                </p>
+              </div>
             </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Quê quán</label>
-              <input
-                type="text"
-                value={hometown}
-                onChange={(e) => {
-                  setHometown(e.target.value);
-                  setSaved(false);
-                }}
-                placeholder="VD: Nam Định"
-                className={inputClass}
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Nơi ở hiện tại</label>
-              <input
-                type="text"
-                value={currentAddress}
-                onChange={(e) => {
-                  setCurrentAddress(e.target.value);
-                  setSaved(false);
-                }}
-                placeholder="VD: Quận 3, TP.HCM"
-                className={inputClass}
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Trường THPT Cấp 3</label>
-              <input
-                type="text"
-                value={highSchool}
-                onChange={(e) => {
-                  setHighSchool(e.target.value);
-                  setSaved(false);
-                }}
-                placeholder="VD: THPT Chuyên Lê Hồng Phong"
-                className={inputClass}
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Trường ĐH &amp; Chuyên ngành</label>
-              <input
-                type="text"
-                value={university}
-                onChange={(e) => {
-                  setUniversity(e.target.value);
-                  setSaved(false);
-                }}
-                placeholder="VD: ĐH Ngoại Thương - Ngôn ngữ Anh"
-                className={inputClass}
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Điểm tốt nghiệp THPT / Thi ĐH</label>
-              <input
-                type="text"
-                value={graduationScore}
-                onChange={(e) => {
-                  setGraduationScore(e.target.value);
-                  setSaved(false);
-                }}
-                placeholder="VD: 28.5 điểm khối D01"
-                className={inputClass}
-              />
-            </div>
-
-            <div className="xs:col-span-2 lg:col-span-3">
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Xếp loại Học lực &amp; GPA Đại học</label>
-              <input
-                type="text"
-                value={academicRank}
-                onChange={(e) => {
-                  setAcademicRank(e.target.value);
-                  setSaved(false);
-                }}
-                placeholder="VD: Xuất sắc (GPA 3.85/4.0)"
-                className={inputClass}
-              />
+            <div className="text-xs font-mono text-slate-500 dark:text-slate-400 shrink-0">
+              Mã Gia Sư: TS-001 (Nguyễn Lan Anh)
             </div>
           </div>
         </Card>
+      )}
 
-        <Card>
-          <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Trình độ &amp; kinh nghiệm</h2>
-          <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
-            Thông tin nền tảng để Admin đánh giá mức độ phù hợp với yêu cầu của phụ huynh.
-          </p>
-          <div className="grid gap-4 xs:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Trình độ</label>
-              <div className="flex flex-wrap gap-2">
-                {levelOptions.map((o) => (
-                  <button
-                    type="button"
-                    key={o.value}
-                    onClick={() => {
-                      setLevel(o.value);
-                      setSaved(false);
-                    }}
-                    className={chipClass(level === o.value)}
+      {(profileStatus === "pending_approval" || pendingCount > 0) && (
+        <Card className="border-amber-200 bg-amber-50/40 dark:border-amber-900/60 dark:bg-amber-950/20">
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500 text-white">
+                  <Clock size={20} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-slate-900 dark:text-slate-50">
+                      Trạng thái: Có {pendingCount} thông tin &amp; minh chứng chờ Admin xét duyệt
+                    </h3>
+                    <Badge tone="amber">Đang chờ duyệt</Badge>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                    Trong thời gian chờ duyệt, hồ sơ và file minh chứng cũ vẫn hiển thị bình thường trên hệ thống.
+                  </p>
+                </div>
+              </div>
+              <Button variant="secondary" size="sm" onClick={handleCancelAllPending} className="shrink-0">
+                <X size={14} /> Hủy các yêu cầu chờ duyệt
+              </Button>
+            </div>
+
+            {/* PENDING SUMMARY TABLE */}
+            <div className="rounded-lg border border-amber-200 bg-white p-3 dark:border-amber-900/60 dark:bg-slate-900">
+              <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <FileCheck size={14} className="text-amber-600" /> Các mục đang chờ phê duyệt:
+              </h4>
+
+              <div className="space-y-1.5 text-xs">
+                {Object.keys(pendingChanges).map((key) => {
+                  const item = pendingChanges[key];
+                  return (
+                    <div
+                      key={key}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 rounded bg-slate-50 p-2 dark:bg-slate-800/60"
+                    >
+                      <span className="font-medium text-slate-700 dark:text-slate-300">
+                        {item.label}:
+                      </span>
+                      <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                        <span className="line-through text-slate-400">{item.oldVal}</span>
+                        <ArrowRight size={12} className="text-amber-600" />
+                        <span className="font-semibold text-slate-900 dark:text-slate-100 bg-amber-100 dark:bg-amber-950 px-1.5 py-0.5 rounded">
+                          {item.newVal}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {pendingCertificates.map((cert) => (
+                  <div
+                    key={cert.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 rounded bg-slate-50 p-2 dark:bg-slate-800/60"
                   >
-                    {o.label}
-                  </button>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">
+                      Chứng chỉ bổ sung:
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-slate-900 dark:text-slate-100 bg-amber-100 dark:bg-amber-950 px-1.5 py-0.5 rounded">
+                        {cert.name} ({cert.issuer} - {cert.year})
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removePendingCert(cert.id)}
+                        className="text-rose-600 hover:text-rose-800 ml-1"
+                        title="Hủy chứng chỉ này"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
+          </div>
+        </Card>
+      )}
+
+      {profileStatus === "rejected" && (
+        <Card className="border-rose-200 bg-rose-50/40 dark:border-rose-900/60 dark:bg-rose-950/20">
+          <div className="flex items-start gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-600 text-white">
+              <AlertTriangle size={20} />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-slate-900 dark:text-slate-50">
+                  Trạng thái: Admin yêu cầu bổ sung / chỉnh sửa
+                </h3>
+                <Badge tone="rose">Cần chỉnh sửa</Badge>
+              </div>
+              <div className="rounded-lg border border-rose-200 bg-white p-3 text-xs text-slate-700 dark:border-rose-900/60 dark:bg-slate-900 dark:text-slate-300">
+                <p className="font-semibold text-rose-700 dark:text-rose-400 mb-1 flex items-center gap-1">
+                  <Info size={14} /> Phản hồi từ Admin:
+                </p>
+                <p>{rejectionReason || "Ảnh minh chứng Bằng ĐH / CCCD chưa rõ nét. Vui lòng tải lại ảnh bản scan đầy đủ 4 góc văn bằng."}</p>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400">
+                Vui lòng cập nhật thông tin &amp; file đính kèm bên dưới rồi nhấn <strong>"Lưu thay đổi hồ sơ"</strong> để gửi lại cho Admin.
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* ---------------------------------------------------- */}
+      {/* SECTION 1: MÔN / KỸ NĂNG (CƠ BẢN ⚡) */}
+      {/* ---------------------------------------------------- */}
+      <Card>
+        <div className="mb-4 flex items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+              Môn / Kỹ năng có thể giảng dạy
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Chọn các môn hoặc kỹ năng chuyên môn bạn nhận dạy.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Zap size={13} className="text-blue-500" /> Cập nhật ngay
+          </span>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {subjectOptions.map((s) => (
+            <button
+              type="button"
+              key={s}
+              onClick={() => toggleSubject(s)}
+              className={chipClass(formData.subjects.includes(s))}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {/* ---------------------------------------------------- */}
+      {/* SECTION 2: GIỚI THIỆU BẢN THÂN (CƠ BẢN ⚡) */}
+      {/* ---------------------------------------------------- */}
+      <Card>
+        <div className="mb-4 flex items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+              Giới thiệu ngắn &amp; Liên hệ
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Mô tả phương pháp truyền đạt và số điện thoại kết nối.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Zap size={13} className="text-blue-500" /> Cập nhật ngay
+          </span>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300">
+              Giới thiệu ngắn bản thân &amp; Phong cách giảng dạy
+            </label>
+            <textarea
+              value={formData.bio}
+              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+              rows={3}
+              placeholder="Kinh nghiệm giảng dạy, thế mạnh chuyên môn..."
+              className={inputClass}
+            />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">
-                Số năm kinh nghiệm
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300">
+                Số điện thoại liên hệ
               </label>
+              <input
+                type="text"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300">
+                Số Zalo liên hệ
+              </label>
+              <input
+                type="text"
+                value={formData.zalo}
+                onChange={(e) => setFormData({ ...formData, zalo: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* ---------------------------------------------------- */}
+      {/* SECTION 3: TRÌNH ĐỘ & KINH NGHIỆM (QUAN TRỌNG 🔒) */}
+      {/* ---------------------------------------------------- */}
+      <Card>
+        <div className="mb-4 flex items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50 flex items-center gap-2">
+              Trình độ Phân loại &amp; Kinh nghiệm
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Thông tin phân loại gia sư chính thức từ hệ thống.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Lock size={13} className="text-amber-500" /> Cần Admin duyệt
+          </span>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+              <span>Trình độ phân loại gia sư</span>
+              {pendingChanges.qualificationLevel && (
+                <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <Clock size={11} /> Chờ duyệt
+                </span>
+              )}
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {levelOptions.map((o) => (
+                <button
+                  type="button"
+                  key={o.value}
+                  onClick={() => setFormData({ ...formData, qualificationLevel: o.value })}
+                  className={chipClass(formData.qualificationLevel === o.value)}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            {pendingChanges.qualificationLevel && (
+              <p className="mt-2 text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 p-2 rounded border border-amber-200 dark:border-amber-900">
+                Chờ duyệt: <strong>{pendingChanges.qualificationLevel.newVal}</strong> (Đang hiển thị: {pendingChanges.qualificationLevel.oldVal})
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+              <span>Số năm kinh nghiệm</span>
+              {pendingChanges.experienceYears && (
+                <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <Clock size={11} /> Chờ duyệt
+                </span>
+              )}
+            </label>
+            <div className="flex items-center gap-2">
               <input
                 type="number"
                 min={0}
                 max={50}
-                value={experienceYears}
-                onChange={(e) => {
-                  setExperienceYears(e.target.value);
-                  setSaved(false);
-                }}
-                className={clsx(inputClass, "w-28")}
+                value={formData.experienceYears}
+                onChange={(e) => setFormData({ ...formData, experienceYears: e.target.value })}
+                className={clsx(
+                  pendingChanges.experienceYears ? pendingInputClass : inputClass,
+                  "w-32"
+                )}
+              />
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-400">năm kinh nghiệm</span>
+            </div>
+            {pendingChanges.experienceYears && (
+              <p className="mt-2 text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 p-2 rounded border border-amber-200 dark:border-amber-900">
+                Chờ duyệt: <strong>{pendingChanges.experienceYears.newVal}</strong> (Đang hiển thị: {pendingChanges.experienceYears.oldVal})
+              </p>
+            )}
+          </div>
+        </div>
+      </Card>
+
+      {/* ---------------------------------------------------- */}
+      {/* SECTION 4: LÝ LỊCH HỌC TẬP & GIẤY TỜ MINH CHỨNG (QUAN TRỌNG 🔒) */}
+      {/* INTEGRATED ACADEMIC CREDENTIALS + ID VERIFICATION + PROOF FILES */}
+      {/* ---------------------------------------------------- */}
+      <Card>
+        <div className="mb-4 flex items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50 flex items-center gap-2">
+              <GraduationCap size={18} className="text-blue-600" />
+              Lý lịch Học tập, Định danh &amp; Giấy tờ Minh chứng
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Khai báo học vấn kèm ảnh chụp CCCD, Bằng Đại Học / Thẻ Sinh Viên &amp; Bảng điểm để Admin đối soát chính xác.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Lock size={13} className="text-amber-500" /> Cần Admin duyệt
+          </span>
+        </div>
+
+        {/* PART A: ACADEMIC TEXT FIELDS */}
+        <div className="space-y-4">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            1. Thông tin Học vấn &amp; Xuất thân
+          </h3>
+
+          <div className="grid gap-4 xs:grid-cols-2 lg:grid-cols-3">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Năm sinh / Tuổi</span>
+                {pendingChanges.birthYear && <span className="text-[11px] text-amber-600 font-medium">Chờ duyệt</span>}
+              </label>
+              <input
+                type="text"
+                value={formData.birthYear}
+                onChange={(e) => setFormData({ ...formData, birthYear: e.target.value })}
+                placeholder="VD: 2001 (25 tuổi)"
+                className={pendingChanges.birthYear ? pendingInputClass : inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Quê quán</span>
+                {pendingChanges.hometown && <span className="text-[11px] text-amber-600 font-medium">Chờ duyệt</span>}
+              </label>
+              <input
+                type="text"
+                value={formData.hometown}
+                onChange={(e) => setFormData({ ...formData, hometown: e.target.value })}
+                placeholder="VD: Nam Định"
+                className={pendingChanges.hometown ? pendingInputClass : inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Nơi ở hiện tại</span>
+                {pendingChanges.currentAddress && <span className="text-[11px] text-amber-600 font-medium">Chờ duyệt</span>}
+              </label>
+              <input
+                type="text"
+                value={formData.currentAddress}
+                onChange={(e) => setFormData({ ...formData, currentAddress: e.target.value })}
+                placeholder="VD: Quận 3, TP.HCM"
+                className={pendingChanges.currentAddress ? pendingInputClass : inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Trường THPT Cấp 3</span>
+                {pendingChanges.highSchool && <span className="text-[11px] text-amber-600 font-medium">Chờ duyệt</span>}
+              </label>
+              <input
+                type="text"
+                value={formData.highSchool}
+                onChange={(e) => setFormData({ ...formData, highSchool: e.target.value })}
+                placeholder="VD: THPT Chuyên Lê Hồng Phong"
+                className={pendingChanges.highSchool ? pendingInputClass : inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Trường ĐH &amp; Chuyên ngành</span>
+                {pendingChanges.university && <span className="text-[11px] text-amber-600 font-medium">Chờ duyệt</span>}
+              </label>
+              <input
+                type="text"
+                value={formData.university}
+                onChange={(e) => setFormData({ ...formData, university: e.target.value })}
+                placeholder="VD: ĐH Ngoại Thương - Ngôn ngữ Anh"
+                className={pendingChanges.university ? pendingInputClass : inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Điểm tốt nghiệp THPT / Thi ĐH</span>
+                {pendingChanges.graduationScore && <span className="text-[11px] text-amber-600 font-medium">Chờ duyệt</span>}
+              </label>
+              <input
+                type="text"
+                value={formData.graduationScore}
+                onChange={(e) => setFormData({ ...formData, graduationScore: e.target.value })}
+                placeholder="VD: 28.5 điểm khối D01"
+                className={pendingChanges.graduationScore ? pendingInputClass : inputClass}
+              />
+            </div>
+
+            <div className="xs:col-span-2 lg:col-span-3">
+              <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <span>Xếp loại Học lực &amp; GPA Đại học</span>
+                {pendingChanges.academicRank && <span className="text-[11px] text-amber-600 font-medium">Chờ duyệt</span>}
+              </label>
+              <input
+                type="text"
+                value={formData.academicRank}
+                onChange={(e) => setFormData({ ...formData, academicRank: e.target.value })}
+                placeholder="VD: Xuất sắc (GPA 3.85/4.0)"
+                className={pendingChanges.academicRank ? pendingInputClass : inputClass}
               />
             </div>
           </div>
-          <div className="mt-4">
-            <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Giới thiệu ngắn</label>
-            <textarea
-              value={bio}
-              onChange={(e) => {
-                setBio(e.target.value);
-                setSaved(false);
-              }}
-              rows={3}
-              placeholder="Kinh nghiệm giảng dạy, thế mạnh, phong cách dạy..."
-              className={inputClass}
-            />
+        </div>
+
+        {/* PART B: PROOF FILES & CCCD INTEGRATION */}
+        <div className="mt-6 space-y-4 border-t border-slate-100 pt-5 dark:border-slate-800">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+            <CreditCard size={15} className="text-blue-600" />
+            2. Giấy tờ Định danh (CCCD) &amp; File Minh chứng Học vấn
+          </h3>
+
+          {/* CCCD section */}
+          <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-3.5 dark:border-slate-800 dark:bg-slate-900/60 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <CreditCard size={14} className="text-slate-500" /> Xác minh Căn cước công dân (CCCD / CMND)
+              </span>
+              {pendingChanges.idCardNumber && (
+                <Badge tone="amber">Số CCCD mới chờ duyệt</Badge>
+              )}
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300">
+                  Số CCCD / CMND
+                </label>
+                <input
+                  type="text"
+                  value={formData.idCardNumber}
+                  onChange={(e) => setFormData({ ...formData, idCardNumber: e.target.value })}
+                  className={pendingChanges.idCardNumber ? pendingInputClass : inputClass}
+                />
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                  <span>Mặt trước CCCD</span>
+                  {pendingChanges.idCardFrontName && <span className="text-[10px] text-amber-600 font-bold">Chờ duyệt</span>}
+                </label>
+                <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800">
+                  <span className="truncate font-mono text-slate-600 dark:text-slate-300">
+                    {formData.idCardFrontName}
+                  </span>
+                  <label className="cursor-pointer text-blue-600 hover:underline text-[11px] font-semibold shrink-0 ml-1">
+                    Đổi
+                    <input type="file" onChange={(e) => handleProofFileUpload("idCardFrontName", e)} className="hidden" accept="image/*,.pdf" />
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                  <span>Mặt sau CCCD</span>
+                  {pendingChanges.idCardBackName && <span className="text-[10px] text-amber-600 font-bold">Chờ duyệt</span>}
+                </label>
+                <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-800">
+                  <span className="truncate font-mono text-slate-600 dark:text-slate-300">
+                    {formData.idCardBackName}
+                  </span>
+                  <label className="cursor-pointer text-blue-600 hover:underline text-[11px] font-semibold shrink-0 ml-1">
+                    Đổi
+                    <input type="file" onChange={(e) => handleProofFileUpload("idCardBackName", e)} className="hidden" accept="image/*,.pdf" />
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
-        </Card>
 
-        <Card>
-          <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Bằng cấp / chứng chỉ</h2>
-          <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
-            Danh sách bằng cấp, chứng chỉ liên quan tới năng lực giảng dạy.
-          </p>
+          {/* Academic Proof Documents Upload */}
+          <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-3.5 dark:border-slate-800 dark:bg-slate-900/60 space-y-3">
+            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+              <FileText size={14} className="text-slate-500" /> File Minh chứng Học vấn (Bằng ĐH / Thẻ Sinh Viên &amp; Bảng điểm)
+            </span>
 
-          {certificates.length > 0 && (
-            <ul className="mb-4 divide-y divide-slate-100 rounded-lg border border-slate-200 dark:divide-slate-800 dark:border-slate-800">
-              {certificates.map((c) => (
-                <li key={c.id} className="flex items-center justify-between gap-3 px-3 py-2.5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {/* Degree / Student ID Scan */}
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                  <span>Minh chứng Bằng Tốt Nghiệp ĐH / Thẻ Sinh Viên</span>
+                  {pendingChanges.degreeScanName ? (
+                    <span className="text-[10px] font-bold text-amber-600">File mới chờ duyệt</span>
+                  ) : (
+                    <Badge tone="emerald">Đã xác minh</Badge>
+                  )}
+                </label>
+                <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-2.5 text-xs dark:border-slate-700 dark:bg-slate-800">
+                  <div className="flex items-center gap-2 truncate">
+                    <FileText size={14} className="text-blue-500 shrink-0" />
+                    <span className="truncate font-mono text-slate-700 dark:text-slate-300">
+                      {formData.degreeScanName}
+                    </span>
+                  </div>
+                  <label className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 transition cursor-pointer shrink-0 ml-2">
+                    <Upload size={12} /> Tải file mới
+                    <input type="file" onChange={(e) => handleProofFileUpload("degreeScanName", e)} className="hidden" accept="image/*,.pdf" />
+                  </label>
+                </div>
+              </div>
+
+              {/* GPA Transcript Scan */}
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                  <span>Minh chứng Bảng điểm GPA / Học bạ THPT</span>
+                  {pendingChanges.transcriptScanName ? (
+                    <span className="text-[10px] font-bold text-amber-600">File mới chờ duyệt</span>
+                  ) : (
+                    <Badge tone="emerald">Đã xác minh</Badge>
+                  )}
+                </label>
+                <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-2.5 text-xs dark:border-slate-700 dark:bg-slate-800">
+                  <div className="flex items-center gap-2 truncate">
+                    <FileText size={14} className="text-blue-500 shrink-0" />
+                    <span className="truncate font-mono text-slate-700 dark:text-slate-300">
+                      {formData.transcriptScanName}
+                    </span>
+                  </div>
+                  <label className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600 transition cursor-pointer shrink-0 ml-2">
+                    <Upload size={12} /> Tải file mới
+                    <input type="file" onChange={(e) => handleProofFileUpload("transcriptScanName", e)} className="hidden" accept="image/*,.pdf" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* ---------------------------------------------------- */}
+      {/* SECTION 5: BẰNG CẤP & CHỨNG CHỈ KHÁC (QUAN TRỌNG 🔒) */}
+      {/* ---------------------------------------------------- */}
+      <Card>
+        <div className="mb-4 flex items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+              Chứng chỉ Chuyên môn Khác (IELTS, TESOL...)
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Danh sách văn bằng, chứng chỉ ngoại ngữ hoặc kỹ năng bổ sung đính kèm.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Lock size={13} className="text-amber-500" /> Cần Admin duyệt
+          </span>
+        </div>
+
+        {/* List of certificates */}
+        <div className="space-y-3 mb-5">
+          <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900 overflow-hidden text-sm">
+            {approvedProfile.certificates.map((c) => {
+              const isPendingRemoval = pendingChanges[`remove_cert_${c.id}`];
+              return (
+                <div
+                  key={c.id}
+                  className={clsx(
+                    "flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 transition",
+                    isPendingRemoval ? "bg-rose-50/50 dark:bg-rose-950/20" : ""
+                  )}
+                >
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 mt-0.5">
+                      <FileCheck size={16} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="truncate font-semibold text-slate-900 dark:text-slate-50">
+                          {c.name}
+                        </p>
+                        <Badge tone="emerald">Đã duyệt</Badge>
+                      </div>
+                      <p className="truncate text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        {[c.issuer, c.year].filter(Boolean).join(" · ")} | File: <span className="font-mono text-slate-600 dark:text-slate-300">{c.fileName}</span>
+                      </p>
+
+                      {isPendingRemoval && (
+                        <p className="mt-1 text-xs font-semibold text-rose-600 dark:text-rose-400">
+                          Đang có yêu cầu gỡ chứng chỉ chờ Admin duyệt...
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    {isPendingRemoval ? (
+                      <Button variant="secondary" size="sm" onClick={() => cancelCertRemoveRequest(c.id)}>
+                        Hủy yêu cầu gỡ
+                      </Button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => removeApprovedCert(c.id)}
+                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 transition"
+                      >
+                        <Trash2 size={13} /> Yêu cầu gỡ
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+
+            {pendingCertificates.map((c) => (
+              <div
+                key={c.id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-amber-50/40 dark:bg-amber-950/20 text-sm"
+              >
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 mt-0.5">
+                    <Clock size={16} />
+                  </div>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-50">{c.name}</p>
-                    <p className="truncate text-xs text-slate-500 dark:text-slate-400">
-                      {[c.issuer, c.year].filter(Boolean).join(" · ") || "—"}
+                    <div className="flex items-center gap-2">
+                      <p className="truncate font-semibold text-slate-900 dark:text-slate-50">
+                        {c.name}
+                      </p>
+                      <Badge tone="amber">Chờ duyệt</Badge>
+                    </div>
+                    <p className="truncate text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                      {[c.issuer, c.year].filter(Boolean).join(" · ")} | File đính kèm: <span className="font-mono">{c.fileName}</span>
                     </p>
                   </div>
-                  <button
-                    onClick={() => removeCertificate(c.id)}
-                    title="Xóa"
-                    className="shrink-0 rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950 dark:hover:text-rose-400"
-                  >
-                    <X size={15} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+                </div>
 
-          <div className="grid gap-2 xs:grid-cols-[2fr_1.5fr_1fr] lg:grid-cols-[2fr_1.5fr_1fr_auto]">
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => removePendingCert(c.id)}
+                    className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-800 transition"
+                  >
+                    <X size={13} /> Hủy thêm
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Add cert form */}
+        <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/50 space-y-3">
+          <h3 className="text-xs font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+            <Plus size={14} className="text-blue-600" /> Thêm chứng chỉ khác:
+          </h3>
+
+          <div className="grid gap-3 sm:grid-cols-3">
             <input
               value={certForm.name}
               onChange={(e) => setCertForm((f) => ({ ...f, name: e.target.value }))}
-              placeholder="Tên bằng cấp/chứng chỉ"
+              placeholder="Tên bằng cấp (VD: IELTS 8.0)"
               className={inputClass}
             />
             <input
               value={certForm.issuer}
               onChange={(e) => setCertForm((f) => ({ ...f, issuer: e.target.value }))}
-              placeholder="Đơn vị cấp"
+              placeholder="Đơn vị cấp (VD: British Council)"
               className={inputClass}
             />
             <input
               value={certForm.year}
               onChange={(e) => setCertForm((f) => ({ ...f, year: e.target.value }))}
-              placeholder="Năm"
+              placeholder="Năm cấp (VD: 2024)"
               className={inputClass}
             />
-            <Button variant="secondary" size="md" type="button" onClick={addCertificate} disabled={!certForm.name.trim()}>
-              <Plus size={14} /> Thêm
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+            <label className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition cursor-pointer">
+              <Upload size={13} />
+              <span>{simulatedCertFile ? `Đã chọn: ${simulatedCertFile}` : "Tải file scan minh chứng (PDF, JPG)"}</span>
+              <input type="file" onChange={handleCertFileSelect} className="hidden" accept="image/*,.pdf" />
+            </label>
+
+            <Button
+              variant="secondary"
+              size="sm"
+              type="button"
+              onClick={addCertificateRequest}
+              disabled={!certForm.name.trim()}
+            >
+              <Plus size={14} /> Thêm vào danh sách chờ duyệt
             </Button>
           </div>
-        </Card>
+        </div>
+      </Card>
 
-        <Card>
-          <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Khu vực nhận lớp</h2>
-          <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
-            Khu vực bạn có thể di chuyển tới dạy, hoặc chọn "Dạy online" — Admin dùng để tra cứu khi có yêu cầu mới.
-          </p>
-          <div className="mb-3 flex flex-wrap gap-2">
-            {serviceAreas.map((area) => (
-              <span
-                key={area}
-                className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-              >
-                <MapPin size={12} /> {area}
-                <button
-                  onClick={() => removeServiceArea(area)}
-                  title="Xóa"
-                  className="text-slate-400 hover:text-rose-600 dark:hover:text-rose-400"
-                >
-                  <X size={12} />
-                </button>
-              </span>
-            ))}
-            {serviceAreas.length === 0 && <p className="text-sm text-slate-400">Chưa khai báo khu vực nào.</p>}
-          </div>
-          <div className="flex max-w-sm gap-2">
-            <input
-              value={newArea}
-              onChange={(e) => setNewArea(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addServiceArea();
-                }
-              }}
-              placeholder="VD: Quận 7, TP.HCM"
-              className={inputClass}
-            />
-            <Button variant="secondary" type="button" onClick={addServiceArea} disabled={!newArea.trim()}>
-              <Plus size={14} /> Thêm
-            </Button>
-          </div>
-        </Card>
-
-        <Card padded={false} className="overflow-hidden">
-          <div className="p-5 pb-4">
-            <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Lịch rảnh</h2>
+      {/* ---------------------------------------------------- */}
+      {/* SECTION 6: KHU VỰC NHẬN LỚP (CƠ BẢN ⚡) */}
+      {/* ---------------------------------------------------- */}
+      <Card>
+        <div className="mb-4 flex items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+              Khu vực nhận lớp &amp; Hình thức dạy
+            </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Chọn khung giờ bạn có thể nhận lớp mới — Admin dùng để sắp lịch dạy thử phù hợp.
+              Khu vực di chuyển giảng dạy hoặc chọn dạy Online.
             </p>
           </div>
-          <div className="overflow-x-auto px-4 lg:px-5 pb-4 lg:pb-5">
-            <table className="w-full min-w-[560px] border-collapse text-sm">
-              <thead>
-                <tr>
-                  <th className="w-20"></th>
-                  {weekDays.map((day) => (
-                    <th
-                      key={day}
-                      className="pb-2 text-center text-xs font-medium text-slate-500 dark:text-slate-400"
-                    >
-                      {day}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {dayBlocks.map((block) => (
-                  <tr key={block}>
-                    <td className="py-1 pr-3 text-xs font-medium text-slate-500 dark:text-slate-400">{block}</td>
-                    {weekDays.map((day) => {
-                      const key = `${day}|${block}`;
-                      const active = availability.includes(key);
-                      return (
-                        <td key={day} className="p-1 text-center">
-                          <button
-                            type="button"
-                            onClick={() => toggleSlot(day, block)}
-                            title={`${day} - ${block}`}
-                            className={clsx(
-                              "flex h-8 w-full items-center justify-center rounded-md border transition",
-                              active
-                                ? "border-blue-600 bg-blue-600 text-white"
-                                : "border-slate-200 text-transparent hover:border-blue-300 dark:border-slate-700"
-                            )}
-                          >
-                            <Check size={14} />
-                          </button>
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Zap size={13} className="text-blue-500" /> Cập nhật ngay
+          </span>
+        </div>
+
+        <div className="mb-3 flex flex-wrap gap-2">
+          {formData.serviceAreas.map((area) => (
+            <span
+              key={area}
+              className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            >
+              <MapPin size={12} className="text-slate-500" /> {area}
+              <button
+                onClick={() => removeServiceArea(area)}
+                title="Xóa"
+                className="text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 ml-0.5"
+              >
+                <X size={12} />
+              </button>
+            </span>
+          ))}
+          {formData.serviceAreas.length === 0 && (
+            <p className="text-sm text-slate-400">Chưa khai báo khu vực nào.</p>
+          )}
+        </div>
+
+        <div className="flex max-w-sm gap-2">
+          <input
+            value={newArea}
+            onChange={(e) => setNewArea(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addServiceArea();
+              }
+            }}
+            placeholder="VD: Quận 7, TP.HCM hoặc Dạy Online"
+            className={inputClass}
+          />
+          <Button variant="secondary" type="button" onClick={addServiceArea} disabled={!newArea.trim()}>
+            <Plus size={14} /> Thêm
+          </Button>
+        </div>
+      </Card>
+
+      {/* ---------------------------------------------------- */}
+      {/* SECTION 7: LỊCH RẢNH (CƠ BẢN ⚡) */}
+      {/* ---------------------------------------------------- */}
+      <Card padded={false} className="overflow-hidden">
+        <div className="p-5 pb-3 flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+              Lịch rảnh có thể nhận lớp mới
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Chọn các khung giờ bạn rảnh để tiếp nhận lớp học sinh mới.
+            </p>
           </div>
-        </Card>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            <Zap size={13} className="text-blue-500" /> Cập nhật ngay
+          </span>
+        </div>
+
+        <div className="overflow-x-auto p-4 lg:p-5">
+          <table className="w-full min-w-[560px] border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="w-20"></th>
+                {weekDays.map((day) => (
+                  <th
+                    key={day}
+                    className="pb-2 text-center text-xs font-medium text-slate-600 dark:text-slate-400"
+                  >
+                    {day}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {dayBlocks.map((block) => (
+                <tr key={block}>
+                  <td className="py-1 pr-3 text-xs font-medium text-slate-500 dark:text-slate-400">{block}</td>
+                  {weekDays.map((day) => {
+                    const key = `${day}|${block}`;
+                    const active = formData.availability.includes(key);
+                    return (
+                      <td key={day} className="p-1 text-center">
+                        <button
+                          type="button"
+                          onClick={() => toggleSlot(day, block)}
+                          title={`${day} - ${block}`}
+                          className={clsx(
+                            "flex h-8 w-full items-center justify-center rounded-md border transition cursor-pointer",
+                            active
+                              ? "border-blue-600 bg-blue-600 text-white"
+                              : "border-slate-200 text-transparent hover:border-slate-300 dark:border-slate-800"
+                          )}
+                        >
+                          <Check size={14} />
+                        </button>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      {/* ---------------------------------------------------- */}
+      {/* STICKY BOTTOM BAR */}
+      {/* ---------------------------------------------------- */}
+      <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white/95 p-3.5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 shadow-sm">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
+            <Save size={16} />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
+              Lưu thay đổi thông tin hồ sơ
+            </p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              Thông tin cơ bản có hiệu lực ngay · Thông tin học vấn &amp; minh chứng gửi Admin duyệt
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {pendingCount > 0 && (
+            <Button variant="secondary" size="sm" onClick={handleCancelAllPending}>
+              Khôi phục ban đầu
+            </Button>
+          )}
+          <Button size="sm" onClick={handleSaveProfile}>
+            <Save size={14} /> Lưu thay đổi hồ sơ
+          </Button>
+        </div>
       </div>
     </div>
   );
