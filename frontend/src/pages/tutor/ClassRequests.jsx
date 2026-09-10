@@ -149,7 +149,7 @@ export default function ClassRequests() {
         description="Các yêu cầu từ phụ huynh do Admin giới thiệu/phân công — xem chi tiết, nhận hoặc từ chối, theo dõi trạng thái."
       />
 
-      <div className="grid gap-6 lg:grid-cols-5">
+      <div className="grid gap-4 lg:grid-cols-5 lg:gap-6">
         <Card className="lg:col-span-2" padded={false}>
           <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
             <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Chờ phản hồi ({pending.length})</p>
@@ -193,7 +193,7 @@ export default function ClassRequests() {
         <div className="lg:col-span-3">
           {selected ? (
             <Card>
-              <div className="mb-4 flex items-start justify-between gap-4">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <h3 className="font-medium text-slate-900 dark:text-slate-50">{selected.subject}</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -213,7 +213,7 @@ export default function ClassRequests() {
               </div>
 
               {selected.status !== "rejected" && selected.status !== "pending_response" && (
-                <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/50">
+                <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/50 overflow-x-auto">
                   <StatusTrack status={selected.status} />
                 </div>
               )}
@@ -226,7 +226,7 @@ export default function ClassRequests() {
               )}
 
               {selected.status === "pending_response" && !rejecting && (
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Button onClick={accept}>
                     <Check size={16} /> Nhận lớp
                   </Button>
@@ -249,7 +249,7 @@ export default function ClassRequests() {
                     placeholder="Ví dụ: lịch mong muốn trùng lịch dạy hiện tại..."
                     className="mb-3 w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-800 dark:bg-slate-900 dark:focus:ring-blue-950"
                   />
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Button variant="danger" disabled={!rejectReason.trim()} onClick={confirmReject}>
                       <X size={16} /> Xác nhận từ chối
                     </Button>

@@ -22,15 +22,13 @@ import AddAssignmentPage from "./pages/tutor/manage/AddAssignmentPage";
 import ManageMaterialsRoute from "./pages/tutor/manage/ManageMaterialsRoute";
 import TutorExerciseDetail from "./pages/tutor/TutorExerciseDetail";
 import ExerciseGenerator from "./pages/tutor/ExerciseGenerator";
-import GradingQueue from "./pages/tutor/GradingQueue";
 import ClassRequests from "./pages/tutor/ClassRequests";
-import ParentInbox from "./pages/tutor/ParentInbox";
-import Notifications from "./pages/tutor/Notifications";
 import LibraryPaths from "./pages/tutor/LibraryPaths";
 import LibraryPathDetail from "./pages/tutor/LibraryPathDetail";
 import LibraryExercises from "./pages/tutor/LibraryExercises";
 import LibraryMaterials from "./pages/tutor/LibraryMaterials";
 import TutorProfile from "./pages/tutor/TutorProfile";
+import TutorSchedule from "./pages/tutor/TutorSchedule";
 
 import StudentMarketplace from "./pages/student/StudentMarketplace";
 import StudentOnboarding from "./pages/student/StudentOnboarding";
@@ -116,11 +114,9 @@ export default function App() {
               <Route index element={<ManageMaterialsRoute />} />
             </Route>
             <Route path="students/:studentId/exercises/:exerciseId" element={<TutorExerciseDetail />} />
+            <Route path="schedule" element={<TutorSchedule />} />
             <Route path="exercise-generator" element={<ExerciseGenerator />} />
             <Route path="requests" element={<ClassRequests />} />
-            <Route path="grading" element={<GradingQueue />} />
-            <Route path="inbox" element={<ParentInbox />} />
-            <Route path="notifications" element={<Notifications />} />
             <Route path="library/paths" element={<LibraryPaths />} />
             <Route path="library/paths/:templateId" element={<LibraryPathDetail />} />
             <Route path="library/exercises" element={<LibraryExercises />} />

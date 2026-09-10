@@ -31,7 +31,7 @@ export default function StudentsList() {
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((s) => (
           <Link key={s.id} to={`/tutor/students/${s.id}`}>
             <Card className="h-full transition hover:border-blue-300 hover:shadow-sm dark:hover:border-blue-800">

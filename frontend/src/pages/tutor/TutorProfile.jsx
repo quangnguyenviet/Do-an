@@ -148,7 +148,7 @@ export default function TutorProfile() {
             Thông tin thực tế (Năm sinh, Quê quán, Điểm tốt nghiệp THPT/ĐH, GPA) giúp Phụ huynh &amp; Học sinh thêm tin tưởng.
           </p>
 
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid gap-4 xs:grid-cols-2 lg:grid-cols-3">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Năm sinh / Tuổi</label>
               <input
@@ -233,7 +233,7 @@ export default function TutorProfile() {
               />
             </div>
 
-            <div className="sm:col-span-2 md:col-span-3">
+            <div className="xs:col-span-2 lg:col-span-3">
               <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Xếp loại Học lực &amp; GPA Đại học</label>
               <input
                 type="text"
@@ -254,7 +254,7 @@ export default function TutorProfile() {
           <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
             Thông tin nền tảng để Admin đánh giá mức độ phù hợp với yêu cầu của phụ huynh.
           </p>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 xs:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Trình độ</label>
               <div className="flex flex-wrap gap-2">
@@ -333,7 +333,7 @@ export default function TutorProfile() {
             </ul>
           )}
 
-          <div className="grid gap-2 sm:grid-cols-[2fr_1.5fr_1fr_auto]">
+          <div className="grid gap-2 xs:grid-cols-[2fr_1.5fr_1fr] lg:grid-cols-[2fr_1.5fr_1fr_auto]">
             <input
               value={certForm.name}
               onChange={(e) => setCertForm((f) => ({ ...f, name: e.target.value }))}
@@ -407,7 +407,7 @@ export default function TutorProfile() {
               Chọn khung giờ bạn có thể nhận lớp mới — Admin dùng để sắp lịch dạy thử phù hợp.
             </p>
           </div>
-          <div className="overflow-x-auto px-5 pb-5">
+          <div className="overflow-x-auto px-4 lg:px-5 pb-4 lg:pb-5">
             <table className="w-full min-w-[560px] border-collapse text-sm">
               <thead>
                 <tr>
