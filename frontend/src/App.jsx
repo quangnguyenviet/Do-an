@@ -1,6 +1,8 @@
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import LandingPage from "./pages/LandingPage";
+import StudentDashboardPage from "./pages/StudentDashboardPage";
 import AppShell from "./components/layout/AppShell";
 import LoginPage from "./pages/LoginPage";
 
@@ -33,8 +35,6 @@ import TutorProfile from "./pages/tutor/TutorProfile";
 import StudentMarketplace from "./pages/student/StudentMarketplace";
 import StudentOnboarding from "./pages/student/StudentOnboarding";
 import StudentChat from "./pages/student/StudentChat";
-import StudentDashboard from "./pages/student/StudentDashboard";
-import StudentSchedule from "./pages/student/StudentSchedule";
 import StudentExercises from "./pages/student/StudentExercises";
 import ExerciseTaking from "./pages/student/ExerciseTaking";
 import StudentProgress from "./pages/student/StudentProgress";
@@ -48,13 +48,6 @@ function RequireRole({ role, children }) {
   return children;
 }
 
-function RootRedirect() {
-  const { session } = useAuth();
-  if (!session) return <Navigate to="/login" replace />;
-  if (session.role === "student") return <Navigate to="/student/marketplace" replace />;
-  return <Navigate to={`/${session.role}`} replace />;
-}
-
 function StudentDetailDefaultTab() {
   const { studentId } = useParams();
   return <Navigate to={`/tutor/students/${studentId}/path`} replace />;
@@ -65,8 +58,21 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <Routes>
+          {/* Landing Page cho Phụ huynh (Khách xem không cần đăng nhập) */}
+          <Route path="/" element={<LandingPage />} />
+
+          {/* Student Dashboard App (Yêu cầu đăng nhập học sinh) */}
+          <Route
+            path="/dashboard"
+            element={
+              <RequireRole role="student">
+                <StudentDashboardPage />
+              </RequireRole>
+            }
+          />
+
+          {/* Trang Đăng nhập Học sinh */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<RootRedirect />} />
 
           <Route
             path="/admin"
@@ -131,17 +137,18 @@ export default function App() {
               </RequireRole>
             }
           >
-            <Route index element={<StudentDashboard />} />
+            <Route index element={<StudentDashboardPage />} />
             <Route path="marketplace" element={<StudentMarketplace />} />
             <Route path="onboarding" element={<StudentOnboarding />} />
             <Route path="chat" element={<StudentChat />} />
-            <Route path="schedule" element={<StudentSchedule />} />
+            <Route path="schedule" element={<StudentDashboardPage />} />
             <Route path="exercises" element={<StudentExercises />} />
             <Route path="exercises/:exerciseId" element={<ExerciseTaking />} />
             <Route path="progress" element={<StudentProgress />} />
             <Route path="materials" element={<StudentMaterials />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

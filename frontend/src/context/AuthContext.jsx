@@ -33,8 +33,7 @@ export function AuthProvider({ children }) {
   }
 
   function loginAsStudent(studentId) {
-    const s = students.find((x) => x.id === studentId);
-    if (!s) return;
+    const s = students.find((x) => x.id === studentId) || { id: "s1", name: "Nguyễn Minh Anh", initials: "MA" };
     setSession({ role: "student", studentId: s.id, name: s.name, initials: s.initials });
   }
 
