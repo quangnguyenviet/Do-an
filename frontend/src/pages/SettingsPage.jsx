@@ -120,9 +120,9 @@ export default function SettingsPage() {
       <Card className="mt-4">
         <h2 className="mb-1 text-sm font-semibold text-slate-900 dark:text-slate-50">Theme hiện tại</h2>
         <div className="flex items-center gap-3">
-          <div className={`h-4 w-4 rounded-full ${themes[theme].dot}`} />
+          <div className={`h-4 w-4 rounded-full ${themes?.[theme]?.dot ?? "bg-cyan-500"}`} />
           <p className="text-sm text-slate-600 dark:text-slate-300">
-            Đang dùng: <span className="font-medium text-slate-900 dark:text-slate-50">{themes[theme].name}</span>
+            Đang dùng: <span className="font-medium text-slate-900 dark:text-slate-50">{themes?.[theme]?.name ?? theme}</span>
           </p>
         </div>
       </Card>

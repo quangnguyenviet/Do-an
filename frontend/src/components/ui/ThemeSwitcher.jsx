@@ -1,11 +1,12 @@
 import { useTheme } from "../../context/ThemeContext";
 
 export default function ThemeSwitcher() {
-  const { theme, setTheme, themes } = useTheme();
+  const { theme, setTheme, themes = {} } = useTheme();
+  const themeEntries = Object.entries(themes || {});
 
   return (
     <div className="flex items-center gap-1.5 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
-      {Object.entries(themes).map(([key, t]) => (
+      {themeEntries.map(([key, t]) => (
         <button
           key={key}
           onClick={() => setTheme(key)}

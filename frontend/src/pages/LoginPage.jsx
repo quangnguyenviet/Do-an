@@ -8,7 +8,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState("minhanh");
   const [password, setPassword] = useState("123456");
   const [error, setError] = useState("");
-  const { loginAsStudent } = useAuth();
+  const { loginAsStudent, loginAsTutor, loginAsAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
@@ -19,12 +19,22 @@ export default function LoginPage() {
     }
     // Authenticate student session and navigate to student dashboard
     loginAsStudent("s1");
-    navigate("/dashboard");
+    navigate("/student");
   };
 
   const handleQuickStudentLogin = () => {
     loginAsStudent("s1");
-    navigate("/dashboard");
+    navigate("/student");
+  };
+
+  const handleQuickTutorLogin = () => {
+    loginAsTutor();
+    navigate("/tutor");
+  };
+
+  const handleQuickAdminLogin = () => {
+    loginAsAdmin();
+    navigate("/admin");
   };
 
   return (
@@ -109,15 +119,33 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Quick Demo Student Button */}
-          <button
-            type="button"
-            onClick={handleQuickStudentLogin}
-            className="w-full py-3 rounded-xl border border-accent/40 bg-accent/10 text-accent font-semibold text-xs hover:bg-accent/20 transition-colors flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            <span>Vào nhanh tài khoản Bé Nguyễn Minh Anh (Demo)</span>
-          </button>
+          {/* Quick Demo Role Buttons */}
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={handleQuickStudentLogin}
+              className="w-full py-2.5 px-3 rounded-xl border border-accent/40 bg-accent/10 text-accent font-semibold text-xs hover:bg-accent/20 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Vào nhanh: Học sinh (Demo Nguyễn Minh Anh)</span>
+            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={handleQuickTutorLogin}
+                className="py-2 px-3 rounded-xl border border-border bg-muted/50 text-foreground font-medium text-xs hover:bg-muted transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Vào vai Gia sư</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleQuickAdminLogin}
+                className="py-2 px-3 rounded-xl border border-border bg-muted/50 text-foreground font-medium text-xs hover:bg-muted transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Vào vai Admin</span>
+              </button>
+            </div>
+          </div>
         </div>
       </main>
 
