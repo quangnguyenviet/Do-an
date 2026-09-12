@@ -76,9 +76,11 @@ body {
   background: rgba(0, 191, 255, 0.3);
   border-radius: 9999px;
 }
+
 [data-theme="dark"]::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 191, 255, 0.5);
 }
+
 [data-theme="dark"]::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
 }
@@ -88,9 +90,11 @@ body {
   background: #cbd5e1;
   border-radius: 9999px;
 }
+
 [data-theme="light"]::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
 [data-theme="light"]::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
@@ -99,28 +103,36 @@ body {
 .accent-bg {
   background-color: var(--accent-500);
 }
+
 .accent-bg-hover:hover {
   background-color: var(--accent-600);
 }
+
 .accent-bg-light {
   background-color: var(--accent-50);
 }
+
 .accent-text {
   color: var(--accent-500);
 }
+
 .accent-text-dark {
   color: var(--accent-600);
 }
+
 .accent-border {
   border-color: var(--accent-500);
 }
+
 .accent-border-light {
   border-color: var(--accent-300);
 }
+
 .accent-ring:focus {
   --tw-ring-color: var(--accent-100);
   border-color: var(--accent-400);
 }
+
 .accent-dot {
   background-color: var(--accent-500);
 }
@@ -129,18 +141,23 @@ body {
 [data-theme="dark"] .accent-bg-dark {
   background-color: var(--accent-950);
 }
+
 [data-theme="dark"] .accent-text-dark {
   color: var(--accent-300);
 }
+
 [data-theme="dark"] .accent-border-dark {
   border-color: var(--accent-800);
 }
+
 .dark .accent-bg-dark {
   background-color: var(--accent-950);
 }
+
 .dark .accent-text-dark {
   color: var(--accent-300);
 }
+
 .dark .accent-border-dark {
   border-color: var(--accent-800);
 }
@@ -151,14 +168,17 @@ body {
   border-color: var(--accent-500);
   color: white;
 }
+
 .accent-pill:hover {
   background-color: var(--accent-600);
   border-color: var(--accent-600);
 }
+
 .accent-pill-outline {
   border-color: var(--accent-300);
   color: var(--accent-600);
 }
+
 .accent-pill-outline:hover {
   border-color: var(--accent-400);
 }
@@ -172,6 +192,7 @@ body {
 .accent-link {
   color: var(--accent-600);
 }
+
 .accent-link:hover {
   color: var(--accent-700);
 }
@@ -180,6 +201,7 @@ body {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -189,6 +211,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -212,10 +235,12 @@ body {
   box-shadow: 0 0 30px rgba(0, 191, 255, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 }
+
 [data-theme="dark"] .speedtest-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 40px rgba(0, 191, 255, 0.6), 0 10px 25px rgba(0, 0, 0, 0.4);
 }
+
 [data-theme="dark"] .speedtest-btn:active {
   transform: scale(0.95);
 }
@@ -228,10 +253,12 @@ body {
   border-color: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
 }
+
 [data-theme="dark"] input::placeholder,
 [data-theme="dark"] textarea::placeholder {
   color: #64748b !important;
 }
+
 [data-theme="dark"] input:focus,
 [data-theme="dark"] select:focus,
 [data-theme="dark"] textarea:focus {
@@ -239,6 +266,7 @@ body {
   box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2) !important;
   outline: none !important;
 }
+
 [data-theme="dark"] select option {
   background-color: #0a0a2e;
   color: #ffffff;
@@ -252,10 +280,12 @@ body {
   border-color: #e2e8f0 !important;
   color: #0f172a !important;
 }
+
 [data-theme="light"] input::placeholder,
 [data-theme="light"] textarea::placeholder {
   color: #94a3b8 !important;
 }
+
 [data-theme="light"] input:focus,
 [data-theme="light"] select:focus,
 [data-theme="light"] textarea:focus {
@@ -263,6 +293,7 @@ body {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
   outline: none !important;
 }
+
 [data-theme="light"] select option {
   background-color: #ffffff;
   color: #0f172a;
@@ -290,36 +321,47 @@ body {
 [data-theme="dark"] .dark\:bg-slate-950 {
   background-color: transparent;
 }
+
 [data-theme="dark"] .dark\:bg-slate-900 {
   background-color: rgba(255, 255, 255, 0.05);
 }
+
 [data-theme="dark"] .dark\:bg-slate-800 {
   background-color: rgba(255, 255, 255, 0.05);
 }
+
 [data-theme="dark"] .dark\:bg-slate-700 {
   background-color: rgba(255, 255, 255, 0.08);
 }
+
 [data-theme="dark"] .dark\:bg-blue-950 {
   background-color: rgba(0, 191, 255, 0.1);
 }
+
 [data-theme="dark"] .dark\:bg-emerald-950 {
   background-color: rgba(16, 185, 129, 0.1);
 }
+
 [data-theme="dark"] .dark\:bg-amber-950 {
   background-color: rgba(245, 158, 11, 0.1);
 }
+
 [data-theme="dark"] .dark\:bg-rose-950 {
   background-color: rgba(244, 63, 94, 0.1);
 }
+
 [data-theme="dark"] .dark\:bg-cyan-950 {
   background-color: rgba(0, 191, 255, 0.1);
 }
+
 [data-theme="dark"] .dark\:bg-fuchsia-950 {
   background-color: rgba(217, 70, 239, 0.1);
 }
+
 [data-theme="dark"] .dark\:bg-orange-950 {
   background-color: rgba(249, 115, 22, 0.1);
 }
+
 [data-theme="dark"] .dark\:bg-violet-950 {
   background-color: rgba(139, 92, 246, 0.1);
 }
@@ -328,57 +370,75 @@ body {
 [data-theme="dark"] .dark\:text-slate-50 {
   color: #ffffff;
 }
+
 [data-theme="dark"] .dark\:text-slate-100 {
   color: #f1f5f9;
 }
+
 [data-theme="dark"] .dark\:text-slate-200 {
   color: #e2e8f0;
 }
+
 [data-theme="dark"] .dark\:text-slate-300 {
   color: #cbd5e1;
 }
+
 [data-theme="dark"] .dark\:text-slate-400 {
   color: #64748b;
 }
+
 [data-theme="dark"] .dark\:text-slate-500 {
   color: #475569;
 }
+
 [data-theme="dark"] .dark\:text-slate-600 {
   color: #334155;
 }
+
 [data-theme="dark"] .dark\:text-blue-400 {
   color: #00bfff;
 }
+
 [data-theme="dark"] .dark\:text-blue-300 {
   color: #4dd4ff;
 }
+
 [data-theme="dark"] .dark\:text-emerald-400 {
   color: #34d399;
 }
+
 [data-theme="dark"] .dark\:text-emerald-300 {
   color: #6ee7b7;
 }
+
 [data-theme="dark"] .dark\:text-amber-400 {
   color: #fbbf24;
 }
+
 [data-theme="dark"] .dark\:text-amber-300 {
   color: #fcd34d;
 }
+
 [data-theme="dark"] .dark\:text-rose-400 {
   color: #fb7185;
 }
+
 [data-theme="dark"] .dark\:text-rose-300 {
   color: #fda4af;
 }
+
 [data-theme="dark"] .dark\:text-cyan-300 {
   color: #67e8f9;
 }
+
 [data-theme="dark"] .dark\:text-fuchsia-300 {
   color: #f0abfc;
 }
+
 [data-theme="dark"] .dark\:text-orange-300 {
   color: #fdba74;
 }
+
 [data-theme="dark"] .dark\:text-violet-300 {
   color: #c4b5fd;
 }
@@ -387,21 +447,27 @@ body {
 [data-theme="dark"] .dark\:border-slate-800 {
   border-color: rgba(255, 255, 255, 0.1);
 }
+
 [data-theme="dark"] .dark\:border-slate-700 {
   border-color: rgba(255, 255, 255, 0.1);
 }
+
 [data-theme="dark"] .dark\:border-slate-600 {
   border-color: rgba(255, 255, 255, 0.2);
 }
+
 [data-theme="dark"] .dark\:border-blue-800 {
   border-color: rgba(0, 191, 255, 0.3);
 }
+
 [data-theme="dark"] .dark\:border-emerald-800 {
   border-color: rgba(16, 185, 129, 0.4);
 }
+
 [data-theme="dark"] .dark\:border-amber-800 {
   border-color: rgba(245, 158, 11, 0.4);
 }
+
 [data-theme="dark"] .dark\:border-rose-800 {
   border-color: rgba(244, 63, 94, 0.4);
 }
@@ -415,30 +481,39 @@ body {
 [data-theme="dark"] .dark\:hover\:bg-slate-800 {
   background-color: rgba(255, 255, 255, 0.08);
 }
+
 [data-theme="dark"] .dark\:hover\:bg-slate-900 {
   background-color: rgba(255, 255, 255, 0.05);
 }
+
 [data-theme="dark"] .dark\:hover\:bg-slate-800\/50 {
   background-color: rgba(255, 255, 255, 0.05);
 }
+
 [data-theme="dark"] .dark\:hover\:bg-slate-900\/40 {
   background-color: rgba(255, 255, 255, 0.03);
 }
+
 [data-theme="dark"] .dark\:hover\:bg-slate-900\/60 {
   background-color: rgba(255, 255, 255, 0.05);
 }
+
 [data-theme="dark"] .dark\:hover\:bg-emerald-950 {
   background-color: rgba(16, 185, 129, 0.1);
 }
+
 [data-theme="dark"] .dark\:hover\:border-blue-800 {
   border-color: rgba(0, 191, 255, 0.4);
 }
+
 [data-theme="dark"] .dark\:hover\:text-blue-400 {
   color: #00bfff;
 }
+
 [data-theme="dark"] .dark\:hover\:text-slate-200 {
   color: #e2e8f0;
 }
+
 [data-theme="dark"] .dark\:hover\:text-slate-300 {
   color: #cbd5e1;
 }
@@ -447,9 +522,36 @@ body {
 [data-theme="dark"] .dark\:ring-blue-800\/50 {
   --tw-ring-color: rgba(0, 191, 255, 0.3);
 }
+
 [data-theme="dark"] .dark\:ring-offset-slate-800 {
   --tw-ring-offset-color: #0a0a2e;
 }
+
 [data-theme="dark"] .dark\:ring-offset-slate-900 {
   --tw-ring-offset-color: #0a0a2e;
 }
+
+/* DESIGN.md Entrance Animations & Staggered Cascade */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.fade-slide-in {
+  animation: fadeSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
